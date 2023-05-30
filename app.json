@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "LifeTracker",
+    "slug": "LifeTracker",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "android": {
+      "package": "com.jcornevin.lifetracker"
+    },
+    "ios": {
+      "bundleIdentifier": "com.jcornevin.lifetracker"
+    }
+  }
+}
