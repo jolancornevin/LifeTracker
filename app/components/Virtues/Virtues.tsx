@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import {
+	FlatList,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -12,15 +13,19 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 import { TaskRealmContext } from '../../models';
 import { Virtues } from '../../models/Virtues';
+import { yyyymmdd } from '../../utils';
+
+const { useRealm, useQuery } = TaskRealmContext;
 
 enum Status {
-	NotSet,
-	OK,
-	KO,
+	NotSet = 'NotSet',
+	OK = 'OK',
+	KO = 'KO',
 }
 
-const tableHead = [
-	'',
+// TODO store that in a collection so that we can update it
+// Think how merge previously existing data.
+const virtuesList = [
 	'TEMPERANCE',
 	'SILENCE',
 	'ORDER',
@@ -37,87 +42,123 @@ const tableHead = [
 	'GRATITUDE',
 ];
 
+const getOrCreateVirtuesForDate = (realm: Realm, date: string): Virtues => {
+	let virtues = useQuery(Virtues).filtered(`date = "${date}"`);
+
+	if (virtues.length === 0) {
+		realm.write(() => {
+			realm.create('Virtues', {
+				_id: new Realm.BSON.ObjectId(),
+				date: date,
+				values: Object.fromEntries(
+					virtuesList.map((value) => [value, Status.NotSet]),
+				),
+			});
+		});
+
+		virtues = useQuery(Virtues).filtered(`date = "${date}"`);
+	}
+	return virtues[0];
+};
+
+const updateVirtueStatus = (
+	realm: Realm,
+	virtue: Virtues,
+	label: string,
+	prevStatus: Status,
+) => {
+	let newStatus = prevStatus;
+
+	if (prevStatus === Status.NotSet) {
+		newStatus = Status.OK;
+	} else if (prevStatus === Status.OK) {
+		newStatus = Status.KO;
+	} else if (prevStatus === Status.KO) {
+		newStatus = Status.NotSet;
+	}
+
+	realm.write(() => {
+		virtue.values.set({ ...virtue.values, [label]: newStatus });
+	});
+};
+
+const VirtuesForDate = ({ date }: { date: string }) => {
+	const realm = useRealm();
+	const virtue = getOrCreateVirtuesForDate(realm, date);
+
+	return (
+		<View style={styles.container}>
+			<ScrollView horizontal={true}>
+				<FlatList
+					data={Object.keys(virtue.values)}
+					renderItem={(props) => {
+						let label = props['item'],
+							currentStatus = virtue.values[
+								props['item']
+							] as Status;
+
+						let color = '',
+							text = '';
+
+						if (currentStatus === Status.NotSet) {
+							color = 'white';
+							text = '?';
+						} else if (currentStatus === Status.OK) {
+							color = 'green';
+							text = '';
+						} else if (currentStatus === Status.KO) {
+							color = 'red';
+							text = '';
+						} else {
+							text = 'hu?';
+						}
+
+						return (
+							<View key={props.index}>
+								<Text>{label}</Text>
+								<TouchableOpacity
+									onPress={() =>
+										updateVirtueStatus(
+											realm,
+											virtue,
+											label,
+											currentStatus,
+										)
+									}
+								>
+									<View
+										style={{
+											width: 58,
+											height: 18,
+											backgroundColor: color,
+											borderRadius: 2,
+										}}
+									>
+										<Text>{text}</Text>
+									</View>
+								</TouchableOpacity>
+							</View>
+						);
+					}}
+				/>
+			</ScrollView>
+		</View>
+	);
+};
+
 type RootStackParamList = {
 	VirtuesUI: {
 		// useRealm: () => Realm;
 	};
 };
 
-type Props = BottomTabScreenProps<RootStackParamList, 'VirtuesUI'>;
-
-const { useRealm, useQuery } = TaskRealmContext;
-
-export const VirtuesUI = ({ route }: Props) => {
-	const realm = useRealm();
-	const virtues = useQuery(Virtues);
-
-	console.log({ virtues });
-
-	const changeStatus = (
-		prevStatus: Status,
-		rowIndex: number,
-		cellIndex: number,
-	) => {
-		// if (prevStatus === Status.NotSet) {
-		// 	setTableData((oldData) => {
-		// 		oldData[rowIndex][cellIndex] = Status.OK;
-		// 		return [...oldData];
-		// 	});
-		// } else if (prevStatus === Status.OK) {
-		// 	setTableData((oldData) => {
-		// 		oldData[rowIndex][cellIndex] = Status.KO;
-		// 		return [...oldData];
-		// 	});
-		// } else if (prevStatus === Status.KO) {
-		// 	setTableData((oldData) => {
-		// 		oldData[rowIndex][cellIndex] = Status.NotSet;
-		// 		return [...oldData];
-		// 	});
-		// }
-	};
-
-	const btnOkKO = (
-		currentStatus: Status,
-		rowIndex: number,
-		cellIndex: number,
-	) => {
-		let color = '',
-			text = '';
-
-		if (currentStatus === Status.NotSet) {
-			color = 'white';
-			text = '?';
-		} else if (currentStatus === Status.OK) {
-			color = 'green';
-			text = '';
-		} else if (currentStatus === Status.KO) {
-			color = 'red';
-			text = '';
-		} else {
-			text = 'hu?';
-		}
-
-		return (
-			<TouchableOpacity
-				onPress={() => changeStatus(currentStatus, rowIndex, cellIndex)}
-			>
-				<View
-					style={{
-						width: 58,
-						height: 18,
-						backgroundColor: color,
-						borderRadius: 2,
-					}}
-				>
-					<Text>{text}</Text>
-				</View>
-			</TouchableOpacity>
-		);
-	};
-
+export const VirtuesUI = ({
+	route,
+}: BottomTabScreenProps<RootStackParamList, 'VirtuesUI'>) => {
+	const date = yyyymmdd(new Date());
 	return (
 		<View style={styles.container}>
-			<ScrollView horizontal={true}></ScrollView>
+			<VirtuesForDate date={date} />
 		</View>
 	);
 };

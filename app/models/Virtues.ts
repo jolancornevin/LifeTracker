@@ -29,7 +29,7 @@ import { Realm } from '@realm/react';
 // it to a Realm schema automatically.
 export class Virtues extends Realm.Object<Virtues> {
 	_id!: Realm.BSON.ObjectId;
-	date!: Date;
+	date!: string;
 	values!: Realm.Dictionary<string>;
 
 	static primaryKey = '_id';
