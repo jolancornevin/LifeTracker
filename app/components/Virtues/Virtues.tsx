@@ -220,6 +220,45 @@ const Header = ({
 	);
 };
 
+const CalendarModal = ({
+	date,
+	calendarVisible,
+	setDate,
+	setCalendarVisible,
+}: {
+	date: string;
+	calendarVisible: boolean;
+	setDate: React.Dispatch<React.SetStateAction<string>>;
+	setCalendarVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+	let splittedDate = date.split('/');
+	let dateForCalendar = [
+		splittedDate[2],
+		splittedDate[1],
+		splittedDate[0],
+	].join('-');
+
+	return (
+		<Modal
+			animationType="slide"
+			transparent={true}
+			visible={calendarVisible}
+		>
+			<View>
+				<Calendar
+					onDayPress={(date: DateData) => {
+						setDate(formatToDate(date.day, date.month, date.year));
+						setCalendarVisible(false);
+					}}
+					markedDates={{
+						[dateForCalendar]: { selected: true },
+					}}
+				/>
+			</View>
+		</Modal>
+	);
+};
+
 type RootStackParamList = {
 	VirtuesUI: {
 		// useRealm: () => Realm;
@@ -245,22 +284,12 @@ export const VirtuesUI = ({
 
 			<VirtuesForDate realm={realm} date={date} />
 
-			<Modal
-				animationType="slide"
-				transparent={true}
-				visible={calendarVisible}
-			>
-				<View>
-					<Calendar
-						onDayPress={(date: DateData) => {
-							setDate(
-								formatToDate(date.day, date.month, date.year),
-							);
-							setCalendarVisible(false);
-						}}
-					/>
-				</View>
-			</Modal>
+			<CalendarModal
+				date={date}
+				calendarVisible={calendarVisible}
+				setDate={setDate}
+				setCalendarVisible={setCalendarVisible}
+			/>
 		</View>
 	);
 };
