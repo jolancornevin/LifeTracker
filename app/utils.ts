@@ -6,7 +6,6 @@ export const ddmmyyyy = function (date: Date): string {
 	return formatToDate(dd, mm, date.getFullYear());
 };
 
-
 export const formatToDate = function (day: number, month: number, year: number): string {
 	return [
 		(day > 9 ? '' : '0') + day,
@@ -15,5 +14,13 @@ export const formatToDate = function (day: number, month: number, year: number):
 		'/',
 		year,
 	].join('');
+};
+
+export const stringToDate = function (date: string): Date {
+	const splittedDate = date.split('/');
+	let d = new Date();
+	d.setUTCFullYear(parseInt(splittedDate[2]), parseInt(splittedDate[1]) -1, parseInt(splittedDate[0]));
+	d.setUTCHours(0, 0, 0, 0);
+	return d;
 };
 

@@ -15,7 +15,7 @@ import { Calendar, DateData, LocaleConfig } from 'react-native-calendars';
 
 import { TaskRealmContext } from '../../models';
 import { Virtues } from '../../models/Virtues';
-import { ddmmyyyy, formatToDate } from '../../utils';
+import { ddmmyyyy, formatToDate, stringToDate } from '../../utils';
 
 import { virtuesList, virtuesDef } from './virtues_conf';
 
@@ -41,7 +41,6 @@ const getOrCreateVirtuesForDate = (realm: Realm, date: string): Virtues => {
 				),
 			});
 		});
-
 	}
 
 	// re-run it outside of the if because react doesn't want hooks to be run in conditions...
@@ -163,9 +162,11 @@ const VirtuesForDate = ({ realm, date }: { realm: Realm; date: string }) => {
 
 const Header = ({
 	date,
+	setDate,
 	setCalendarVisible,
 }: {
 	date: string;
+	setDate: React.Dispatch<React.SetStateAction<string>>;
 	setCalendarVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
 	return (
@@ -175,7 +176,14 @@ const Header = ({
 				alignItems: 'center',
 			}}
 		>
-			<TouchableOpacity style={{ flex: 1, alignItems: 'center' }}>
+			<TouchableOpacity
+				style={{ flex: 1, alignItems: 'center' }}
+				onPress={() => {
+					const dateAsDate = stringToDate(date);
+					dateAsDate.setDate(dateAsDate.getDate() - 1);
+					setDate(ddmmyyyy(dateAsDate));
+				}}
+			>
 				<Text style={{ color: 'blue', fontWeight: 'bold' }}>
 					{'< Prev'}
 				</Text>
@@ -196,7 +204,14 @@ const Header = ({
 				</Text>
 			</TouchableOpacity>
 
-			<TouchableOpacity style={{ flex: 1, alignItems: 'center' }}>
+			<TouchableOpacity
+				style={{ flex: 1, alignItems: 'center' }}
+				onPress={() => {
+					const dateAsDate = stringToDate(date);
+					dateAsDate.setDate(dateAsDate.getDate() + 1);
+					setDate(ddmmyyyy(dateAsDate));
+				}}
+			>
 				<Text style={{ color: 'blue', fontWeight: 'bold' }}>
 					{'Next >'}
 				</Text>
@@ -222,7 +237,11 @@ export const VirtuesUI = ({
 
 	return (
 		<View style={styles.container}>
-			<Header date={date} setCalendarVisible={setCalendarVisible} />
+			<Header
+				date={date}
+				setDate={setDate}
+				setCalendarVisible={setCalendarVisible}
+			/>
 
 			<VirtuesForDate realm={realm} date={date} />
 
