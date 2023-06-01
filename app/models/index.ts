@@ -4,5 +4,5 @@ import { Virtues } from './Virtues';
 
 export const TaskRealmContext = createRealmContext({
 	schema: [Task, Virtues],
-	// deleteRealmIfMigrationNeeded: true,
+	deleteRealmIfMigrationNeeded: true,
 });
