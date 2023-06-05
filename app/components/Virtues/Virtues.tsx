@@ -4,13 +4,13 @@ import { View } from 'react-native';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
-import { TaskRealmContext } from '../../models';
 import { ddmmyyyy } from '../../utils';
 
 import { Header } from './header';
 import { CalendarModal } from './calendar_modal';
 import { VirtuesForDate } from './virtues_for_date';
-import { styles } from './styles';
+import { TaskRealmContext } from '../../models';
+import { DayRatingUI } from './day_rating';
 
 const { useRealm, useQuery } = TaskRealmContext;
 
@@ -30,12 +30,14 @@ export const VirtuesUI = ({
 	const [date, setDate] = React.useState(ddmmyyyy(new Date()));
 
 	return (
-		<View style={styles.container}>
+		<View>
 			<Header
 				date={date}
 				setDate={setDate}
 				setCalendarVisible={setCalendarVisible}
 			/>
+
+			<DayRatingUI realm={realm} date={date} />
 
 			<VirtuesForDate realm={realm} date={date} />
 

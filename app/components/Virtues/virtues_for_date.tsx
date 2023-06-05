@@ -125,9 +125,9 @@ const virtueElement = (
 
 export const VirtuesForDate = ({
 	realm,
-	date,
+    date,
 }: {
-	realm: Realm;
+    realm: Realm;
 	date: string;
 }) => {
 	const virtue = getOrCreateVirtuesForDate(realm, date);

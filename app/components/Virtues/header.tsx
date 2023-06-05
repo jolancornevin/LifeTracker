@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import { ddmmyyyy, stringToDate } from '../../utils';
+import { DayRatingUI } from './day_rating';
 
 export const Header = ({
 	date,
