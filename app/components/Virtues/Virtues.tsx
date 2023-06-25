@@ -4,15 +4,16 @@ import { View } from 'react-native';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
-import { ddmmyyyy } from '../../utils';
-
-import { Header } from './header';
-import { CalendarModal } from './calendar_modal';
+import { CalendarModal } from '../utils/calendar_modal';
 import { VirtuesForDate } from './virtues_for_date';
-import { TaskRealmContext } from '../../models';
-import { DayRatingUI } from './day_rating';
 
-const { useRealm, useQuery } = TaskRealmContext;
+import { ddmmyyyy } from '../../utils';
+import { Header } from '../utils/header';
+import { RealmContext } from '../../models';
+import { FooterNavigation } from '../utils/footer_navigation';
+import { NextScreenButton } from '../utils/next_screen_button';
+
+const { useRealm } = RealmContext;
 
 type RootStackParamList = {
 	VirtuesUI: {
@@ -30,16 +31,18 @@ export const VirtuesUI = ({
 	const [date, setDate] = React.useState(ddmmyyyy(new Date()));
 
 	return (
-		<View>
-			<Header
-				date={date}
-				setDate={setDate}
-				setCalendarVisible={setCalendarVisible}
-			/>
+		<FooterNavigation>
+			<View>
+				<Header
+					date={date}
+					setDate={setDate}
+					setCalendarVisible={setCalendarVisible}
+				/>
 
-			<DayRatingUI realm={realm} date={date} />
+				<VirtuesForDate realm={realm} date={date} />
+			</View>
 
-			<VirtuesForDate realm={realm} date={date} />
+			<NextScreenButton nextScreenName={'EventUI'} />
 
 			<CalendarModal
 				date={date}
@@ -47,6 +50,6 @@ export const VirtuesUI = ({
 				setDate={setDate}
 				setCalendarVisible={setCalendarVisible}
 			/>
-		</View>
+		</FooterNavigation>
 	);
 };

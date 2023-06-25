@@ -2,13 +2,13 @@ import * as React from 'react';
 
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
-import { TaskRealmContext } from '../../models';
+import { RealmContext } from '../../models';
 import { Virtues } from '../../models/Virtues';
 
 import { virtuesList, virtuesDef } from './virtues_conf';
 import { styles } from './styles';
 
-const { useRealm, useQuery } = TaskRealmContext;
+const { useRealm, useQuery } = RealmContext;
 
 enum Status {
 	NotSet = 'NotSet',
@@ -51,8 +51,6 @@ const updateVirtueStatus = (
 	} else if (prevStatus === Status.OK) {
 		newStatus = Status.KO;
 	} else if (prevStatus === Status.KO) {
-		newStatus = Status.NA;
-	} else if (prevStatus === Status.NA) {
 		newStatus = Status.NotSet;
 	}
 
@@ -70,10 +68,7 @@ const virtueElement = (
 	let color = '',
 		text = '';
 
-	if (currentStatus === Status.NA) {
-		color = 'white';
-		text = '-';
-	} else if (currentStatus === Status.NotSet) {
+	if (currentStatus === Status.NotSet) {
 		color = 'white';
 		text = virtuesDef[label];
 	} else if (currentStatus === Status.OK) {
@@ -93,6 +88,7 @@ const virtueElement = (
 				width: '50%',
 				height: 100,
 				alignItems: 'center',
+				paddingLeft: 4,
 			}}
 		>
 			<Text style={{ fontWeight: 'bold' }}>{label}</Text>
@@ -140,14 +136,15 @@ export const VirtuesForDate = ({
 					flexDirection: 'row',
 					flexWrap: 'wrap',
 					alignItems: 'flex-start',
+					backgroundColor: 'transparent'
 				}}
 			>
-				{Object.entries(virtue.values).map(([label, currentStatus]) => {
+				{virtuesList.map((label) => {
 					return virtueElement(
 						realm,
 						virtue,
 						label,
-						currentStatus as Status,
+						virtue.values[label] as Status,
 					);
 				})}
 			</View>

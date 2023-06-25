@@ -9,10 +9,12 @@
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.6",
+    "@react-navigation/native-stack": "^6.9.13",
     "@realm/babel-plugin": "^0.1.1",
     "@realm/react": "^0.4.3",
     "expo": "~48.0.15",
     "expo-dev-client": "~2.1.6",
+    "expo-mail-composer": "~12.1.1",
     "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.2",
     "react": "18.2.0",

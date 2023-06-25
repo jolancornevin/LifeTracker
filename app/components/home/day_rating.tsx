@@ -2,12 +2,12 @@ import * as React from 'react';
 
 import { TouchableOpacity, View, Text } from 'react-native';
 
-import { TaskRealmContext } from '../../models';
+import { RealmContext } from '../../models';
 import { DayRating } from '../../models/DayRating';
 
-import { styles } from './styles';
+import { styles } from '../virtues/styles';
 
-const { useRealm, useQuery } = TaskRealmContext;
+const { useRealm, useQuery } = RealmContext;
 
 enum Rating {
 	Bad = 'Bad',
@@ -57,38 +57,55 @@ export const DayRatingUI = ({
 }) => {
 	const rating = getOrCreateRatingForDate(realm, date);
 
+	const ratingButton = (value: Rating) => {
+		return (
+			<TouchableOpacity
+				key={value}
+				style={{
+					flex: 1,
+					height: 70,
+					margin: 10,
+					padding: 10,
+
+					borderWidth: 1,
+					borderRadius: 10,
+					borderColor: 'grey',
+
+					alignItems: 'center',
+					justifyContent: 'center',
+					backgroundColor:
+						rating.value === value
+							? colorForRating[value]
+							: 'white',
+				}}
+				onPress={() => {
+					updateRating(realm, rating, value);
+				}}
+			>
+				<Text
+					style={{
+						color:
+							rating.value === value
+								? 'white'
+								: colorForRating[value],
+					}}
+				>
+					{value}
+				</Text>
+			</TouchableOpacity>
+		);
+	};
+
 	return (
-		<View
-			style={{
-				flexDirection: 'row',
-			}}
-		>
-			{Object.values(Rating).map((value) => {
-				return (
-					<TouchableOpacity
-						key={value}
-						style={{
-							flex: 1,
-							alignItems: 'center',
-							backgroundColor:
-								rating.value === value ? colorForRating[value] : 'white',
-							padding: 10,
-						}}
-						onPress={() => {
-							updateRating(realm, rating, value);
-						}}
-					>
-						<Text
-							style={{
-								color:
-									rating.value === value ? 'white' : colorForRating[value],
-							}}
-						>
-							{value}
-						</Text>
-					</TouchableOpacity>
-				);
-			})}
-		</View>
+		<>
+			<View style={{ flexDirection: 'row' }}>
+				{ratingButton(Rating.Bad)}
+				{ratingButton(Rating.Good)}
+			</View>
+			<View style={{ flexDirection: 'row' }}>
+				{ratingButton(Rating.Great)}
+				{ratingButton(Rating.Awesome)}
+			</View>
+		</>
 	);
 };

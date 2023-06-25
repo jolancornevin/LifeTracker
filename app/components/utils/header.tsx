@@ -1,9 +1,8 @@
 import * as React from 'react';
 
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, Button, TouchableOpacity, View } from 'react-native';
 
 import { ddmmyyyy, stringToDate } from '../../utils';
-import { DayRatingUI } from './day_rating';
 
 export const Header = ({
 	date,
@@ -18,29 +17,44 @@ export const Header = ({
 		<View
 			style={{
 				flexDirection: 'row',
+
 				alignItems: 'center',
+				justifyContent: 'center',
+
+				height: 40,
+
+				borderWidth: 1,
+				borderRadius: 10,
+				borderColor: 'grey'
 			}}
 		>
 			<TouchableOpacity
-				style={{ flex: 1, alignItems: 'center' }}
+				style={{
+					flex: 1,
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
 				onPress={() => {
 					const dateAsDate = stringToDate(date);
 					dateAsDate.setDate(dateAsDate.getDate() - 1);
 					setDate(ddmmyyyy(dateAsDate));
 				}}
 			>
-				<Text style={{ color: 'blue', fontWeight: 'bold' }}>
-					{'< Prev'}
+				<Text>
+					{"< Prev"}
 				</Text>
 			</TouchableOpacity>
 
 			<TouchableOpacity
-				style={{ flex: 1, alignItems: 'center' }}
+				style={{
+					flex: 1,
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
 				onPress={() => setCalendarVisible(true)}
 			>
 				<Text
 					style={{
-						flex: 1,
 						alignItems: 'center',
 						textDecorationLine: 'underline',
 					}}
@@ -50,15 +64,19 @@ export const Header = ({
 			</TouchableOpacity>
 
 			<TouchableOpacity
-				style={{ flex: 1, alignItems: 'center' }}
+				style={{
+					flex: 1,
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
 				onPress={() => {
 					const dateAsDate = stringToDate(date);
 					dateAsDate.setDate(dateAsDate.getDate() + 1);
 					setDate(ddmmyyyy(dateAsDate));
 				}}
 			>
-				<Text style={{ color: 'blue', fontWeight: 'bold' }}>
-					{'Next >'}
+				<Text>
+					{"Next >"}
 				</Text>
 			</TouchableOpacity>
 		</View>
