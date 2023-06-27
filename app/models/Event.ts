@@ -15,7 +15,7 @@ export class Event extends Realm.Object<Event> {
   _id: Realm.BSON.ObjectId = new Realm.BSON.ObjectId();
   label!: string;
   value!: string;
-  date!: string;
+  date!: number;
 
   static primaryKey = '_id';
 }

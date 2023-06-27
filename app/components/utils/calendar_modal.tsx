@@ -4,7 +4,7 @@ import { View, Modal } from 'react-native';
 
 import { Calendar, DateData } from 'react-native-calendars';
 
-import { formatToDate } from '../../utils';
+import { formatToDate, newDate } from '../../utils';
 
 export const CalendarModal = ({
 	date,
@@ -12,16 +12,15 @@ export const CalendarModal = ({
 	setDate,
 	setCalendarVisible,
 }: {
-	date: string;
+	date: Date;
 	calendarVisible: boolean;
-	setDate: React.Dispatch<React.SetStateAction<string>>;
+	setDate: React.Dispatch<React.SetStateAction<Date>>;
 	setCalendarVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-	let splittedDate = date.split('/');
 	let dateForCalendar = [
-		splittedDate[2],
-		splittedDate[1],
-		splittedDate[0],
+		date.getFullYear(),
+		date.getMonth(),
+		date.getDate()
 	].join('-');
 
 	return (
@@ -33,7 +32,7 @@ export const CalendarModal = ({
 			<View>
 				<Calendar
 					onDayPress={(date: DateData) => {
-						setDate(formatToDate(date.day, date.month, date.year));
+						setDate(newDate(date.year, date.month - 1, date.day + 1));
 						setCalendarVisible(false);
 					}}
 					markedDates={{

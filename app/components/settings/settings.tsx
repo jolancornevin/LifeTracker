@@ -3,8 +3,9 @@ import React from 'react';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 import { StyleSheet, View, Button } from 'react-native';
-import { ExportToEmail, RealmContext } from '../../models';
+import { RealmContext } from '../../models/main';
 import { FooterNavigation } from '../utils/footer_navigation';
+import { ExportToEmail } from '../../models/exporter';
 
 const { useRealm } = RealmContext;
 

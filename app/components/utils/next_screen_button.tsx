@@ -8,8 +8,10 @@ import { ddmmyyyy, stringToDate } from '../../utils';
 
 export const NextScreenButton = ({
 	nextScreenName,
+	params = {},
 }: {
 	nextScreenName: string;
+	params;
 }) => {
     const navigation = useNavigation();
 
@@ -17,7 +19,7 @@ export const NextScreenButton = ({
 		<View style={styles.nextWrapper}>
             <TouchableOpacity
                 style={styles.nextButton}
-                onPress={() => navigation.navigate(nextScreenName)}
+                onPress={() => navigation.navigate(nextScreenName, params)}
             >
                 <Text style={{ fontSize: 18 }}>
                     {">>>"}

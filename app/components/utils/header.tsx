@@ -3,16 +3,17 @@ import * as React from 'react';
 import { Text, Button, TouchableOpacity, View } from 'react-native';
 
 import { ddmmyyyy, stringToDate } from '../../utils';
+import { CalendarModal } from './calendar_modal';
 
 export const Header = ({
 	date,
 	setDate,
-	setCalendarVisible,
 }: {
-	date: string;
-	setDate: React.Dispatch<React.SetStateAction<string>>;
-	setCalendarVisible: React.Dispatch<React.SetStateAction<boolean>>;
+	date: Date;
+	setDate: React.Dispatch<React.SetStateAction<Date>>;
 }) => {
+	const [calendarVisible, setCalendarVisible] = React.useState(false);
+
 	return (
 		<View
 			style={{
@@ -35,9 +36,9 @@ export const Header = ({
 					justifyContent: 'center',
 				}}
 				onPress={() => {
-					const dateAsDate = stringToDate(date);
-					dateAsDate.setDate(dateAsDate.getDate() - 1);
-					setDate(ddmmyyyy(dateAsDate));
+					const newDate = new Date(date);
+					newDate.setDate(date.getDate() - 1);
+					setDate(newDate);
 				}}
 			>
 				<Text>
@@ -59,7 +60,7 @@ export const Header = ({
 						textDecorationLine: 'underline',
 					}}
 				>
-					{date}
+					{ddmmyyyy(date)}
 				</Text>
 			</TouchableOpacity>
 
@@ -70,15 +71,24 @@ export const Header = ({
 					justifyContent: 'center',
 				}}
 				onPress={() => {
-					const dateAsDate = stringToDate(date);
-					dateAsDate.setDate(dateAsDate.getDate() + 1);
-					setDate(ddmmyyyy(dateAsDate));
+					const newDate = new Date(date);
+					newDate.setDate(date.getDate() + 1);
+					setDate(newDate);
 				}}
 			>
 				<Text>
 					{"Next >"}
 				</Text>
 			</TouchableOpacity>
+
+			<CalendarModal
+				date={date}
+				setDate={(_date) => {
+					setDate(_date);
+				}}
+				calendarVisible={calendarVisible}
+				setCalendarVisible={setCalendarVisible}
+			/>
 		</View>
 	);
 };

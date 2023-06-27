@@ -9,6 +9,7 @@ import { EventUI } from './components/events/events';
 import { VirtuesUI } from './components/virtues/virtues';
 import { SettingsUI } from './components/settings/settings';
 import { HomeUI } from './components/home/home';
+import { ReportUI } from './components/report/report';
 
 export type RootStackParamList = {
 	HomeUI: {},
@@ -17,6 +18,7 @@ export type RootStackParamList = {
 	};
 	EventUI: {};
 	Settings: {};
+	ReportUI: {};
 };
 
 const Stack = createNativeStackNavigator();
@@ -41,6 +43,10 @@ export const AppNonSync = () => {
 					<Stack.Screen
 						name="Settings"
 						component={SettingsUI}
+					/>
+					<Stack.Screen
+						name="ReportUI"
+						component={ReportUI}
 					/>
 				</Stack.Navigator>
 			</NavigationContainer>

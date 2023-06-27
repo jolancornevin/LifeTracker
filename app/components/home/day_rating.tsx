@@ -2,10 +2,11 @@ import * as React from 'react';
 
 import { TouchableOpacity, View, Text } from 'react-native';
 
-import { RealmContext } from '../../models';
+import { RealmContext } from '../../models/main';
 import { DayRating } from '../../models/DayRating';
 
 import { styles } from '../virtues/styles';
+import { newDate, toUTC } from '../../utils';
 
 const { useRealm, useQuery } = RealmContext;
 
@@ -16,14 +17,14 @@ enum Rating {
 	Awesome = 'Awesome',
 }
 
-const getOrCreateRatingForDate = (realm: Realm, date: string): DayRating => {
-	let rating = useQuery(DayRating).filtered(`date = "${date}"`);
+const getOrCreateRatingForDate = (realm: Realm, date: Date): DayRating => {
+	let rating = useQuery(DayRating).filtered(`date = ${date.getTime()}`);
 
 	if (rating.length === 0) {
 		realm.write(() => {
 			realm.create('DayRating', {
 				_id: new Realm.BSON.ObjectId(),
-				date: date,
+				date: date.getTime(),
 				value: '',
 			});
 		});
@@ -31,7 +32,7 @@ const getOrCreateRatingForDate = (realm: Realm, date: string): DayRating => {
 
 	// re-run it outside of the if because react doesn't want hooks to be run in conditions...
 	// It's ugly, but it's ok since it's a pretty quick query.
-	rating = useQuery(DayRating).filtered(`date = "${date}"`);
+	rating = useQuery(DayRating).filtered(`date = ${date.getTime()}`);
 	return rating[0];
 };
 
@@ -52,7 +53,7 @@ export const DayRatingUI = ({
 	realm,
 	date,
 }: {
-	date: string;
+	date: Date;
 	realm: Realm;
 }) => {
 	const rating = getOrCreateRatingForDate(realm, date);

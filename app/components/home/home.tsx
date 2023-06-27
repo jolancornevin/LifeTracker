@@ -6,8 +6,8 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 import { DayRatingUI } from './day_rating';
 
-import { ddmmyyyy } from '../../utils';
-import { RealmContext } from '../../models';
+import { ddmmyyyy, newDate } from '../../utils';
+import { RealmContext } from '../../models/main';
 import { Header } from '../utils/header';
 import { CalendarModal } from '../utils/calendar_modal';
 import { FooterNavigation } from '../utils/footer_navigation';
@@ -26,8 +26,7 @@ export const HomeUI = ({
 }: BottomTabScreenProps<RootStackParamList, 'HomeUI'>) => {
 	const realm = useRealm();
 
-	const [calendarVisible, setCalendarVisible] = React.useState(false);
-	const [date, setDate] = React.useState(ddmmyyyy(new Date()));
+	const [date, setDate] = React.useState(newDate());
 
 	return (
 		<FooterNavigation>
@@ -35,7 +34,6 @@ export const HomeUI = ({
 				<Header
 					date={date}
 					setDate={setDate}
-					setCalendarVisible={setCalendarVisible}
 				/>
 
 				<View style={styles.content}>
@@ -48,14 +46,6 @@ export const HomeUI = ({
 			</View>
 
 			<NextScreenButton nextScreenName={'VirtuesUI'}/>
-
-			<CalendarModal
-				date={date}
-				calendarVisible={calendarVisible}
-				setDate={setDate}
-				setCalendarVisible={setCalendarVisible}
-			/>
-
 		</FooterNavigation>
 	);
 };

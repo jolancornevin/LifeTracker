@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
-import { RealmContext } from '../../models';
+import { RealmContext } from '../../models/main';
 import { Virtues } from '../../models/Virtues';
 
 import { virtuesList, virtuesDef } from './virtues_conf';
@@ -17,14 +17,14 @@ enum Status {
 	KO = 'KO',
 }
 
-const getOrCreateVirtuesForDate = (realm: Realm, date: string): Virtues => {
-	let virtues = useQuery(Virtues).filtered(`date = "${date}"`);
+const getOrCreateVirtuesForDate = (realm: Realm, date: Date): Virtues => {
+	let virtues = useQuery(Virtues).filtered(`date = ${date.getTime()}`);
 
 	if (virtues.length === 0) {
 		realm.write(() => {
 			realm.create('Virtues', {
 				_id: new Realm.BSON.ObjectId(),
-				date: date,
+				date: date.getTime(),
 				values: Object.fromEntries(
 					virtuesList.map((value) => [value, Status.NotSet]),
 				),
@@ -34,7 +34,7 @@ const getOrCreateVirtuesForDate = (realm: Realm, date: string): Virtues => {
 
 	// re-run it outside of the if because react doesn't want hooks to be run in conditions...
 	// It's ugly, but it's ok since it's a pretty quick query.
-	virtues = useQuery(Virtues).filtered(`date = "${date}"`);
+	virtues = useQuery(Virtues).filtered(`date = ${date.getTime()}`);
 	return virtues[0];
 };
 
@@ -124,7 +124,7 @@ export const VirtuesForDate = ({
     date,
 }: {
     realm: Realm;
-	date: string;
+	date: Date;
 }) => {
 	const virtue = getOrCreateVirtuesForDate(realm, date);
 

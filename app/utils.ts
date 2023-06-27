@@ -1,9 +1,27 @@
 
+// Create a new date, without any time specific info
+export const newDate = function (year?: number, month?: number, day?: number): Date {
+	let d = new Date();
+	if (year && month && year) {
+		d = new Date(year, month, day);
+	}
+	d.setUTCHours(0, 0, 0, 0);
+
+	return d;
+};
+
 export const ddmmyyyy = function (date: Date): string {
 	var mm = date.getMonth() + 1; // getMonth() is zero-based
 	var dd = date.getDate();
 
 	return formatToDate(dd, mm, date.getFullYear());
+};
+
+export const toUTC = function (date: Date): string {
+	var mm = date.getMonth() + 1; // getMonth() is zero-based
+	var dd = date.getDate();
+
+	return `${date.getFullYear()}-${mm}-${dd}T00:00:00:0000000000`;
 };
 
 export const formatToDate = function (day: number, month: number, year: number): string {
@@ -24,3 +42,4 @@ export const stringToDate = function (date: string): Date {
 	return d;
 };
 
+export const NOTICABLE_LABEL = 'Noticable';

@@ -17,7 +17,6 @@ echo $env:ANDROID_HOME
 
 
 TODO:
-- make it a list of screens: Day rating, events, virtues
 - make events be:
   - a list of things we want to focus on: for each, we have the number of minutes spend
     -> configurable in the settings.
