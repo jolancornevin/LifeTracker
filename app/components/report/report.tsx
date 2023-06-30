@@ -2,7 +2,14 @@ import React, { useCallback, useMemo } from 'react';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
-import { StyleSheet, View, Text, Button, TextInput } from 'react-native';
+import {
+	StyleSheet,
+	View,
+	Text,
+	Button,
+	TextInput,
+	ScrollView,
+} from 'react-native';
 import { Results } from 'realm';
 
 import { RealmContext } from '../../models/main';
@@ -11,6 +18,8 @@ import { NOTICABLE_LABEL, ddmmyyyy, newDate, stringToDate } from '../../utils';
 import { Header } from '../utils/header';
 import { CalendarModal } from '../utils/calendar_modal';
 import { FooterNavigation } from '../utils/footer_navigation';
+import { DayRating } from '../../models/DayRating';
+import { ColorForRating } from '../home/day_rating';
 
 const { useRealm, useQuery } = RealmContext;
 
@@ -38,7 +47,6 @@ const getEventsForDate = (
 			if (!result[event.label]) {
 				result[event.label] = 0;
 			}
-			console.log(event.value)
 			result[event.label] += parseInt(event.value);
 		}
 	});
@@ -51,6 +59,55 @@ type RootStackParamList = {
 		// useRealm: () => Realm;
 		monthly: boolean;
 	};
+};
+
+export const DayRatingsReport = ({
+	start_date,
+	end_date,
+}: {
+	start_date: Date;
+	end_date: Date;
+}) => {
+	let dayRatings = useQuery(DayRating).filtered(
+		`date > ${start_date.getTime()} && date < ${end_date.getTime()}`,
+	);
+
+	// reset date to the current month, to get the number of days in the month
+	end_date.setDate(end_date.getDate() - 1);
+
+	let ratingsColors = Array.from(
+		{ length: end_date.getDate() },
+		() => 'transparent',
+	);
+
+	// now iterate over the ratings we have in the db and set the color
+	dayRatings.forEach((rating) => {
+		if (!rating.value) {
+			return;
+		}
+		// date start at 1
+		ratingsColors[new Date(rating.date).getDate() - 1] =
+			ColorForRating[rating.value];
+	});
+
+	return (
+		<View style={{ width: '100%', flexDirection: 'row', paddingTop: 10 }}>
+			{ratingsColors.map((color, index) => (
+				<View
+					key={index}
+					style={{
+						flex: 1,
+						height: 15,
+						backgroundColor: color,
+						borderColor: 'white',
+						borderWidth: 1,
+					}}
+				>
+					<Text>{''}</Text>
+				</View>
+			))}
+		</View>
+	);
 };
 
 export const ReportUI = ({
@@ -72,25 +129,37 @@ export const ReportUI = ({
 		end_date.setMonth(end_date.getMonth() + 1);
 	}
 
-	const events = getEventsForDate(start_date, end_date);
+	const events = getEventsForDate(start_date, end_date) || [];
 
 	return (
 		<FooterNavigation>
 			<View style={styles.wrapper}>
 				<Header date={date} setDate={setDate} />
 				<View style={styles.content}>
-					<Text style={{ fontSize: 16, fontWeight: '600' }}>GG</Text>
-					<Text style={{ fontWeight: '600' }}>
+					<Text style={{ fontSize: 16, fontWeight: '600' }}>
+						Congrats ! 🎉
+					</Text>
+
+					<DayRatingsReport
+						start_date={start_date}
+						end_date={end_date}
+					/>
+
+					<Text style={{ fontWeight: '600', paddingTop: 32 }}>
 						This month, you've accumulated:
 					</Text>
 					{Object.entries(events).map(([label, value]) => {
 						if (label !== NOTICABLE_LABEL) {
+							const hours = Math.floor((value as number) / 60);
+							const minutes = (value as number) % 60;
+
 							return (
-								<>
-									<Text>
-										{label}{":"} {value as number}
-									</Text>
-								</>
+								<Text key={label}>
+									{label}
+									{': '}
+									{hours > 0 && `${hours}h`}
+									{minutes > 0 && `${minutes}m`}
+								</Text>
 							);
 						}
 					})}
@@ -109,15 +178,27 @@ export const ReportUI = ({
 						>
 							Noticable
 						</Text>
-						{(events[NOTICABLE_LABEL] as Event[]).map((event) => {
-							return (
-								<>
-									<Text>
-										{event.value}
-									</Text>
-								</>
-							);
-						})}
+						<View
+							style={{
+								flex: 1,
+								width: '100%',
+								flexDirection: 'column',
+								justifyContent: 'flex-start',
+							}}
+						>
+							<ScrollView>
+								{NOTICABLE_LABEL in events &&
+									(events[NOTICABLE_LABEL] as Event[]).map(
+										(event) => {
+											return (
+												<Text key={event.value}>
+													{event.value}
+												</Text>
+											);
+										},
+									)}
+							</ScrollView>
+						</View>
 					</View>
 				</View>
 			</View>

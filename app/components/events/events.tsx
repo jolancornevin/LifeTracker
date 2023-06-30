@@ -40,7 +40,7 @@ const getOrCreateEventForDate = (realm: Realm, date: Date): Record<string, Event
 					label: label,
 					value: '',
 				});
-			})
+			});
 
 			realm.create('Event', {
 				_id: new Realm.BSON.ObjectId(),
@@ -66,6 +66,13 @@ const getOrCreateEventForDate = (realm: Realm, date: Date): Record<string, Event
 
 const TextEntry = ({ label, value, onChange }) => {
 	const [text, onChangeText] = React.useState(value);
+
+	// for some reason, the text doesn't sync with the value automatically, so we have to do it this way :/
+	useEffect(() => {
+		setTimeout(() => {
+			onChangeText(value)
+		}, 100)
+	}, [value])
 
 	return (
 		<View
@@ -101,6 +108,11 @@ export const EventUI = ({
 	const events = getOrCreateEventForDate(realm, date);
 
 	const [noticableText, onChangeNoticableText] = React.useState<string>(events[NOTICABLE_LABEL].value);
+	useEffect(() => {
+		setTimeout(() => {
+			onChangeNoticableText(events[NOTICABLE_LABEL].value)
+		}, 100)
+	}, [events[NOTICABLE_LABEL]])
 
 	return (
 		<FooterNavigation>
@@ -111,7 +123,7 @@ export const EventUI = ({
 				/>
 				<View style={styles.content}>
 					<Text style={{ fontSize: 16, fontWeight: '600' }}>
-						Recuring
+						Goals
 					</Text>
 					{Object.values(RecuringEvent).map((label) => {
 						return (
@@ -140,7 +152,7 @@ export const EventUI = ({
 								fontWeight: '600',
 							}}
 						>
-							Noticable
+							Events
 						</Text>
 
 						<TextInput

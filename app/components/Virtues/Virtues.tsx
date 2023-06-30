@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
@@ -30,13 +30,15 @@ export const VirtuesUI = ({
 
 	return (
 		<FooterNavigation>
-			<View>
+			<View style={{flex: 1}}>
 				<Header
 					date={date}
 					setDate={setDate}
 				/>
 
-				<VirtuesForDate realm={realm} date={date} />
+				<ScrollView>
+					<VirtuesForDate realm={realm} date={date} />
+				</ScrollView>
 			</View>
 
 			<NextScreenButton nextScreenName={'EventUI'} />

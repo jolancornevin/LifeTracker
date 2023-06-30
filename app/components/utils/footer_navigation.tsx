@@ -1,6 +1,12 @@
 import * as React from 'react';
 
-import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import {
+	StyleSheet,
+	TouchableOpacity,
+	View,
+	ScrollView,
+	Text,
+} from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -13,18 +19,18 @@ export const FooterNavigation = (props) => {
 				flex: 1,
 				backgroundColor: '#efefef',
 				paddingTop: 20,
-				paddingHorizontal: 20,
 			}}
 		>
-			{props.children}
-
+			<View style={{ flex: 1, paddingHorizontal: 20 }}>
+				{props.children}
+			</View>
 			<View
 				style={{
-					position: 'absolute',
-					left: 0,
-					right: 0,
-					bottom: 0,
+					width: '100%',
 					height: 60,
+
+					// backgroundColor: '#efefef',
+
 					alignItems: 'center',
 					justifyContent: 'space-evenly',
 					flexDirection: 'row',

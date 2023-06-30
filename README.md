@@ -17,12 +17,6 @@ echo $env:ANDROID_HOME
 
 
 TODO:
-- make events be:
-  - a list of things we want to focus on: for each, we have the number of minutes spend
-    -> configurable in the settings.
-  - noticable events: a free input
-- add a report screen
-  - visualisation of day rating
-  - sum of times spend in events
-
-add a "better friend feature"
+- add an import feature
+- add a notification to fill everyday
+- add a list of sentences to live by

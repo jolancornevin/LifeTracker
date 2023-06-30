@@ -5,10 +5,7 @@ import { TouchableOpacity, View, Text } from 'react-native';
 import { RealmContext } from '../../models/main';
 import { DayRating } from '../../models/DayRating';
 
-import { styles } from '../virtues/styles';
-import { newDate, toUTC } from '../../utils';
-
-const { useRealm, useQuery } = RealmContext;
+const { useQuery } = RealmContext;
 
 enum Rating {
 	Bad = 'Bad',
@@ -42,7 +39,7 @@ const updateRating = (realm: Realm, rating: DayRating, value: string) => {
 	});
 };
 
-const colorForRating = {
+export const ColorForRating = {
 	[Rating.Bad]: 'red',
 	[Rating.Good]: '#6cc857',
 	[Rating.Great]: 'green',
@@ -76,7 +73,7 @@ export const DayRatingUI = ({
 					justifyContent: 'center',
 					backgroundColor:
 						rating.value === value
-							? colorForRating[value]
+							? ColorForRating[value]
 							: 'white',
 				}}
 				onPress={() => {
@@ -88,7 +85,7 @@ export const DayRatingUI = ({
 						color:
 							rating.value === value
 								? 'white'
-								: colorForRating[value],
+								: ColorForRating[value],
 					}}
 				>
 					{value}

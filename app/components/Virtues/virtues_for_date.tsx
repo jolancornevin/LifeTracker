@@ -129,7 +129,6 @@ export const VirtuesForDate = ({
 	const virtue = getOrCreateVirtuesForDate(realm, date);
 
 	return (
-		<ScrollView>
 			<View
 				style={{
 					...styles.container,
@@ -148,6 +147,5 @@ export const VirtuesForDate = ({
 					);
 				})}
 			</View>
-		</ScrollView>
 	);
 };

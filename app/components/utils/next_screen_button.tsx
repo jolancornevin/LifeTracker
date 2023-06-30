@@ -11,7 +11,7 @@ export const NextScreenButton = ({
 	params = {},
 }: {
 	nextScreenName: string;
-	params;
+	params?;
 }) => {
     const navigation = useNavigation();
 
@@ -31,10 +31,6 @@ export const NextScreenButton = ({
 
 const styles = StyleSheet.create({
 	nextWrapper: {
-		position: 'absolute',
-		left: 0,
-		right: 0,
-		bottom: 60,
 		height: 60,
 
 		alignItems: 'center',

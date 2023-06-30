@@ -54,31 +54,3 @@ export const AppNonSync = () => {
 	);
 };
 
-/*
-const Stack = createBottomTabNavigator<RootStackParamList>();
-
-export const AppNonSync = () => {
-	return (
-		<>
-			<NavigationContainer>
-				<Stack.Navigator>
-					<Stack.Screen
-						name="VirtuesUI"
-						component={VirtuesUI}
-						options={{ title: 'Day' }}
-					/>
-					<Stack.Screen
-						name="EventUI"
-						component={EventUI}
-						options={{ title: 'Events' }}
-					/>
-					<Stack.Screen
-						name="Settings"
-						component={SettingsUI}
-						options={{ title: 'Settings' }}
-					/>
-				</Stack.Navigator>
-			</NavigationContainer>
-		</>
-	);
-}; */
