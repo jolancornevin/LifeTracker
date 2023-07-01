@@ -87,7 +87,14 @@ const TextEntry = ({ label, value, onChange }) => {
 				<Text>{label + ':'}</Text>
 			</View>
 			<TextInput
-				style={styles.input}
+				style={{
+					width: 54,
+
+					borderBottomWidth: 1,
+
+					paddingLeft: 10,
+					marginLeft: 10,
+				}}
 				onChangeText={(value) => {
 					onChangeText(value);
 					onChange(value);
@@ -168,10 +175,14 @@ export const EventUI = ({
 							}}
 							value={noticableText}
 							style={{
-								...styles.input,
-
 								width: '100%',
 								height: 100,
+
+								borderWidth: 1,
+								borderRadius: 5,
+
+								paddingLeft: 10,
+								marginLeft: 10,
 							}}
 						/>
 					</View>
@@ -196,15 +207,5 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		width: '100%',
 		paddingTop: 32,
-	},
-	input: {
-		height: 30,
-		width: 60,
-
-		borderWidth: 1,
-		borderRadius: 5,
-
-		paddingLeft: 10,
-		marginLeft: 10,
 	},
 });
