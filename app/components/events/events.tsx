@@ -2,14 +2,12 @@ import React, { useEffect } from 'react';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
-import { StyleSheet, View, Text, Button, TextInput } from 'react-native';
-import { Results } from 'realm';
+import { StyleSheet, View, Text, TextInput } from 'react-native';
 
 import { RealmContext } from '../../models/main';
 import { Event } from '../../models/event';
-import { NOTICABLE_LABEL, ddmmyyyy, newDate, stringToDate } from '../../utils';
+import { NOTICABLE_LABEL, newDate } from '../../utils';
 import { Header } from '../utils/header';
-import { CalendarModal } from '../utils/calendar_modal';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { NextScreenButton } from '../utils/next_screen_button';
 
@@ -28,7 +26,10 @@ enum RecuringEvent {
 	Learning = 'Learning',
 }
 
-const getOrCreateEventForDate = (realm: Realm, date: Date): Record<string, Event> => {
+const getOrCreateEventForDate = (
+	realm: Realm,
+	date: Date,
+): Record<string, Event> => {
 	let events = useQuery(Event).filtered(`date = ${date.getTime()}`);
 
 	if (events.length === 0) {
@@ -70,9 +71,9 @@ const TextEntry = ({ label, value, onChange }) => {
 	// for some reason, the text doesn't sync with the value automatically, so we have to do it this way :/
 	useEffect(() => {
 		setTimeout(() => {
-			onChangeText(value)
-		}, 100)
-	}, [value])
+			onChangeText(value);
+		}, 100);
+	}, [value]);
 
 	return (
 		<View
@@ -94,6 +95,7 @@ const TextEntry = ({ label, value, onChange }) => {
 				value={text}
 				keyboardType={'numeric'}
 			/>
+			<Text> minutes</Text>
 		</View>
 	);
 };
@@ -107,20 +109,19 @@ export const EventUI = ({
 
 	const events = getOrCreateEventForDate(realm, date);
 
-	const [noticableText, onChangeNoticableText] = React.useState<string>(events[NOTICABLE_LABEL].value);
+	const [noticableText, onChangeNoticableText] = React.useState<string>(
+		events[NOTICABLE_LABEL].value,
+	);
 	useEffect(() => {
 		setTimeout(() => {
-			onChangeNoticableText(events[NOTICABLE_LABEL].value)
-		}, 100)
-	}, [events[NOTICABLE_LABEL]])
+			onChangeNoticableText(events[NOTICABLE_LABEL].value);
+		}, 100);
+	}, [events[NOTICABLE_LABEL]]);
 
 	return (
 		<FooterNavigation>
 			<View style={styles.wrapper}>
-				<Header
-					date={date}
-					setDate={setDate}
-				/>
+				<Header date={date} setDate={setDate} />
 				<View style={styles.content}>
 					<Text style={{ fontSize: 16, fontWeight: '600' }}>
 						Goals
@@ -177,7 +178,10 @@ export const EventUI = ({
 				</View>
 			</View>
 
-			<NextScreenButton nextScreenName={'ReportUI'} params={{monthly: true}} />
+			<NextScreenButton
+				nextScreenName={'ReportUI'}
+				params={{ monthly: true }}
+			/>
 		</FooterNavigation>
 	);
 };
@@ -195,7 +199,7 @@ const styles = StyleSheet.create({
 	},
 	input: {
 		height: 30,
-		width: 80,
+		width: 60,
 
 		borderWidth: 1,
 		borderRadius: 5,

@@ -17,6 +17,5 @@ echo $env:ANDROID_HOME
 
 
 TODO:
-- add an import feature
 - add a notification to fill everyday
 - add a list of sentences to live by

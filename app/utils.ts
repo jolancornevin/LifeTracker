@@ -2,7 +2,7 @@
 // Create a new date, without any time specific info
 export const newDate = function (year?: number, month?: number, day?: number): Date {
 	let d = new Date();
-	if (year && month && year) {
+	if (year !== undefined && month !== undefined && year !== undefined) {
 		d = new Date(year, month, day);
 	}
 	d.setUTCHours(0, 0, 0, 0);

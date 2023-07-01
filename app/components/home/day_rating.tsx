@@ -46,13 +46,7 @@ export const ColorForRating = {
 	[Rating.Awesome]: 'gold',
 };
 
-export const DayRatingUI = ({
-	realm,
-	date,
-}: {
-	date: Date;
-	realm: Realm;
-}) => {
+export const DayRatingUI = ({ realm, date }: { date: Date; realm: Realm }) => {
 	const rating = getOrCreateRatingForDate(realm, date);
 
 	const ratingButton = (value: Rating) => {

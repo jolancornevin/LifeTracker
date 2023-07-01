@@ -1,22 +1,13 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
-import {
-	StyleSheet,
-	View,
-	Text,
-	Button,
-	TextInput,
-	ScrollView,
-} from 'react-native';
-import { Results } from 'realm';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 
 import { RealmContext } from '../../models/main';
 import { Event } from '../../models/event';
-import { NOTICABLE_LABEL, ddmmyyyy, newDate, stringToDate } from '../../utils';
+import { NOTICABLE_LABEL, newDate } from '../../utils';
 import { Header } from '../utils/header';
-import { CalendarModal } from '../utils/calendar_modal';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { DayRating } from '../../models/DayRating';
 import { ColorForRating } from '../home/day_rating';
@@ -28,7 +19,7 @@ const getEventsForDate = (
 	end_date: Date,
 ): Record<string, number | Event[]> => {
 	let events = useQuery(Event).filtered(
-		`date > ${start_date.getTime()} && date < ${end_date.getTime()}`,
+		`date >= ${start_date.getTime()} && date < ${end_date.getTime()}`,
 	);
 
 	let result = {};
@@ -117,17 +108,28 @@ export const ReportUI = ({
 
 	const [date, setDate] = React.useState(newDate());
 
-	let start_date = newDate();
-	start_date.setDate(1);
+	let start_date = useMemo(() => {
+		const d = newDate(
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate() + 1,
+		);
+		d.setDate(1);
 
-	let end_date = newDate();
-	end_date.setDate(1);
-	if (end_date.getMonth() === 12) {
-		end_date.setMonth(0);
-		end_date.setFullYear(end_date.getFullYear() + 1);
-	} else {
-		end_date.setMonth(end_date.getMonth() + 1);
-	}
+		return d;
+	}, [date]);
+
+	let end_date = useMemo(() => {
+		const d = newDate(
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate() + 1,
+		);
+		d.setDate(1);
+		d.setMonth(d.getMonth() + 1);
+
+		return d;
+	}, [date]);
 
 	const events = getEventsForDate(start_date, end_date) || [];
 
