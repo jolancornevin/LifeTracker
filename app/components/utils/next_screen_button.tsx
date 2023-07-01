@@ -21,8 +21,8 @@ export const NextScreenButton = ({
                 style={styles.nextButton}
                 onPress={() => navigation.navigate(nextScreenName, params)}
             >
-                <Text style={{ fontSize: 18 }}>
-                    {">>>"}
+                <Text style={{ fontSize: 28, position: 'relative', bottom: 2 }}>
+                    {"➪"}
                 </Text>
             </TouchableOpacity>
         </View>
@@ -31,14 +31,15 @@ export const NextScreenButton = ({
 
 const styles = StyleSheet.create({
 	nextWrapper: {
-		height: 60,
+		height: 40,
+		marginBottom: 10,
 
 		alignItems: 'center',
 		justifyContent: 'space-evenly',
 	},
 	nextButton: {
-		paddingTop: 5,
-		paddingBottom: 5,
+		//paddingBottom: 5,
+
 		paddingLeft: 20,
 		paddingRight: 20,
 
