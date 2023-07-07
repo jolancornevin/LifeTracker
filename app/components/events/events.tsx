@@ -112,7 +112,7 @@ export const EventUI = ({
 }: BottomTabScreenProps<RootStackParamList, 'EventUI'>) => {
 	const realm = useRealm();
 
-	const [date, setDate] = React.useState(new Date(route.params.date));
+	const date = new Date(route.params.date);
 
 	const events = getOrCreateEventForDate(realm, date);
 

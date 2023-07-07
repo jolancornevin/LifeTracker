@@ -26,7 +26,7 @@ export const HomeUI = ({
 }: BottomTabScreenProps<RootStackParamList, 'HomeUI'>) => {
 	const realm = useRealm();
 
-	const date = route.params.date;
+	const date = new Date(route.params.date);
 	console.log({date})
 
 	return (

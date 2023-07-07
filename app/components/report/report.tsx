@@ -6,7 +6,7 @@ import { StyleSheet, View, Text, ScrollView } from 'react-native';
 
 import { RealmContext } from '../../models/main';
 import { Event } from '../../models/event';
-import { NOTICABLE_LABEL, newDate } from '../../utils';
+import { NOTICABLE_LABEL, ddmmyyyy, newDate } from '../../utils';
 import { Header } from '../utils/header';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { DayRating } from '../../models/DayRating';
@@ -108,7 +108,7 @@ export const ReportUI = ({
 }: BottomTabScreenProps<RootStackParamList, 'ReportUI'>) => {
 	const isMonthly = route.params.monthly;
 
-	const [date, setDate] = React.useState(new Date(route.params.date));
+	const date = new Date(route.params.date);
 
 	let start_date = useMemo(() => {
 		const d = newDate(
@@ -195,7 +195,7 @@ export const ReportUI = ({
 										(event) => {
 											return (
 												<Text key={event.value}>
-													{event.date}: {event.value}
+													{ddmmyyyy(new Date(event.date))}: {event.value}
 												</Text>
 											);
 										},

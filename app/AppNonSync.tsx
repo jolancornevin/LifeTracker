@@ -58,7 +58,7 @@ export const AppNonSync = () => {
 							headerTitle: (props) => (
 								<HeaderTitle date={date} setDate={setDate} />
 							),
-							headerLeft: () => (<></>),
+							headerBackVisible: false,
 						})}
 						initialParams={{ date }}
 					/>
@@ -69,7 +69,7 @@ export const AppNonSync = () => {
 							headerTitle: (props) => (
 								<HeaderTitle date={date} setDate={setDate} />
 							),
-							headerLeft: () => (<></>),
+							headerBackVisible: false,
 						})}
 						initialParams={{ date }}
 					/>
@@ -80,7 +80,7 @@ export const AppNonSync = () => {
 							headerTitle: (props) => (
 								<HeaderTitle date={date} setDate={setDate} />
 							),
-							headerLeft: () => (<></>),
+							headerBackVisible: false,
 						})}
 						initialParams={{ date }}
 					/>
@@ -91,7 +91,7 @@ export const AppNonSync = () => {
 							headerTitle: (props) => (
 								<HeaderTitle date={date} setDate={setDate} />
 							),
-							headerLeft: () => (<></>),
+							headerBackVisible: false,
 						})}
 						initialParams={{ date }}
 					/>
