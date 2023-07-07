@@ -85,15 +85,6 @@ export const SettingsUI = ({
 									realm.create('Event', obj);
 								});
 
-								values['Virtues'].forEach((obj) => {
-									const vv = obj;
-									vv['_id'] = new Realm.BSON.ObjectId(
-										obj['_id'],
-									);
-
-									realm.create('Virtues', obj);
-								});
-
 								values['DayRating'].forEach((obj) => {
 									const vv = obj;
 									vv['_id'] = new Realm.BSON.ObjectId(

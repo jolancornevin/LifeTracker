@@ -6,7 +6,6 @@ import { NavigationContainer, useNavigation } from '@react-navigation/native';
 
 import { ScrollView, View, Text, Button, TextInput } from 'react-native';
 import { EventUI } from './components/events/events';
-import { VirtuesUI } from './components/virtues/virtues';
 import { SettingsUI } from './components/settings/settings';
 import { HomeUI } from './components/day_rating/home';
 import { ReportUI } from './components/report/report';
@@ -15,9 +14,6 @@ import { newDate } from './utils';
 
 export type RootStackParamList = {
 	HomeUI: {};
-	VirtuesUI: {
-		// useRealm: () => Realm;
-	};
 	EventUI: {};
 	Settings: {};
 	ReportUI: {};
@@ -58,17 +54,6 @@ export const AppNonSync = () => {
 					<Stack.Screen
 						name="HomeUI"
 						component={HomeUI}
-						options={({ navigation, route }) => ({
-							headerTitle: (props) => (
-								<HeaderTitle date={date} setDate={setDate} />
-							),
-							headerLeft: () => (<></>),
-						})}
-						initialParams={{ date }}
-					/>
-					<Stack.Screen
-						name="VirtuesUI"
-						component={VirtuesUI}
 						options={({ navigation, route }) => ({
 							headerTitle: (props) => (
 								<HeaderTitle date={date} setDate={setDate} />

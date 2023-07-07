@@ -3,7 +3,6 @@ import * as MailComposer from 'expo-mail-composer';
 export const ExportToEmail = (realm, onSuccess, onReject) => {
 	var body = JSON.stringify({
 		"Event": realm.objects('Event'),
-		"Virtues": realm.objects('Virtues'),
 		"DayRating": realm.objects('DayRating'),
 	});
 

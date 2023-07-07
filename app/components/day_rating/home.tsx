@@ -42,7 +42,7 @@ export const HomeUI = ({
 			</View>
 
 			<NextScreenButton
-				nextScreenName={'VirtuesUI'}
+				nextScreenName={'EventUI'}
 				params={{
 					date: date.toJSON()
 				}}
