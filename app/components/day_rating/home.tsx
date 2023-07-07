@@ -17,7 +17,7 @@ const { useRealm, useQuery } = RealmContext;
 
 type RootStackParamList = {
 	HomeUI: {
-		// useRealm: () => Realm;
+		date: Date;
 	};
 };
 
@@ -26,16 +26,12 @@ export const HomeUI = ({
 }: BottomTabScreenProps<RootStackParamList, 'HomeUI'>) => {
 	const realm = useRealm();
 
-	const [date, setDate] = React.useState(newDate());
+	const date = route.params.date;
+	console.log({date})
 
 	return (
 		<FooterNavigation>
 			<View style={styles.wrapper}>
-				<Header
-					date={date}
-					setDate={setDate}
-				/>
-
 				<View style={styles.content}>
 					<Text style={{ fontSize: 26, paddingBottom: 50 }}>
 						How was your day? 😃
@@ -45,7 +41,12 @@ export const HomeUI = ({
 				</View>
 			</View>
 
-			<NextScreenButton nextScreenName={'VirtuesUI'}/>
+			<NextScreenButton
+				nextScreenName={'VirtuesUI'}
+				params={{
+					date: date.toJSON()
+				}}
+			/>
 		</FooterNavigation>
 	);
 };
@@ -80,6 +81,6 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		borderColor: 'grey',
 
-		backgroundColor: 'white'
-	}
+		backgroundColor: 'white',
+	},
 });

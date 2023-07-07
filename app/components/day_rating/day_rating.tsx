@@ -9,8 +9,8 @@ const { useQuery } = RealmContext;
 
 enum Rating {
 	Bad = 'Bad',
+	Meh = 'Meh',
 	Good = 'Good',
-	Great = 'Great',
 	Awesome = 'Awesome',
 }
 
@@ -41,8 +41,8 @@ const updateRating = (realm: Realm, rating: DayRating, value: string) => {
 
 export const ColorForRating = {
 	[Rating.Bad]: 'red',
+	[Rating.Meh]: 'orange',
 	[Rating.Good]: '#6cc857',
-	[Rating.Great]: 'green',
 	[Rating.Awesome]: 'gold',
 };
 
@@ -92,10 +92,10 @@ export const DayRatingUI = ({ realm, date }: { date: Date; realm: Realm }) => {
 		<>
 			<View style={{ flexDirection: 'row' }}>
 				{ratingButton(Rating.Bad)}
-				{ratingButton(Rating.Good)}
+				{ratingButton(Rating.Meh)}
 			</View>
 			<View style={{ flexDirection: 'row' }}>
-				{ratingButton(Rating.Great)}
+				{ratingButton(Rating.Good)}
 				{ratingButton(Rating.Awesome)}
 			</View>
 		</>

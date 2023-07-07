@@ -22,6 +22,8 @@ export const Header = ({
 				alignItems: 'center',
 				justifyContent: 'center',
 
+				marginRight: 25,
+
 				height: 40,
 
 				borderWidth: 1,
@@ -46,13 +48,13 @@ export const Header = ({
 				</Text>
 			</TouchableOpacity>
 
-			<TouchableOpacity
+			 <TouchableOpacity
 				style={{
 					flex: 1,
 					alignItems: 'center',
 					justifyContent: 'center',
 				}}
-				onPress={() => setCalendarVisible(true)}
+				//onPress={() => setCalendarVisible(true)}
 			>
 				<Text
 					style={{
@@ -60,7 +62,7 @@ export const Header = ({
 						textDecorationLine: 'underline',
 					}}
 				>
-					{ddmmyyyy(date)}
+					{ddmmyyyy(new Date(date))}
 				</Text>
 			</TouchableOpacity>
 

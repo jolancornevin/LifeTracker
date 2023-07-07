@@ -38,6 +38,7 @@ export const CalendarModal = ({
 					markedDates={{
 						[dateForCalendar]: { selected: true },
 					}}
+					firstDay={1}
 				/>
 			</View>
 		</Modal>

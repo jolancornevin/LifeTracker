@@ -15,7 +15,7 @@ const { useRealm, useQuery } = RealmContext;
 
 type RootStackParamList = {
 	EventUI: {
-		// useRealm: () => Realm;
+		date: Date,
 	};
 };
 
@@ -112,7 +112,7 @@ export const EventUI = ({
 }: BottomTabScreenProps<RootStackParamList, 'EventUI'>) => {
 	const realm = useRealm();
 
-	const [date, setDate] = React.useState(newDate());
+	const [date, setDate] = React.useState(new Date(route.params.date));
 
 	const events = getOrCreateEventForDate(realm, date);
 
@@ -128,7 +128,6 @@ export const EventUI = ({
 	return (
 		<FooterNavigation>
 			<View style={styles.wrapper}>
-				<Header date={date} setDate={setDate} />
 				<View style={styles.content}>
 					<Text style={{ fontSize: 16, fontWeight: '600' }}>
 						Goals
@@ -191,7 +190,10 @@ export const EventUI = ({
 
 			<NextScreenButton
 				nextScreenName={'ReportUI'}
-				params={{ monthly: true }}
+				params={{
+					date: date.toJSON(),
+					monthly: true
+				}}
 			/>
 		</FooterNavigation>
 	);

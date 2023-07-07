@@ -10,7 +10,8 @@ import { NOTICABLE_LABEL, newDate } from '../../utils';
 import { Header } from '../utils/header';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { DayRating } from '../../models/DayRating';
-import { ColorForRating } from '../home/day_rating';
+import { ColorForRating } from '../day_rating/day_rating';
+import { NextScreenButton } from '../utils/next_screen_button';
 
 const { useRealm, useQuery } = RealmContext;
 
@@ -49,6 +50,7 @@ type RootStackParamList = {
 	ReportUI: {
 		// useRealm: () => Realm;
 		monthly: boolean;
+		date: Date,
 	};
 };
 
@@ -60,7 +62,7 @@ export const DayRatingsReport = ({
 	end_date: Date;
 }) => {
 	let dayRatings = useQuery(DayRating).filtered(
-		`date > ${start_date.getTime()} && date < ${end_date.getTime()}`,
+		`date >= ${start_date.getTime()} && date < ${end_date.getTime()}`,
 	);
 
 	// reset date to the current month, to get the number of days in the month
@@ -106,7 +108,7 @@ export const ReportUI = ({
 }: BottomTabScreenProps<RootStackParamList, 'ReportUI'>) => {
 	const isMonthly = route.params.monthly;
 
-	const [date, setDate] = React.useState(newDate());
+	const [date, setDate] = React.useState(new Date(route.params.date));
 
 	let start_date = useMemo(() => {
 		const d = newDate(
@@ -136,7 +138,6 @@ export const ReportUI = ({
 	return (
 		<FooterNavigation>
 			<View style={styles.wrapper}>
-				<Header date={date} setDate={setDate} />
 				<View style={styles.content}>
 					<Text style={{ fontSize: 16, fontWeight: '600' }}>
 						Congrats ! 🎉
@@ -194,7 +195,7 @@ export const ReportUI = ({
 										(event) => {
 											return (
 												<Text key={event.value}>
-													{event.value}
+													{event.date}: {event.value}
 												</Text>
 											);
 										},
@@ -204,6 +205,12 @@ export const ReportUI = ({
 					</View>
 				</View>
 			</View>
+			<NextScreenButton
+				nextScreenName={null}
+				params={{
+					date: date.toJSON()
+				}}
+			/>
 		</FooterNavigation>
 	);
 };

@@ -17,7 +17,7 @@ const { useRealm } = RealmContext;
 
 type RootStackParamList = {
 	VirtuesUI: {
-		// useRealm: () => Realm;
+		date: Date,
 	};
 };
 
@@ -26,22 +26,22 @@ export const VirtuesUI = ({
 }: BottomTabScreenProps<RootStackParamList, 'VirtuesUI'>) => {
 	const realm = useRealm();
 
-	const [date, setDate] = React.useState(newDate());
+	const [date, setDate] = React.useState(new Date(route.params.date));
 
 	return (
 		<FooterNavigation>
-			<View style={{flex: 1}}>
-				<Header
-					date={date}
-					setDate={setDate}
-				/>
-
+			<View style={{ flex: 1 }}>
 				<ScrollView>
 					<VirtuesForDate realm={realm} date={date} />
 				</ScrollView>
 			</View>
 
-			<NextScreenButton nextScreenName={'EventUI'} />
+			<NextScreenButton
+				nextScreenName={'EventUI'}
+				params={{
+					date: date.toJSON()
+				}}
+			/>
 		</FooterNavigation>
 	);
 };

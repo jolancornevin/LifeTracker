@@ -13,19 +13,50 @@ export const NextScreenButton = ({
 	nextScreenName: string;
 	params?;
 }) => {
-    const navigation = useNavigation();
+	const navigation = useNavigation();
 
 	return (
 		<View style={styles.nextWrapper}>
-            <TouchableOpacity
-                style={styles.nextButton}
-                onPress={() => navigation.navigate(nextScreenName, params)}
-            >
-                <Text style={{ fontSize: 28, position: 'relative', bottom: 2 }}>
-                    {"➪"}
-                </Text>
-            </TouchableOpacity>
-        </View>
+			{navigation.canGoBack() && (
+				<TouchableOpacity
+					style={styles.nextButton}
+					onPress={() => {
+						navigation.goBack();
+						// navigation.getState().params.date = params.date;
+					}}
+				>
+					<Text
+						style={{
+							fontSize: 28,
+							fontWeight: 700,
+							color: 'grey',
+							position: 'relative',
+							bottom: 6,
+						}}
+					>
+						{'⇦'}
+					</Text>
+				</TouchableOpacity>
+			)}
+			{nextScreenName && (
+				<TouchableOpacity
+					style={styles.nextButton}
+					onPress={() => navigation.navigate(nextScreenName, params)}
+				>
+					<Text
+						style={{
+							fontSize: 28,
+							fontWeight: 700,
+							color: 'grey',
+							position: 'relative',
+							bottom: 6,
+						}}
+					>
+						{'⇨'}
+					</Text>
+				</TouchableOpacity>
+			)}
+		</View>
 	);
 };
 
@@ -33,6 +64,8 @@ const styles = StyleSheet.create({
 	nextWrapper: {
 		height: 40,
 		marginBottom: 10,
+
+		flexDirection: 'row',
 
 		alignItems: 'center',
 		justifyContent: 'space-evenly',
@@ -47,6 +80,6 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		borderColor: 'grey',
 
-		backgroundColor: 'white'
-	}
+		backgroundColor: 'white',
+	},
 });
