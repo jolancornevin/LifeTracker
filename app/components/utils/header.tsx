@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { Text, Button, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
-import { ddmmyyyy, stringToDate } from '../../utils';
+import { DDMMyyyy } from '../../utils';
 import { CalendarModal } from './calendar_modal';
 
 export const Header = ({
@@ -36,6 +36,7 @@ export const Header = ({
 					flex: 1,
 					alignItems: 'center',
 					justifyContent: 'center',
+					maxWidth: 100,
 				}}
 				onPress={() => {
 					const newDate = new Date(date);
@@ -62,7 +63,7 @@ export const Header = ({
 						textDecorationLine: 'underline',
 					}}
 				>
-					{ddmmyyyy(new Date(date))}
+					{DDMMyyyy(new Date(date))}
 				</Text>
 			</TouchableOpacity>
 
@@ -71,6 +72,7 @@ export const Header = ({
 					flex: 1,
 					alignItems: 'center',
 					justifyContent: 'center',
+					maxWidth: 100,
 				}}
 				onPress={() => {
 					const newDate = new Date(date);

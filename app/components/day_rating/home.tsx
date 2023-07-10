@@ -27,7 +27,6 @@ export const HomeUI = ({
 	const realm = useRealm();
 
 	const date = new Date(route.params.date);
-	console.log({date})
 
 	return (
 		<FooterNavigation>

@@ -16,6 +16,33 @@ export class Event extends Realm.Object<Event> {
   label!: string;
   value!: string;
   date!: number;
+  type!: string;
 
   static primaryKey = '_id';
 }
+
+export const NOTICEABLE_LABEL = 'Noticable';
+
+export enum TYPES {
+	Positive = '+',
+	Negative = '-',
+  Noticeable = 'n'
+}
+
+export enum RecuringPositiveEvents {
+	Music = 'Music',
+	Chess = 'Chess',
+	Gym = 'Gym',
+	Learning = 'Learn',
+}
+
+export const RecuringNegativeEvents = {
+	Sleep: {
+		text: 'Sleep',
+		target: 8.5 * 60, // in minutes
+	},
+	Zip: {
+		text: '☔︎',
+		target: 1, // in times per day
+	},
+};

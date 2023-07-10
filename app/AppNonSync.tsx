@@ -60,7 +60,7 @@ export const AppNonSync = () => {
 							),
 							headerBackVisible: false,
 						})}
-						initialParams={{ date }}
+						initialParams={{ date: date.toJSON(), }}
 					/>
 					<Stack.Screen
 						name="EventUI"
@@ -71,7 +71,7 @@ export const AppNonSync = () => {
 							),
 							headerBackVisible: false,
 						})}
-						initialParams={{ date }}
+						initialParams={{ date: date.toJSON(), }}
 					/>
 					<Stack.Screen
 						name="Settings"
@@ -82,7 +82,7 @@ export const AppNonSync = () => {
 							),
 							headerBackVisible: false,
 						})}
-						initialParams={{ date }}
+						initialParams={{ date: date.toJSON(), }}
 					/>
 					<Stack.Screen
 						name="ReportUI"

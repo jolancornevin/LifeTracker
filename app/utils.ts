@@ -17,6 +17,16 @@ export const ddmmyyyy = function (date: Date): string {
 	return formatToDate(dd, mm, date.getFullYear());
 };
 
+export const DDMMyyyy = function (date: Date): string {
+	var days = ['Sun.','Mon.','Tue.','Wed.','Thur.','Fri.','Sat.'];
+	var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+	var mm = months[date.getMonth()];
+	var dd = days[date.getDay()];
+
+	return `${dd} ${date.getDate()} ${mm} ${date.getFullYear()}`;
+};
+
 export const toUTC = function (date: Date): string {
 	var mm = date.getMonth() + 1; // getMonth() is zero-based
 	var dd = date.getDate();
@@ -41,5 +51,3 @@ export const stringToDate = function (date: string): Date {
 	d.setUTCHours(0, 0, 0, 0);
 	return d;
 };
-
-export const NOTICABLE_LABEL = 'Noticable';

@@ -5,8 +5,13 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 
 import { RealmContext } from '../../models/main';
-import { Event } from '../../models/event';
-import { NOTICABLE_LABEL, ddmmyyyy, newDate } from '../../utils';
+import {
+	Event,
+	NOTICEABLE_LABEL,
+	RecuringNegativeEvents,
+	TYPES,
+} from '../../models/event';
+import { ddmmyyyy, newDate } from '../../utils';
 import { Header } from '../utils/header';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { DayRating } from '../../models/DayRating';
@@ -15,12 +20,40 @@ import { NextScreenButton } from '../utils/next_screen_button';
 
 const { useRealm, useQuery } = RealmContext;
 
+const computeMonthStartAndEndDate = (date: Date) => {
+	let start_date = useMemo(() => {
+		const d = newDate(
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate() + 1,
+		);
+		d.setDate(1);
+
+		return d;
+	}, [date]);
+
+	let end_date = useMemo(() => {
+		const d = newDate(
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate() + 1,
+		);
+		d.setDate(1);
+		d.setMonth(d.getMonth() + 1);
+
+		return d;
+	}, [date]);
+
+	return { start_date, end_date };
+};
+
 const getEventsForDate = (
 	start_date: Date,
 	end_date: Date,
-): Record<string, number | Event[]> => {
+	type: string,
+): Record<string, number> => {
 	let events = useQuery(Event).filtered(
-		`date >= ${start_date.getTime()} && date < ${end_date.getTime()}`,
+		`date >= ${start_date.getTime()} and date < ${end_date.getTime()} and type = '${type}'`,
 	);
 
 	let result = {};
@@ -29,38 +62,91 @@ const getEventsForDate = (
 		if (!event.value) {
 			return;
 		}
-
-		if (event.label === NOTICABLE_LABEL) {
-			if (!result[event.label]) {
-				result[event.label] = [];
-			}
-			result[event.label].push(event);
-		} else {
-			if (!result[event.label]) {
-				result[event.label] = 0;
-			}
-			result[event.label] += parseInt(event.value);
+		if (!result[event.label]) {
+			result[event.label] = 0;
 		}
+
+		result[event.label] += parseInt(event.value);
 	});
 
 	return result;
+};
+
+const getPositiveEvents = (date: Date) => {
+	const { start_date, end_date } = computeMonthStartAndEndDate(date);
+	return getEventsForDate(start_date, end_date, TYPES.Positive) || [];
+};
+
+const getNoticeableEventsForDate = (date: Date): Event[] => {
+	const { start_date, end_date } = computeMonthStartAndEndDate(date);
+
+	let events = useQuery(Event).filtered(
+		`date >= ${start_date.getTime()} and date < ${end_date.getTime()} and type = '${
+			TYPES.Noticeable
+		}'`,
+	);
+
+	let result = [];
+
+	events.forEach((event: Event) => {
+		if (!event.value) {
+			return;
+		}
+
+		result.push(event);
+	});
+
+	return result;
+};
+
+const getNegativeEvents = (date: Date) => {
+	// start date is the beginning of the week
+	let start_date = useMemo(() => {
+		let d = newDate(
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate() + 1,
+		);
+		d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+
+		return d;
+	}, [date]);
+
+	// end date is now (+ 1 because the query is <)
+	let end_date = useMemo(() => {
+		const d = newDate(
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate() + 1,
+		);
+		d.setDate(d.getDate() + 1);
+		return d;
+	}, [date]);
+
+	// To calculate the time difference of two dates
+	var Difference_In_Time = end_date.getTime() - start_date.getTime();
+
+	// To calculate the no. of days between two dates
+	var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+
+	return {
+		negativeEvents:
+			getEventsForDate(start_date, end_date, TYPES.Negative) || [],
+		nbOfDaysSinceMonday: Difference_In_Days,
+	};
 };
 
 type RootStackParamList = {
 	ReportUI: {
 		// useRealm: () => Realm;
 		monthly: boolean;
-		date: Date,
+		date: Date;
 	};
 };
 
-export const DayRatingsReport = ({
-	start_date,
-	end_date,
-}: {
-	start_date: Date;
-	end_date: Date;
-}) => {
+export const DayRatingsReport = ({ date }: { date: Date }) => {
+	const { start_date, end_date } = computeMonthStartAndEndDate(date);
+
 	let dayRatings = useQuery(DayRating).filtered(
 		`date >= ${start_date.getTime()} && date < ${end_date.getTime()}`,
 	);
@@ -110,62 +196,96 @@ export const ReportUI = ({
 
 	const date = new Date(route.params.date);
 
-	let start_date = useMemo(() => {
-		const d = newDate(
-			date.getFullYear(),
-			date.getMonth(),
-			date.getDate() + 1,
-		);
-		d.setDate(1);
-
-		return d;
-	}, [date]);
-
-	let end_date = useMemo(() => {
-		const d = newDate(
-			date.getFullYear(),
-			date.getMonth(),
-			date.getDate() + 1,
-		);
-		d.setDate(1);
-		d.setMonth(d.getMonth() + 1);
-
-		return d;
-	}, [date]);
-
-	const events = getEventsForDate(start_date, end_date) || [];
+	const events = getPositiveEvents(date);
+	const { negativeEvents, nbOfDaysSinceMonday } = getNegativeEvents(date);
+	const noticeable = getNoticeableEventsForDate(date) || [];
 
 	return (
 		<FooterNavigation>
 			<View style={styles.wrapper}>
 				<View style={styles.content}>
-					<Text style={{ fontSize: 16, fontWeight: '600' }}>
-						Congrats ! 🎉
+					<Text style={{ fontSize: 20, fontWeight: '600' }}>
+						🔥 Congrats ! 🔥
 					</Text>
 
-					<DayRatingsReport
-						start_date={start_date}
-						end_date={end_date}
-					/>
+					<DayRatingsReport date={date} />
 
-					<Text style={{ fontWeight: '600', paddingTop: 32 }}>
-						This month, you've accumulated:
-					</Text>
+					<View
+						style={{
+							marginTop: 32,
+							marginBottom: 8,
+							flexDirection: 'row',
+						}}
+					>
+						<Text
+							style={{
+								fontSize: 16,
+								fontWeight: '600',
+							}}
+						>
+							You've done
+						</Text>
+						<Text
+							style={{
+								fontSize: 16,
+								marginLeft: 8,
+							}}
+						>
+							💪
+						</Text>
+					</View>
 					{Object.entries(events).map(([label, value]) => {
-						if (label !== NOTICABLE_LABEL) {
-							const hours = Math.floor((value as number) / 60);
-							const minutes = (value as number) % 60;
+						const hours = Math.floor((value as number) / 60);
+						const minutes = (value as number) % 60;
+
+						return (
+							<Text key={label}>
+								{label}
+								{': '}
+								{hours > 0 && `${hours}h`}
+								{minutes > 0 && `${minutes}m`}
+							</Text>
+						);
+					})}
+
+					<Text
+						style={{
+							marginTop: 10,
+							fontSize: 16,
+							fontWeight: '600',
+						}}
+					>
+						But:
+					</Text>
+
+					{Object.entries(negativeEvents).map(
+						([label, computedValue]) => {
+							let value =
+								computedValue -
+								RecuringNegativeEvents[label].target *
+									nbOfDaysSinceMonday;
+
+							// compute the sign before making sure value stay positive
+							// so that the hours computation doesn't get affected by negative values
+							const sign = value >= 0? '+': '-';
+							if (value < 0) {
+								value *= -1;
+							}
+
+							const hours = Math.floor(value / 60);
+							const minutes = value % 60;
 
 							return (
 								<Text key={label}>
-									{label}
+									{RecuringNegativeEvents[label].text}
 									{': '}
-									{hours > 0 && `${hours}h`}
-									{minutes > 0 && `${minutes}m`}
+									{sign}
+									{`${hours}h`}
+									{`${minutes}m`}
 								</Text>
 							);
-						}
-					})}
+						},
+					)}
 
 					<View
 						style={{
@@ -177,9 +297,10 @@ export const ReportUI = ({
 							style={{
 								fontSize: 16,
 								fontWeight: '600',
+								marginBottom: 8,
 							}}
 						>
-							Noticable
+							Noticeable 🎉
 						</Text>
 						<View
 							style={{
@@ -190,16 +311,25 @@ export const ReportUI = ({
 							}}
 						>
 							<ScrollView>
-								{NOTICABLE_LABEL in events &&
-									(events[NOTICABLE_LABEL] as Event[]).map(
-										(event) => {
-											return (
-												<Text key={event.value}>
-													{ddmmyyyy(new Date(event.date))}: {event.value}
-												</Text>
-											);
-										},
-									)}
+								{noticeable.map((event) => {
+									return (
+										<View
+											key={event.value}
+											style={{ flexDirection: 'row' }}
+										>
+											<Text
+												style={{
+													textDecorationLine:
+														'underline',
+												}}
+											>
+												{ddmmyyyy(new Date(event.date))}
+												:
+											</Text>
+											<Text> {event.value}</Text>
+										</View>
+									);
+								})}
 							</ScrollView>
 						</View>
 					</View>
@@ -208,7 +338,7 @@ export const ReportUI = ({
 			<NextScreenButton
 				nextScreenName={null}
 				params={{
-					date: date.toJSON()
+					date: date.toJSON(),
 				}}
 			/>
 		</FooterNavigation>
