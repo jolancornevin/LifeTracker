@@ -2,8 +2,8 @@ import * as MailComposer from 'expo-mail-composer';
 
 export const ExportToEmail = (realm, onSuccess, onReject) => {
 	var body = JSON.stringify({
-		"Event": realm.objects('Event'),
-		"DayRating": realm.objects('DayRating'),
+		"Event": realm.objects('Event').filter((event) => event.value),
+		"DayRating": realm.objects('DayRating').filter((event) => event.value),
 	});
 
 	var options = {
