@@ -1,11 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 import { StyleSheet, View, Text, TextInput } from 'react-native';
 
 import { RealmContext } from '../../models/main';
-import { Event, NOTICEABLE_LABEL, RecuringNegativeEvents, RecuringPositiveEvents, TYPES } from '../../models/event';
+import {
+	Event,
+	NOTICEABLE_LABEL,
+	RecuringNegativeEvents,
+	RecuringPositiveEvents,
+	TYPES,
+} from '../../models/event';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { NextScreenButton } from '../utils/next_screen_button';
 
@@ -21,9 +27,11 @@ const getOrCreateEventsForDate = (
 	realm: Realm,
 	date: Date,
 	listOfLabels: string[],
-	type: string
+	type: string,
 ): Record<string, Event> => {
-	let events = useQuery(Event).filtered(`date = ${date.getTime()} and type = '${type}'`);
+	let events = realm
+		.objects<Event>('Event')
+		.filtered(`date = ${date.getTime()} and type = '${type}'`);
 
 	if (events.length === 0) {
 		realm.write(() => {
@@ -68,7 +76,9 @@ const getOrCreateEventsForDate = (
 
 	// re-run it outside of the if because react doesn't want hooks to be run in conditions...
 	// It's ugly, but it's ok since it's a pretty quick query.
-	events = useQuery(Event).filtered(`date = ${date.getTime()} and type = '${type}'`);
+	events = realm
+		.objects<Event>('Event')
+		.filtered(`date = ${date.getTime()} and type = '${type}'`);
 
 	let result = {};
 
@@ -80,28 +90,26 @@ const getOrCreateEventsForDate = (
 };
 
 const getOrCreateNoticeableEventForDate = (realm: Realm, date: Date): Event => {
-	let events = useQuery(Event).filtered(
-		`date = ${date.getTime()} and label = '${NOTICEABLE_LABEL}'`,
-	);
+	let events = realm
+		.objects<Event>('Event')
+		.filtered(`date = ${date.getTime()} and label = '${NOTICEABLE_LABEL}'`);
 
-	if (events.length === 0) {
-		realm.write(() => {
-			realm.create('Event', {
-				_id: new Realm.BSON.ObjectId(),
-				date: date.getTime(),
-				label: NOTICEABLE_LABEL,
-				value: '',
-				type: TYPES.Noticeable
-			});
-		});
+	if (events.length !== 0) {
+		return events[0];
 	}
 
-	// re-run it outside of the if because react doesn't want hooks to be run in conditions...
-	// It's ugly, but it's ok since it's a pretty quick query.
-	events = useQuery(Event).filtered(
-		`date = ${date.getTime()} and label = '${NOTICEABLE_LABEL}'`,
-	);
-	return events[0];
+	let event;
+	realm.write(() => {
+		event = realm.create<Event>('Event', {
+			_id: new Realm.BSON.ObjectId(),
+			date: date.getTime(),
+			label: NOTICEABLE_LABEL,
+			value: '',
+			type: TYPES.Noticeable,
+		});
+	});
+
+	return event;
 };
 
 const TextEntry = ({
@@ -160,20 +168,21 @@ export const EventUI = ({
 	route,
 }: BottomTabScreenProps<RootStackParamList, 'EventUI'>) => {
 	const realm = useRealm();
+
 	const date = new Date(route.params.date);
 
 	const positiveEvents = getOrCreateEventsForDate(
 		realm,
 		date,
 		Object.values(RecuringPositiveEvents),
-		TYPES.Positive
+		TYPES.Positive,
 	);
 
 	const negativeEvents = getOrCreateEventsForDate(
 		realm,
 		date,
 		Object.keys(RecuringNegativeEvents),
-		TYPES.Negative
+		TYPES.Negative,
 	);
 
 	const noticeableEvent = getOrCreateNoticeableEventForDate(realm, date);
@@ -181,6 +190,7 @@ export const EventUI = ({
 	const [noticableText, onChangeNoticeableText] = React.useState<string>(
 		noticeableEvent.value,
 	);
+
 	useEffect(() => {
 		setTimeout(() => {
 			onChangeNoticeableText(noticeableEvent.value);
@@ -195,11 +205,15 @@ export const EventUI = ({
 						Goals ✓
 					</Text>
 					{Object.values(RecuringPositiveEvents).map((label) => {
+						let value = '';
+						if (positiveEvents[label]) {
+							value = positiveEvents[label].value;
+						}
 						return (
 							<TextEntry
 								key={label}
 								label={label}
-								value={positiveEvents[label].value}
+								value={value}
 								onChange={(value) => {
 									realm.write(() => {
 										positiveEvents[label].value = value;
@@ -220,11 +234,16 @@ export const EventUI = ({
 					</Text>
 					{Object.keys(RecuringNegativeEvents).map((key) => {
 						const event = negativeEvents[key];
+						let value = '';
+						if (negativeEvents[key]) {
+							value = negativeEvents[key].value;
+						}
+
 						return (
 							<TextEntry
 								key={RecuringNegativeEvents[key].text}
 								label={RecuringNegativeEvents[key].text}
-								value={negativeEvents[event.label].value}
+								value={value}
 								onChange={(value) => {
 									realm.write(() => {
 										negativeEvents[event.label].value =

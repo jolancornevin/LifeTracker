@@ -33,7 +33,7 @@ export enum RecuringPositiveEvents {
 	Music = 'Music',
 	Chess = 'Chess',
 	Gym = 'Gym',
-	Learning = 'Learn',
+	Learn = 'Learn',
 }
 
 export const RecuringNegativeEvents = {
