@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -37,6 +37,13 @@ const HeaderTitle = ({
 		});
 	};
 
+	useEffect(() => {
+		navigation.setParams({
+			date: date.toJSON(),
+		});
+	}, [date]);
+
+
 	return (
 		<View style={{ flex: 1, alignItems: 'center' }}>
 			<Header date={date} setDate={_setDate} />
@@ -60,7 +67,7 @@ export const AppNonSync = () => {
 							),
 							headerBackVisible: false,
 						})}
-						initialParams={{ date: date.toJSON(), }}
+						initialParams={{ date: date.toJSON() }}
 					/>
 					<Stack.Screen
 						name="EventUI"
@@ -71,18 +78,7 @@ export const AppNonSync = () => {
 							),
 							headerBackVisible: false,
 						})}
-						initialParams={{ date: date.toJSON(), }}
-					/>
-					<Stack.Screen
-						name="Settings"
-						component={SettingsUI}
-						options={({ navigation, route }) => ({
-							headerTitle: (props) => (
-								<HeaderTitle date={date} setDate={setDate} />
-							),
-							headerBackVisible: false,
-						})}
-						initialParams={{ date: date.toJSON(), }}
+						initialParams={{ date: date.toJSON() }}
 					/>
 					<Stack.Screen
 						name="ReportUI"
@@ -93,7 +89,19 @@ export const AppNonSync = () => {
 							),
 							headerBackVisible: false,
 						})}
-						initialParams={{ date }}
+						initialParams={{ date: date.toJSON() }}
+					/>
+
+					<Stack.Screen
+						name="Settings"
+						component={SettingsUI}
+						options={({ navigation, route }) => ({
+							headerTitle: (props) => (
+								<HeaderTitle date={date} setDate={setDate} />
+							),
+							headerBackVisible: false,
+						})}
+						initialParams={{ date: date.toJSON() }}
 					/>
 				</Stack.Navigator>
 			</NavigationContainer>

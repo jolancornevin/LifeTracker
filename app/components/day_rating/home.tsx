@@ -43,7 +43,7 @@ export const HomeUI = ({
 			<NextScreenButton
 				nextScreenName={'EventUI'}
 				params={{
-					date: date.toJSON()
+					date: date.toJSON(),
 				}}
 			/>
 		</FooterNavigation>
