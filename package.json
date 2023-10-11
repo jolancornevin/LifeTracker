@@ -7,6 +7,9 @@
     "ios": "expo run:ios",
     "release": "eas build -p android --profile preview"
   },
+  "engines": {
+    "node": ">=18.0.08"
+  },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.6",
