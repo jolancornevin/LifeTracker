@@ -2,18 +2,14 @@ import React, { useEffect, useMemo } from 'react';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Button, ScrollView } from 'react-native';
 
 import { RealmContext } from '../../models/main';
-import {
-	Event,
-	NOTICEABLE_LABEL,
-	RecuringNegativeEvents,
-	RecuringPositiveEvents,
-	TYPES,
-} from '../../models/event';
+import { getEventsForDate, getOrCreateNoticeableEventForDate, upsertEvent } from '../../models/event';
+import { TYPES, getEventsSettings } from '../../models/event_settings';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { NextScreenButton } from '../utils/next_screen_button';
+import { EventTimer, createEventTimer, deleteEventTimer, getEventTimers } from '../../models/event_timer';
 
 const { useRealm, useQuery } = RealmContext;
 
@@ -23,101 +19,83 @@ type RootStackParamList = {
 	};
 };
 
-const getOrCreateEventsForDate = (
-	realm: Realm,
-	date: Date,
-	listOfLabels: string[],
-	type: string,
-): Record<string, Event> => {
-	let events = realm
-		.objects<Event>('Event')
-		.filtered(`date = ${date.getTime()} and type = '${type}'`);
+const Timer = ({
+	realm,
+	label,
 
-	if (events.length === 0) {
-		realm.write(() => {
-			listOfLabels.forEach((label) => {
-				realm.create('Event', {
-					_id: new Realm.BSON.ObjectId(),
-					date: date.getTime(),
-					label: label,
-					value: '',
-					type: type,
-				});
-			});
-		});
-	} else {
-		// create any missing events
-		let existingEvents = {};
-		let existingEventsCount = 0;
+	onStop,
+}: {
+	realm: Realm;
+	label: string;
+	onStop: (value: number) => void;
+}) => {
+	const [existingTimer, onChangeExistingTimer] = React.useState<EventTimer | null>(getEventTimers(realm, label));
+	const [timeDiff, onTimeDiffChange] = React.useState<number>(0);
 
-		events.forEach((event: Event) => {
-			existingEvents[event.label] = true;
-			existingEventsCount += 1;
-		});
-
-		if (existingEventsCount != listOfLabels.length) {
-			realm.write(() => {
-				listOfLabels
-					.filter((label) => !existingEvents[label])
-					.forEach((label) => {
-						realm.create('Event', {
-							_id: new Realm.BSON.ObjectId(),
-							date: date.getTime(),
-							label: label,
-							value: '',
-							type: type,
-						});
-					});
-
-				// no need to create noticeable since it has been there since the start
-			});
+	useEffect(() => {
+		if (existingTimer) {
+			const interval = setInterval(() => {
+				onTimeDiffChange(Math.floor((new Date().getTime() - existingTimer.date) / 1000));
+			}, 1000);
+			return () => clearInterval(interval);
 		}
+
+		return () => {};
+	}, [existingTimer]);
+
+	if (!existingTimer) {
+		return (
+			<View
+				style={{
+					width: '100%',
+				}}
+			>
+				<Button
+					title={'Start'}
+					color={'green'}
+					onPress={() => {
+						onChangeExistingTimer(createEventTimer(realm, label));
+					}}
+				/>
+			</View>
+		);
 	}
 
-	// re-run it outside of the if because react doesn't want hooks to be run in conditions...
-	// It's ugly, but it's ok since it's a pretty quick query.
-	events = realm
-		.objects<Event>('Event')
-		.filtered(`date = ${date.getTime()} and type = '${type}'`);
+	const minutes = Math.floor(timeDiff / 60),
+		seconds = timeDiff % 60,
+		timeDiffDisplay = (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
 
-	let result = {};
-
-	events.forEach((event: Event) => {
-		result[event.label] = event;
-	});
-
-	return result;
-};
-
-const getOrCreateNoticeableEventForDate = (realm: Realm, date: Date): Event => {
-	let events = realm
-		.objects<Event>('Event')
-		.filtered(`date = ${date.getTime()} and label = '${NOTICEABLE_LABEL}'`);
-
-	if (events.length !== 0) {
-		return events[0];
-	}
-
-	let event;
-	realm.write(() => {
-		event = realm.create<Event>('Event', {
-			_id: new Realm.BSON.ObjectId(),
-			date: date.getTime(),
-			label: NOTICEABLE_LABEL,
-			value: '',
-			type: TYPES.Noticeable,
-		});
-	});
-
-	return event;
+	return (
+		<View
+			style={{
+				flexDirection: 'row',
+				alignItems: 'center',
+				paddingTop: 8,
+			}}
+		>
+			<Button
+				title={timeDiffDisplay}
+				color={'blue'}
+				onPress={() => {
+					onStop(timeDiff);
+					onChangeExistingTimer(null);
+					deleteEventTimer(realm, existingTimer);
+					onTimeDiffChange(0);
+				}}
+			/>
+		</View>
+	);
 };
 
 const TextEntry = ({
+	realm,
+
 	label,
 	value,
 	onChange,
 	target,
 }: {
+	realm: Realm;
 	label: string;
 	value: string;
 	onChange: (value: string) => void;
@@ -132,64 +110,63 @@ const TextEntry = ({
 		}, 100);
 	}, [value]);
 
+	const onValueChange = (value) => {
+		onChangeText(value);
+		onChange(value);
+	};
+
 	return (
 		<View
 			style={{
+				width: '100%',
 				flexDirection: 'row',
-				alignItems: 'center',
+				alignItems: 'stretch',
+				justifyContent: 'flex-start',
 				paddingTop: 8,
 			}}
 		>
-			<View style={{ width: 64 }}>
+			<View style={{ flex: 1 }}>
 				<Text>{label + ':'}</Text>
 			</View>
-			<TextInput
-				style={{
-					width: 54,
+			<View
+				style={{ flex: 2, alignItems: 'center', flexDirection: 'row', marginLeft: 'auto', marginRight: 'auto' }}
+			>
+				<TextInput
+					style={{
+						width: 54,
 
-					borderBottomWidth: 1,
+						borderBottomWidth: 1,
 
-					paddingLeft: 10,
-					marginLeft: 10,
-				}}
-				onChangeText={(value) => {
-					onChangeText(value);
-					onChange(value);
-				}}
-				value={text}
-				keyboardType={'numeric'}
-			/>
-			<Text> minutes {target !== undefined ? `(${target})` : ''}</Text>
+						paddingLeft: 10,
+						marginLeft: 10,
+					}}
+					onChangeText={onValueChange}
+					value={text}
+					keyboardType={'numeric'}
+				/>
+				<Text> minutes {target !== undefined ? `(${target})` : ''}</Text>
+			</View>
+			<View style={{ flex: 1, alignItems: 'flex-end' }}>
+				<Timer
+					realm={realm}
+					label={label}
+					onStop={(value) => onValueChange(Math.floor(value / 60).toString())}
+				/>
+			</View>
 		</View>
 	);
 };
 
-export const EventUI = ({
-	route,
-}: BottomTabScreenProps<RootStackParamList, 'EventUI'>) => {
+export const EventUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'EventUI'>) => {
 	const realm = useRealm();
 
+	const recuringEventSettings = getEventsSettings(realm);
+
 	const date = new Date(route.params.date);
-
-	const positiveEvents = getOrCreateEventsForDate(
-		realm,
-		date,
-		Object.values(RecuringPositiveEvents),
-		TYPES.Positive,
-	);
-
-	const negativeEvents = getOrCreateEventsForDate(
-		realm,
-		date,
-		Object.keys(RecuringNegativeEvents),
-		TYPES.Negative,
-	);
+	const events = getEventsForDate(realm, date);
 
 	const noticeableEvent = getOrCreateNoticeableEventForDate(realm, date);
-
-	const [noticableText, onChangeNoticeableText] = React.useState<string>(
-		noticeableEvent.value,
-	);
+	const [noticableText, onChangeNoticeableText] = React.useState<string>(noticeableEvent.value);
 
 	useEffect(() => {
 		setTimeout(() => {
@@ -199,102 +176,103 @@ export const EventUI = ({
 
 	return (
 		<FooterNavigation>
-			<View style={styles.wrapper}>
-				<View style={styles.content}>
-					<Text style={{ fontSize: 16, fontWeight: '600' }}>
-						Goals ✓
-					</Text>
-					{Object.values(RecuringPositiveEvents).map((label) => {
-						let value = '';
-						if (positiveEvents[label]) {
-							value = positiveEvents[label].value;
-						}
-						return (
-							<TextEntry
-								key={label}
-								label={label}
-								value={value}
-								onChange={(value) => {
-									realm.write(() => {
-										positiveEvents[label].value = value;
-									});
-								}}
-							/>
-						);
-					})}
+			<ScrollView>
+				<View style={styles.wrapper}>
+					<View style={styles.content}>
+						{[
+							{ title: '-- Goals ✓ --', type: TYPES.Positive },
+							{ title: '-- Goals ✗ --', type: TYPES.Negative },
+						].map(({ title, type }) => {
+							return (
+								<View
+									key={title}
+									style={{
+										marginBottom: 32,
+									}}
+								>
+									<Text
+										style={{
+											fontSize: 16,
+											fontWeight: '600',
 
-					<Text
-						style={{
-							fontSize: 16,
-							fontWeight: '600',
-							marginTop: 32,
-						}}
-					>
-						Goals ✗
-					</Text>
-					{Object.keys(RecuringNegativeEvents).map((key) => {
-						const event = negativeEvents[key];
-						let value = '';
-						if (negativeEvents[key]) {
-							value = negativeEvents[key].value;
-						}
+											marginBottom: 16,
 
-						return (
-							<TextEntry
-								key={RecuringNegativeEvents[key].text}
-								label={RecuringNegativeEvents[key].text}
-								value={value}
-								onChange={(value) => {
-									realm.write(() => {
-										negativeEvents[event.label].value =
-											value;
-									});
-								}}
-								target={RecuringNegativeEvents[key].target}
-							/>
-						);
-					})}
+											marginLeft: 'auto',
+											marginRight: 'auto',
+										}}
+									>
+										{title}
+									</Text>
 
-					<View
-						style={{
-							...styles.content,
-							width: '100%',
-						}}
-					>
-						<Text
+									{recuringEventSettings
+										.filter((eventSetting) => eventSetting.type === type)
+										.map((eventSetting) => {
+											const value = events[eventSetting.label]?.value || '';
+
+											return (
+												<TextEntry
+													realm={realm}
+													key={eventSetting.label}
+													label={eventSetting.label}
+													value={value}
+													onChange={(value) => {
+														events[eventSetting.label] = upsertEvent(
+															realm,
+															date,
+															events[eventSetting.label],
+															eventSetting.label,
+															value,
+															eventSetting.type,
+														);
+													}}
+												/>
+											);
+										})}
+								</View>
+							);
+						})}
+
+						<View
 							style={{
-								fontSize: 16,
-								fontWeight: '600',
+								...styles.content,
+								width: '100%',
 							}}
 						>
-							Events
-						</Text>
+							<Text
+								style={{
+									fontSize: 16,
+									fontWeight: '600',
+								}}
+							>
+								Events
+							</Text>
 
-						<TextInput
-							editable
-							multiline
-							onChangeText={(text) => {
-								onChangeNoticeableText(text);
+							<TextInput
+								editable
+								multiline
+								onChangeText={(text) => {
+									onChangeNoticeableText(text);
 
-								realm.write(() => {
-									noticeableEvent.value = text;
-								});
-							}}
-							value={noticableText}
-							style={{
-								width: '100%',
-								height: 100,
+									realm.write(() => {
+										noticeableEvent.value = text;
+									});
+								}}
+								value={noticableText}
+								style={{
+									width: '100%',
+									height: 100,
 
-								borderWidth: 1,
-								borderRadius: 5,
+									borderWidth: 1,
+									borderRadius: 5,
 
-								paddingLeft: 10,
-								marginLeft: 10,
-							}}
-						/>
+									paddingLeft: 10,
+									marginLeft: 10,
+								}}
+							/>
+						</View>
 					</View>
 				</View>
-			</View>
+			</ScrollView>
 
 			<NextScreenButton
 				nextScreenName={'ReportUI'}
@@ -311,6 +289,7 @@ const styles = StyleSheet.create({
 	wrapper: {
 		flex: 1,
 		alignItems: 'center',
+		padding: 8,
 	},
 	content: {
 		flex: 1,

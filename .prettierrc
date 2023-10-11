@@ -7,7 +7,7 @@ quoteProps: as-needed
 singleQuote: true
 semi: true
 useTabs: true
-printWidth: 80
+printWidth: 120
 tabWidth: 4
 trailingComma: all
 importOrder: ['^react$', '^react-native$', '^@', '^[a-zA-Z]', '^[./]']
