@@ -47,7 +47,7 @@ export const Header = ({ date, setDate }: { date: Date; setDate: React.Dispatch<
 					alignItems: 'center',
 					justifyContent: 'center',
 				}}
-				//onPress={() => setCalendarVisible(true)}
+				onPress={() => setCalendarVisible(true)}
 			>
 				<Text
 					style={{

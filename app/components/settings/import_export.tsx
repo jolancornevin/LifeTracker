@@ -76,8 +76,8 @@ export const ImportExport = () => {
 
 							['EventSettings', 'Event', 'DayRating'].map((type) => {
 								values[type].forEach((obj) => {
-									if (obj["_id"]) {
-										obj["_id"] = new Realm.BSON.ObjectId(obj["_id"]);
+									if (obj['_id']) {
+										obj['_id'] = new Realm.BSON.ObjectId(obj['_id']);
 									}
 									realm.create(type, obj);
 								});
