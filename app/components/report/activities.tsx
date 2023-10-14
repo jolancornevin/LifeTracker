@@ -80,22 +80,21 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 						<View
 							style={{
 								flexDirection: 'row',
-								alignItems: 'stretch',
-								justifyContent: 'flex-start',
+
 								borderBottomWidth: 1,
 								borderTopWidth: 1,
 							}}
 						>
-							<View style={{ flex: 2, borderRightWidth: 1, borderLeftWidth: 1 }}>
+							<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1, borderLeftWidth: 1 }}>
 								<Text style={{ fontWeight: '600' }}>Name</Text>
 							</View>
-							<View style={{ flex: 2, borderRightWidth: 1 }}>
+							<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 								<Text style={{ fontWeight: '600' }}>Total (month)</Text>
 							</View>
-							<View style={{ flex: 2, borderRightWidth: 1 }}>
+							<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 								<Text style={{ fontWeight: '600' }}>Past week</Text>
 							</View>
-							<View style={{ flex: 2, borderRightWidth: 1 }}>
+							<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 								<Text style={{ fontWeight: '600' }}>Past month</Text>
 							</View>
 						</View>
@@ -126,28 +125,34 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 									<View
 										style={{
 											flexDirection: 'row',
-											alignItems: 'center',
 											justifyContent: 'center',
 											borderBottomWidth: 1,
 										}}
 									>
-										<View style={{ flex: 2, borderRightWidth: 1, borderLeftWidth: 1 }}>
+										<View
+											style={{
+												flex: 2,
+												alignItems: 'center',
+												borderRightWidth: 1,
+												borderLeftWidth: 1,
+											}}
+										>
 											<Text>{label}</Text>
 										</View>
-										<View style={{ flex: 2, borderRightWidth: 1 }}>
+										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 											<Text>
 												{monthlyHours > 0 && `${monthlyHours}h`}
 												{monthlyMinutes > 0 && `${monthlyMinutes}m`}
 												{recuringEventSettingsDict[label].target ? `[${diffToTarget}]` : ''}
 											</Text>
 										</View>
-										<View style={{ flex: 2, borderRightWidth: 1 }}>
+										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 											<Text>
 												{lastWeekHours > 0 && `${lastWeekHours}h`}
 												{lastWeekMinutes > 0 && `${lastWeekMinutes}m`}
 											</Text>
 										</View>
-										<View style={{ flex: 2, borderRightWidth: 1 }}>
+										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 											<Text>
 												{lastMonthHours > 0 && `${lastMonthHours}h`}
 												{lastMonthMinutes > 0 && `${lastMonthMinutes}m`}
