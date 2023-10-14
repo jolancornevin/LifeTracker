@@ -6,7 +6,7 @@ import { StyleSheet, View, Text, ScrollView } from 'react-native';
 
 import { RealmContext } from '../../models/main';
 import { Event, NOTICEABLE_LABEL, RecuringNegativeEvents } from '../../models/event';
-import { TYPES, getEventsSettings } from '../../models/event_settings';
+import { ACTIVITY_TYPES, getEventsSettings } from '../../models/event_settings';
 import { computeMonthStartAndEndDate, computeWeekStartAndEndDate, ddmmyyyy, newDate } from '../../utils';
 import { Header } from '../utils/header';
 import { FooterNavigation } from '../utils/footer_navigation';
@@ -26,7 +26,7 @@ type RootStackParamList = {
 
 const sumEventsForDateRange = (start_date: Date, end_date: Date): Record<string, number> => {
 	let events = useQuery(Event).filtered(
-		`date >= ${start_date.getTime()} and date < ${end_date.getTime()} and type != '${TYPES.Noticeable}'`,
+		`date >= ${start_date.getTime()} and date < ${end_date.getTime()} and type != '${ACTIVITY_TYPES.Noticeable}'`,
 	);
 
 	let result = {};
@@ -49,7 +49,7 @@ const getNoticeableEventsForDate = (date: Date): Event[] => {
 	const { start_date, end_date } = computeMonthStartAndEndDate(date);
 
 	let events = useQuery(Event).filtered(
-		`date >= ${start_date.getTime()} and date < ${end_date.getTime()} and type = '${TYPES.Noticeable}'`,
+		`date >= ${start_date.getTime()} and date < ${end_date.getTime()} and type = '${ACTIVITY_TYPES.Noticeable}'`,
 	);
 
 	let result = [];
@@ -137,8 +137,8 @@ export const ReportUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Re
 					<DayRatingsReport date={date} />
 
 					{[
-						{ title: "You've done  💪", type: TYPES.Positive },
-						{ title: 'But', type: TYPES.Negative },
+						{ title: "You've done  💪", type: ACTIVITY_TYPES.Positive },
+						{ title: 'But', type: ACTIVITY_TYPES.Negative },
 					].map(({ title, type }) => {
 						return (
 							<View key={title}>

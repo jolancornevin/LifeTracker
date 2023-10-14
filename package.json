@@ -5,7 +5,7 @@
     "start": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "prettier": "./node_modules/.bin/prettier --config=.prettierrc -w ./app",
+    "prettier": ".\\node_modules\\.bin\\prettier --config=.prettierrc -w ./app",
     "release": "eas build -p android --profile preview"
   },
   "engines": {

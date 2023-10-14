@@ -2,7 +2,7 @@ import React from 'react';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { RealmContext } from '../../models/main';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { ImportExport } from './import_export';
@@ -19,7 +19,7 @@ type RootStackParamList = {
 export const SettingsUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'SettingsUI'>) => {
 	return (
 		<FooterNavigation>
-			<View
+			<ScrollView
 				style={{
 					flex: 1,
 					paddingTop: 20,
@@ -29,7 +29,9 @@ export const SettingsUI = ({ route }: BottomTabScreenProps<RootStackParamList, '
 				<ActivitiesSettings />
 
 				<ImportExport />
-			</View>
+
+				<View style={{ paddingBottom: 32 }}>{/* space for scroll view */}</View>
+			</ScrollView>
 		</FooterNavigation>
 	);
 };

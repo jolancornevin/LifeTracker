@@ -7,7 +7,7 @@
 // for an example of this.
 
 import { Realm } from '@realm/react';
-import { TYPES } from './event_settings';
+import { ACTIVITY_TYPES } from './event_settings';
 
 // To use a class as a Realm object type in Typescript with the `@realm/babel-plugin` plugin,
 // simply define the properties on the class with the correct type and the plugin will convert
@@ -86,7 +86,7 @@ export const getOrCreateNoticeableEventForDate = (realm: Realm, date: Date): Eve
 			date: date.getTime(),
 			label: NOTICEABLE_LABEL,
 			value: '',
-			type: TYPES.Noticeable,
+			type: ACTIVITY_TYPES.Noticeable,
 		});
 	});
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
@@ -6,18 +6,65 @@ import { StyleSheet, View, Button, TextInput, Text } from 'react-native';
 import { RealmContext } from '../../models/main';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { ExportToEmail } from '../../models/exporter';
-import { getEventsSettings } from '../../models/event_settings';
 import { ImportExport } from './import_export';
+import {
+	ACTIVITY_TYPES,
+	createEventsSettings,
+	deleteEventsSetting,
+	getEventsSettings,
+} from '../../models/event_settings';
 
 const { useRealm } = RealmContext;
 
 export const ActivitiesSettings = () => {
 	const realm = useRealm();
 
-	const recuringEventSettings = getEventsSettings(realm);
+	const recuringActivitySettings = getEventsSettings(realm);
 
-	const [eventName, setEventName] = React.useState<string>('');
-	const [eventType, setEventType] = React.useState<string>('');
+	const [activityName, setActivityName] = React.useState<string>('');
+	const [activityType, setactivityType] = React.useState<ACTIVITY_TYPES>(ACTIVITY_TYPES.Positive);
+	const [activityTarget, setActivityTarget] = React.useState<string>('');
+	const [errorText, setErrorText] = React.useState<string>('');
+	const [successText, setSuccessText] = React.useState<string>('');
+
+	useEffect(() => {
+		if (successText !== '') {
+			let timer = setTimeout(() => {
+				setSuccessText('');
+			}, 2000);
+
+			return () => {
+				clearTimeout(timer);
+			};
+		}
+	}, [successText]);
+
+	function onAdd() {
+		if (activityName === '') {
+			setErrorText('The name of the activity is required');
+			return;
+		}
+		if (activityTarget === '') {
+			setErrorText('The target of the activity is required');
+			return;
+		}
+
+		createEventsSettings(realm, activityName, activityType, Number(activityTarget));
+		setErrorText('');
+		setActivityName('');
+		setActivityTarget('');
+		setSuccessText('done');
+	}
+
+	function onNextActivityType() {
+		if (activityType === ACTIVITY_TYPES.Positive) {
+			setactivityType(ACTIVITY_TYPES.Negative);
+		}
+
+		if (activityType === ACTIVITY_TYPES.Negative) {
+			setactivityType(ACTIVITY_TYPES.Positive);
+		}
+	}
 
 	return (
 		<>
@@ -30,12 +77,12 @@ export const ActivitiesSettings = () => {
 					marginRight: 'auto',
 				}}
 			>
-				Current events
+				Current activitys
 			</Text>
 
-			{recuringEventSettings.map((event) => (
+			{recuringActivitySettings.map((activity) => (
 				<View
-					key={event.label}
+					key={activity.label}
 					style={{
 						flexDirection: 'row',
 						alignItems: 'stretch',
@@ -43,16 +90,23 @@ export const ActivitiesSettings = () => {
 					}}
 				>
 					<View style={{ flex: 4 }}>
-						<Text>{event.label}</Text>
+						<Text>{activity.label}</Text>
 					</View>
 					<View style={{ flex: 2 }}>
-						<Text>{event.type}</Text>
+						<Text>{activity.type}</Text>
 					</View>
-					<View style={{ flex: 4 }}>
-						<Text>{event.target}</Text>
+					<View style={{ flex: 3 }}>
+						<Text>{activity.target}</Text>
 					</View>
-					<View style={{ flex: 1 }}>
-						<Button title={'🗑️'} />
+					<View style={{ flex: 2 }}>
+						<Button
+							title={'🗑️'}
+							color={'transparent'}
+							onPress={() => {
+								deleteEventsSetting(realm, activity);
+								setSuccessText('done');
+							}}
+						/>
 					</View>
 				</View>
 			))}
@@ -65,44 +119,44 @@ export const ActivitiesSettings = () => {
 				}}
 			>
 				<View style={{ flex: 4 }}>
+					{/* label */}
 					<TextInput
 						style={{
-							width: 54,
-
 							borderBottomWidth: 1,
 
-							paddingLeft: 10,
-							marginLeft: 10,
+							marginRight: 8,
 						}}
 						editable
 						multiline
-						onChangeText={setEventName}
-						value={eventName}
+						onChangeText={setActivityName}
+						value={activityName}
 					/>
 				</View>
 				<View style={{ flex: 2 }}>
-					<Text>+</Text>
+					{/* type */}
+					<Button title={activityType} onPress={onNextActivityType} />
 				</View>
-				<View style={{ flex: 4 }}>
+				<View style={{ flex: 3 }}>
+					{/* target */}
 					<TextInput
 						style={{
-							width: 54,
-
 							borderBottomWidth: 1,
 
-							paddingLeft: 10,
-							marginLeft: 10,
+							marginLeft: 8,
+							marginRight: 8,
 						}}
 						editable
-						multiline
-						onChangeText={setEventType}
-						value={eventType}
+						onChangeText={setActivityTarget}
+						value={activityTarget}
+						keyboardType={'numeric'}
 					/>
 				</View>
-				<View style={{ flex: 1 }}>
-					<Button title={'Add'} />
+				<View style={{ flex: 2 }}>
+					<Button title={'Add'} onPress={onAdd} />
 				</View>
 			</View>
+			<Text style={{ color: 'red' }}>{errorText}</Text>
+			<Text style={{ color: 'green' }}>{successText}</Text>
 		</>
 	);
 };

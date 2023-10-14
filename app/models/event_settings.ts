@@ -8,7 +8,7 @@
 
 import { Realm } from '@realm/react';
 
-export enum TYPES {
+export enum ACTIVITY_TYPES {
 	Positive = '+',
 	Negative = '-',
 	Noticeable = 'n',
@@ -21,7 +21,7 @@ export class EventSettings extends Realm.Object<EventSettings> {
 	_id: Realm.BSON.ObjectId = new Realm.BSON.ObjectId();
 
 	label!: string;
-	type!: string; // TYPES
+	type!: string; // ACTIVITY_TYPES
 
 	target: number;
 
@@ -30,37 +30,10 @@ export class EventSettings extends Realm.Object<EventSettings> {
 
 // TODO make sure the order is fixed
 export const getEventsSettings = (realm: Realm): EventSettings[] => {
-	let settings = realm.objects<EventSettings>('EventSettings').map((setting) => setting);
-
-	/* if (settings.length === 0) {
-		// Fixtures in order to have something working in the begginning.
-		// TODO make a Hello screen where we have to configure those at first start.
-		// This will be an issue if the user wants to remove all his events.
-		[
-			{label: "Music", type: TYPES.Positive, target: 0},
-			{label: "Chess", type: TYPES.Positive, target: 0},
-			{label: "Gym", type: TYPES.Positive, target: 0},
-
-			{label: "Learn", type: TYPES.Positive, target: 0},
-			{label: "Read", type: TYPES.Positive, target: 0},
-			{label: "Code", type: TYPES.Positive, target: 0},
-
-			{label: "Social Interactions", type: TYPES.Positive, target: 0},
-
-			{label: "Sleep", type: TYPES.Negative, target: 8.5 * 60},
-			{label: "Zip", type: TYPES.Negative, target: 1},
-		].map(({label, type, target}) => {
-			createEventsSettings(realm, label, type, target);
-		})
-
-		settings = realm
-			.objects<EventSettings>('EventSettings').map((setting) => setting);
-	} */
-
-	return settings;
+	return realm.objects<EventSettings>('EventSettings').map((setting) => setting);
 };
 
-export const createEventsSettings = (realm: Realm, label: string, type: TYPES, target?: number) => {
+export const createEventsSettings = (realm: Realm, label: string, type: ACTIVITY_TYPES, target?: number) => {
 	realm.write(() => {
 		realm.create('EventSettings', {
 			_id: new Realm.BSON.ObjectId(),
@@ -70,5 +43,11 @@ export const createEventsSettings = (realm: Realm, label: string, type: TYPES, t
 
 			target: target,
 		});
+	});
+};
+
+export const deleteEventsSetting = (realm: Realm, setting: EventSettings) => {
+	realm.write(() => {
+		realm.delete(setting);
 	});
 };

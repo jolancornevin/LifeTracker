@@ -6,7 +6,7 @@ import { StyleSheet, View, Text, TextInput, Button, ScrollView } from 'react-nat
 
 import { RealmContext } from '../../models/main';
 import { getEventsForDate, getOrCreateNoticeableEventForDate, upsertEvent } from '../../models/event';
-import { TYPES, getEventsSettings } from '../../models/event_settings';
+import { ACTIVITY_TYPES, getEventsSettings } from '../../models/event_settings';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { NextScreenButton } from '../utils/next_screen_button';
 import { EventTimer, createEventTimer, deleteEventTimer, getEventTimers } from '../../models/event_timer';
@@ -180,8 +180,8 @@ export const EventUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Eve
 				<View style={styles.wrapper}>
 					<View style={styles.content}>
 						{[
-							{ title: '-- Goals ✓ --', type: TYPES.Positive },
-							{ title: '-- Goals ✗ --', type: TYPES.Negative },
+							{ title: '-- Goals ✓ --', type: ACTIVITY_TYPES.Positive },
+							{ title: '-- Goals ✗ --', type: ACTIVITY_TYPES.Negative },
 						].map(({ title, type }) => {
 							return (
 								<View
