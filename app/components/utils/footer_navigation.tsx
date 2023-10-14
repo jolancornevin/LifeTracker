@@ -1,12 +1,6 @@
 import * as React from 'react';
 
-import {
-	StyleSheet,
-	TouchableOpacity,
-	View,
-	ScrollView,
-	Text,
-} from 'react-native';
+import { StyleSheet, TouchableOpacity, View, ScrollView, Text } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -21,9 +15,7 @@ export const FooterNavigation = (props) => {
 				paddingTop: 20,
 			}}
 		>
-			<View style={{ flex: 1, paddingHorizontal: 20 }}>
-				{props.children}
-			</View>
+			<View style={{ flex: 1, paddingHorizontal: 20 }}>{props.children}</View>
 			<View
 				style={{
 					width: '100%',
@@ -42,9 +34,7 @@ export const FooterNavigation = (props) => {
 				<TouchableOpacity onPress={() => navigation.navigate('HomeUI')}>
 					<Text>Home</Text>
 				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={() => navigation.navigate('Settings')}
-				>
+				<TouchableOpacity onPress={() => navigation.navigate('Settings')}>
 					<Text>Settings</Text>
 				</TouchableOpacity>
 			</View>

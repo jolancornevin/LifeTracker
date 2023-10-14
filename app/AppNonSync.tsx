@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -21,13 +21,7 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator();
 
-const HeaderTitle = ({
-	date,
-	setDate,
-}: {
-	date: Date;
-	setDate: React.Dispatch<React.SetStateAction<Date>>;
-}) => {
+const HeaderTitle = ({ date, setDate }: { date: Date; setDate: React.Dispatch<React.SetStateAction<Date>> }) => {
 	const navigation = useNavigation();
 
 	const _setDate = (newDate: Date) => {
@@ -42,7 +36,6 @@ const HeaderTitle = ({
 			date: date.toJSON(),
 		});
 	}, [date]);
-
 
 	return (
 		<View style={{ flex: 1, alignItems: 'center' }}>
@@ -62,9 +55,7 @@ export const AppNonSync = () => {
 						name="HomeUI"
 						component={HomeUI}
 						options={({ navigation, route }) => ({
-							headerTitle: (props) => (
-								<HeaderTitle date={date} setDate={setDate} />
-							),
+							headerTitle: (props) => <HeaderTitle date={date} setDate={setDate} />,
 							headerBackVisible: false,
 						})}
 						initialParams={{ date: date.toJSON() }}
@@ -73,9 +64,7 @@ export const AppNonSync = () => {
 						name="EventUI"
 						component={EventUI}
 						options={({ navigation, route }) => ({
-							headerTitle: (props) => (
-								<HeaderTitle date={date} setDate={setDate} />
-							),
+							headerTitle: (props) => <HeaderTitle date={date} setDate={setDate} />,
 							headerBackVisible: false,
 						})}
 						initialParams={{ date: date.toJSON() }}
@@ -84,9 +73,7 @@ export const AppNonSync = () => {
 						name="ReportUI"
 						component={ReportUI}
 						options={({ navigation, route }) => ({
-							headerTitle: (props) => (
-								<HeaderTitle date={date} setDate={setDate} />
-							),
+							headerTitle: (props) => <HeaderTitle date={date} setDate={setDate} />,
 							headerBackVisible: false,
 						})}
 						initialParams={{ date: date.toJSON() }}
@@ -96,9 +83,7 @@ export const AppNonSync = () => {
 						name="Settings"
 						component={SettingsUI}
 						options={({ navigation, route }) => ({
-							headerTitle: (props) => (
-								<HeaderTitle date={date} setDate={setDate} />
-							),
+							headerTitle: (props) => <HeaderTitle date={date} setDate={setDate} />,
 							headerBackVisible: false,
 						})}
 						initialParams={{ date: date.toJSON() }}

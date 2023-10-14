@@ -6,13 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { ddmmyyyy, stringToDate } from '../../utils';
 
-export const NextScreenButton = ({
-	nextScreenName,
-	params = {},
-}: {
-	nextScreenName: string;
-	params?;
-}) => {
+export const NextScreenButton = ({ nextScreenName, params = {} }: { nextScreenName: string; params? }) => {
 	const navigation = useNavigation();
 
 	return (
@@ -39,10 +33,7 @@ export const NextScreenButton = ({
 				</TouchableOpacity>
 			)}
 			{nextScreenName && (
-				<TouchableOpacity
-					style={styles.nextButton}
-					onPress={() => navigation.navigate(nextScreenName, params)}
-				>
+				<TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate(nextScreenName, params)}>
 					<Text
 						style={{
 							fontSize: 28,

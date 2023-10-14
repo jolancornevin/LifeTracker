@@ -21,9 +21,7 @@ type RootStackParamList = {
 	};
 };
 
-export const HomeUI = ({
-	route,
-}: BottomTabScreenProps<RootStackParamList, 'HomeUI'>) => {
+export const HomeUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'HomeUI'>) => {
 	const realm = useRealm();
 
 	const date = new Date(route.params.date);
@@ -32,9 +30,7 @@ export const HomeUI = ({
 		<FooterNavigation>
 			<View style={styles.wrapper}>
 				<View style={styles.content}>
-					<Text style={{ fontSize: 26, paddingBottom: 50 }}>
-						How was your day? 😃
-					</Text>
+					<Text style={{ fontSize: 26, paddingBottom: 50 }}>How was your day? 😃</Text>
 
 					<DayRatingUI realm={realm} date={date} />
 				</View>

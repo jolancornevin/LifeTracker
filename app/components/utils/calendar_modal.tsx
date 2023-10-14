@@ -17,18 +17,10 @@ export const CalendarModal = ({
 	setDate: React.Dispatch<React.SetStateAction<Date>>;
 	setCalendarVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-	let dateForCalendar = [
-		date.getFullYear(),
-		date.getMonth(),
-		date.getDate()
-	].join('-');
+	let dateForCalendar = [date.getFullYear(), date.getMonth(), date.getDate()].join('-');
 
 	return (
-		<Modal
-			animationType="slide"
-			transparent={true}
-			visible={calendarVisible}
-		>
+		<Modal animationType="slide" transparent={true} visible={calendarVisible}>
 			<View>
 				<Calendar
 					onDayPress={(date: DateData) => {

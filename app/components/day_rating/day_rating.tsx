@@ -65,10 +65,7 @@ export const DayRatingUI = ({ realm, date }: { date: Date; realm: Realm }) => {
 
 					alignItems: 'center',
 					justifyContent: 'center',
-					backgroundColor:
-						rating.value === value
-							? ColorForRating[value]
-							: 'white',
+					backgroundColor: rating.value === value ? ColorForRating[value] : 'white',
 				}}
 				onPress={() => {
 					updateRating(realm, rating, value);
@@ -76,10 +73,7 @@ export const DayRatingUI = ({ realm, date }: { date: Date; realm: Realm }) => {
 			>
 				<Text
 					style={{
-						color:
-							rating.value === value
-								? 'white'
-								: ColorForRating[value],
+						color: rating.value === value ? 'white' : ColorForRating[value],
 					}}
 				>
 					{value}

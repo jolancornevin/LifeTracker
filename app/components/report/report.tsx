@@ -112,7 +112,7 @@ export const ReportUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Re
 	const recuringEventSettingsDict = {};
 	recuringEventSettings.map((setting) => {
 		recuringEventSettingsDict[setting.label] = setting;
-	})
+	});
 
 	const date = new Date(route.params.date);
 	const { start_date, end_date } = computeMonthStartAndEndDate(date);
@@ -160,7 +160,7 @@ export const ReportUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Re
 
 										if (recuringEventSettingsDict[label].target) {
 											const adjustedTargetForMonth =
-											recuringEventSettingsDict[label].target * nb_of_days_since_month;
+												recuringEventSettingsDict[label].target * nb_of_days_since_month;
 
 											let diffToTarget = sum - adjustedTargetForMonth;
 

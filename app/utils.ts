@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
 // Create a new date, without any time specific info
 export const newDate = function (year?: number, month?: number, day?: number): Date {
@@ -19,8 +19,21 @@ export const ddmmyyyy = function (date: Date): string {
 };
 
 export const DDMMyyyy = function (date: Date): string {
-	var days = ['Sun.','Mon.','Tue.','Wed.','Thur.','Fri.','Sat.'];
-	var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+	var days = ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thur.', 'Fri.', 'Sat.'];
+	var months = [
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December',
+	];
 
 	var mm = months[date.getMonth()];
 	var dd = days[date.getDay()];
@@ -36,41 +49,27 @@ export const toUTC = function (date: Date): string {
 };
 
 export const formatToDate = function (day: number, month: number, year: number): string {
-	return [
-		(day > 9 ? '' : '0') + day,
-		'/',
-		(month > 9 ? '' : '0') + month,
-		'/',
-		year,
-	].join('');
+	return [(day > 9 ? '' : '0') + day, '/', (month > 9 ? '' : '0') + month, '/', year].join('');
 };
 
 export const stringToDate = function (date: string): Date {
 	const splittedDate = date.split('/');
 	let d = new Date();
-	d.setUTCFullYear(parseInt(splittedDate[2]), parseInt(splittedDate[1]) -1, parseInt(splittedDate[0]));
+	d.setUTCFullYear(parseInt(splittedDate[2]), parseInt(splittedDate[1]) - 1, parseInt(splittedDate[0]));
 	d.setUTCHours(0, 0, 0, 0);
 	return d;
 };
 
 export const computeMonthStartAndEndDate = (date: Date) => {
 	let start_date = useMemo(() => {
-		const d = newDate(
-			date.getFullYear(),
-			date.getMonth(),
-			date.getDate() + 1,
-		);
+		const d = newDate(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 		d.setDate(1);
 
 		return d;
 	}, [date]);
 
 	let end_date = useMemo(() => {
-		const d = newDate(
-			date.getFullYear(),
-			date.getMonth(),
-			date.getDate() + 1,
-		);
+		const d = newDate(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 		d.setDate(1);
 		d.setMonth(d.getMonth() + 1);
 
@@ -83,11 +82,7 @@ export const computeMonthStartAndEndDate = (date: Date) => {
 export const computeWeekStartAndEndDate = (date: Date) => {
 	// start date is the beginning of the week
 	let start_date = useMemo(() => {
-		let d = newDate(
-			date.getFullYear(),
-			date.getMonth(),
-			date.getDate() + 1,
-		);
+		let d = newDate(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 		d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
 
 		return d;
@@ -95,11 +90,7 @@ export const computeWeekStartAndEndDate = (date: Date) => {
 
 	// end date is now (+ 1 because the query is <)
 	let end_date = useMemo(() => {
-		const d = newDate(
-			date.getFullYear(),
-			date.getMonth(),
-			date.getDate() + 1,
-		);
+		const d = newDate(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 
 		d.setDate(d.getDate() + 1);
 		return d;

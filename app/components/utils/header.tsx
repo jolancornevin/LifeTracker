@@ -5,13 +5,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { DDMMyyyy } from '../../utils';
 import { CalendarModal } from './calendar_modal';
 
-export const Header = ({
-	date,
-	setDate,
-}: {
-	date: Date;
-	setDate: React.Dispatch<React.SetStateAction<Date>>;
-}) => {
+export const Header = ({ date, setDate }: { date: Date; setDate: React.Dispatch<React.SetStateAction<Date>> }) => {
 	const [calendarVisible, setCalendarVisible] = React.useState(false);
 
 	return (
@@ -28,7 +22,7 @@ export const Header = ({
 
 				borderWidth: 1,
 				borderRadius: 10,
-				borderColor: 'grey'
+				borderColor: 'grey',
 			}}
 		>
 			<TouchableOpacity
@@ -44,12 +38,10 @@ export const Header = ({
 					setDate(newDate);
 				}}
 			>
-				<Text>
-					{"< Prev"}
-				</Text>
+				<Text>{'< Prev'}</Text>
 			</TouchableOpacity>
 
-			 <TouchableOpacity
+			<TouchableOpacity
 				style={{
 					flex: 1,
 					alignItems: 'center',
@@ -80,9 +72,7 @@ export const Header = ({
 					setDate(newDate);
 				}}
 			>
-				<Text>
-					{"Next >"}
-				</Text>
+				<Text>{'Next >'}</Text>
 			</TouchableOpacity>
 
 			<CalendarModal
