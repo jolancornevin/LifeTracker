@@ -52,7 +52,7 @@ export const ReportUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Re
 
 	return (
 		<FooterNavigation>
-			<View style={styles.wrapper}>
+			<ScrollView>
 				<View style={styles.content}>
 					<Text style={{ fontSize: 20, fontWeight: '600' }}>🔥 Congrats ! 🔥</Text>
 
@@ -83,7 +83,7 @@ export const ReportUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Re
 								justifyContent: 'flex-start',
 							}}
 						>
-							<ScrollView>
+							<View>
 								{noticeable.map((event) => (
 									<View key={event.value} style={{ flexDirection: 'row' }}>
 										<Text style={{ textDecorationLine: 'underline' }}>
@@ -92,11 +92,11 @@ export const ReportUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Re
 										<Text> {event.value}</Text>
 									</View>
 								))}
-							</ScrollView>
+							</View>
 						</View>
 					</View>
 				</View>
-			</View>
+			</ScrollView>
 			<NextScreenButton
 				nextScreenName={null}
 				params={{

@@ -92,9 +92,9 @@ export const computeWeekStartAndEndDate = (date: Date) => {
 	let end_date = useMemo(() => {
 		const d = newDate(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 
-		d.setDate(d.getDate() + 1);
+		d.setDate(start_date.getDate() + 7);
 		return d;
-	}, [date]);
+	}, [start_date, date]);
 
 	return { start_date, end_date };
 };

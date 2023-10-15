@@ -51,7 +51,7 @@ const Timer = ({
 				}}
 			>
 				<Button
-					title={'Start'}
+					title={'Start 🕒'}
 					color={'green'}
 					onPress={() => {
 						onChangeExistingTimer(createEventTimer(realm, label));
@@ -73,11 +73,22 @@ const Timer = ({
 				paddingTop: 8,
 			}}
 		>
+			<View style={{ paddingRight: 8 }}>
+				<Button
+					title={timeDiffDisplay}
+					color={'blue'}
+					onPress={() => {
+						onStop(timeDiff);
+						onChangeExistingTimer(null);
+						deleteEventTimer(realm, existingTimer);
+						onTimeDiffChange(0);
+					}}
+				/>
+			</View>
 			<Button
-				title={timeDiffDisplay}
-				color={'blue'}
+				title={'x'}
+				color={'red'}
 				onPress={() => {
-					onStop(timeDiff);
 					onChangeExistingTimer(null);
 					deleteEventTimer(realm, existingTimer);
 					onTimeDiffChange(0);
@@ -110,7 +121,7 @@ const TextEntry = ({
 		}, 100);
 	}, [value]);
 
-	const onValueChange = (value) => {
+	const onValueChange = (value: string) => {
 		onChangeText(value);
 		onChange(value);
 	};
@@ -150,7 +161,9 @@ const TextEntry = ({
 				<Timer
 					realm={realm}
 					label={label}
-					onStop={(value) => onValueChange(Math.floor(value / 60).toString())}
+					onStop={(timeElapsed) => {
+						onValueChange((Number(text) + Math.floor(timeElapsed / 60)).toString());
+					}}
 				/>
 			</View>
 		</View>
