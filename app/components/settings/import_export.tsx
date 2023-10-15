@@ -18,7 +18,7 @@ export const ImportExport = () => {
 
 	return (
 		<>
-			<View style={{ paddingTop: 56 }}>
+			<View style={{ paddingTop: 32 }}>
 				<Text
 					style={{
 						fontSize: 16,

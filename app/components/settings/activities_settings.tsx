@@ -114,8 +114,26 @@ export const ActivitiesSettings = () => {
 			<View
 				style={{
 					flexDirection: 'row',
+					paddingTop: 24,
+				}}
+			>
+				<View style={{ flex: 4 }}>
+					<Text>Label</Text>
+				</View>
+				<View style={{ flex: 2 }}>
+					<Text>Type</Text>
+				</View>
+				<View style={{ flex: 3 }}>
+					<Text>Target</Text>
+				</View>
+				<View style={{ flex: 2 }}></View>
+			</View>
+			<View
+				style={{
+					flexDirection: 'row',
 					alignItems: 'stretch',
 					justifyContent: 'flex-start',
+					paddingTop: 8,
 				}}
 			>
 				<View style={{ flex: 4 }}>
@@ -134,7 +152,7 @@ export const ActivitiesSettings = () => {
 				</View>
 				<View style={{ flex: 2 }}>
 					{/* type */}
-					<Button title={activityType} onPress={onNextActivityType} />
+					<Button title={activityType} color={'grey'} onPress={onNextActivityType} />
 				</View>
 				<View style={{ flex: 3 }}>
 					{/* target */}

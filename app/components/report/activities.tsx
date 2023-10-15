@@ -56,9 +56,10 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 	// reset the date to 1rst of the month
 	start_date.setDate(1);
 	// Compute the time difference of two dates (in MS)
-	let difference_in_time = end_date.getTime() - start_date.getTime();
+	let difference_in_time = date.getTime() - start_date.getTime();
 	// Divide by the number of MS per day to compute the nb of days since the start
-	let nb_of_days_since_month = difference_in_time / (1000 * 3600 * 24);
+	// add +1 because on the 1rst, the result is 0 and it's an issue for computations.
+	let nb_of_days_since_month = difference_in_time / (1000 * 3600 * 24) + 1;
 
 	return (
 		<>
@@ -90,7 +91,15 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 								borderTopWidth: 1,
 							}}
 						>
-							<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1, borderLeftWidth: 1 }}>
+							<View
+								style={{
+									flex: 3,
+									alignItems: 'center',
+									paddingLeft: 4,
+									borderRightWidth: 1,
+									borderLeftWidth: 1,
+								}}
+							>
 								<Text style={{ fontWeight: '600' }}>Name</Text>
 							</View>
 							{/* <View style={{ flex: 1, alignItems: 'center', borderRightWidth: 1 }}>
@@ -113,7 +122,8 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 						{Object.entries(recuringEventSettingsDict)
 							.filter(([label, setting]) => setting.type === type)
 							.map(([label, setting]) => {
-								let monthlySum = monthlyActivities[label],
+								let dailySum = 0,
+									monthlySum = monthlyActivities[label],
 									weekSum = weekActivities[label],
 									pastWeekSum = lastWeekActivities[label],
 									pastMonthSum = lastMonthActivities[label];
@@ -130,9 +140,9 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 								let lastMonthHours = Math.floor(pastMonthSum / 60),
 									lastMonthMinutes = pastMonthSum % 60;
 
-								/* dailySum = Math.floor(monthlySum / nb_of_days_since_month);
+								dailySum = Math.floor(monthlySum / nb_of_days_since_month);
 								let dailyHours = Math.floor(dailySum / 60),
-									dailyMinutes = dailySum % 60; */
+									dailyMinutes = dailySum % 60;
 
 								return (
 									<View
@@ -144,42 +154,40 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 									>
 										<View
 											style={{
-												flex: 2,
-												alignItems: 'center',
+												flex: 3,
+												alignItems: 'flex-start',
+												paddingLeft: 4,
 												borderRightWidth: 1,
 												borderLeftWidth: 1,
 											}}
 										>
-											<Text>{label}</Text>
-										</View>
-										{/* <View style={{ flex: 1, alignItems: 'center', borderRightWidth: 1 }}>
 											<Text>
-												{dailyHours > 0 && `${dailyHours}h`}
+												{label} ~ {dailyHours > 0 && `${dailyHours}h`}
 												{dailyMinutes > 0 && `${dailyMinutes}m`}
 											</Text>
-										</View> */}
+										</View>
 										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 											<Text>
 												{weeklyHours > 0 && `${weeklyHours}h`}
-												{weeklyMinutes > 0 && `${weeklyMinutes}m`}
+												{weeklyMinutes > 0 && `${weeklyMinutes}`}
 											</Text>
 										</View>
 										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 											<Text>
 												{lastWeekHours > 0 && `${lastWeekHours}h`}
-												{lastWeekMinutes > 0 && `${lastWeekMinutes}m`}
+												{lastWeekMinutes > 0 && `${lastWeekMinutes}`}
 											</Text>
 										</View>
 										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 											<Text>
 												{monthlyHours > 0 && `${monthlyHours}h`}
-												{monthlyMinutes > 0 && `${monthlyMinutes}m`}
+												{monthlyMinutes > 0 && `${monthlyMinutes}`}
 											</Text>
 										</View>
 										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 											<Text>
 												{lastMonthHours > 0 && `${lastMonthHours}h`}
-												{lastMonthMinutes > 0 && `${lastMonthMinutes}m`}
+												{lastMonthMinutes > 0 && `${lastMonthMinutes}`}
 											</Text>
 										</View>
 									</View>
