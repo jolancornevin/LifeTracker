@@ -1,12 +1,9 @@
 import React from 'react';
 
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-
-import { StyleSheet, View, Button, TextInput, Text } from 'react-native';
+import { View, Button, TextInput, Text } from 'react-native';
 import { RealmContext } from '../../models/main';
-import { FooterNavigation } from '../utils/footer_navigation';
 import { ExportToEmail } from '../../models/exporter';
-import { getEventsSettings } from '../../models/event_settings';
+import { newDate } from '../../utils';
 
 const { useRealm } = RealmContext;
 
@@ -79,6 +76,24 @@ export const ImportExport = () => {
 									if (obj['_id']) {
 										obj['_id'] = new Realm.BSON.ObjectId(obj['_id']);
 									}
+
+									// reset all hours to UTC 0.
+									// this code is not really going to be needed for the future,
+									// it's just that the old dates weren't fixed to hours 0
+									if (obj?.date) {
+										const correctedDate = new Date(obj.date);
+										if (correctedDate.getUTCHours() != 0) {
+											obj.date = newDate(
+												correctedDate.getUTCFullYear(),
+												correctedDate.getUTCMonth(),
+												correctedDate.getUTCDate() + 1,
+											);
+
+											obj.date = obj.date.getTime();
+										}
+
+									}
+
 									realm.create(type, obj);
 								});
 							});

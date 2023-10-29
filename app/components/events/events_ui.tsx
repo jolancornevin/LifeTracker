@@ -34,12 +34,9 @@ export const EventUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Eve
 		setEvents(events);
 
 		const noticeableEvent = getOrCreateNoticeableEventForDate(realm, date);
-		console.log("got", { noticableEvent });
 
 		setNoticeableEvent(noticeableEvent);
 	}, [date.getTime()]);
-
-	console.log({ noticableEvent });
 
 	return (
 		<FooterNavigation>

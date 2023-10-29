@@ -15,8 +15,8 @@ export const DayRatingsReport = ({ date }: { date: Date }) => {
 	const dayRatings = useQuery(DayRating).filtered(`date >= ${start_date.getTime()} && date < ${end_date.getTime()}`);
 
 	// reset date to the current month, to get the number of days in the month
-	end_date.setDate(end_date.getDate() - 1);
-	const ratingsColors = Array.from({ length: end_date.getDate() }, () => 'transparent');
+	end_date.setDate(end_date.getUTCDate() - 1);
+	const ratingsColors = Array.from({ length: end_date.getUTCDate() }, () => 'transparent');
 
 	// now iterate over the ratings we have in the db and set the color
 	dayRatings.forEach((rating) => {
@@ -24,7 +24,7 @@ export const DayRatingsReport = ({ date }: { date: Date }) => {
 			return;
 		}
 		// date start at 1
-		ratingsColors[new Date(rating.date).getDate() - 1] = ColorForRating[rating.value];
+		ratingsColors[new Date(rating.date).getUTCDate() - 1] = ColorForRating[rating.value];
 	});
 
 	return (

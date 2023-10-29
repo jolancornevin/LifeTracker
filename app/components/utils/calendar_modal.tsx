@@ -17,7 +17,7 @@ export const CalendarModal = ({
 	setDate: React.Dispatch<React.SetStateAction<Date>>;
 	setCalendarVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-	let dateForCalendar = [date.getFullYear(), date.getMonth(), date.getDate()].join('-');
+	let dateForCalendar = [date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()].join('-');
 
 	return (
 		<Modal animationType="slide" transparent={true} visible={calendarVisible}>

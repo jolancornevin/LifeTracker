@@ -33,8 +33,9 @@ export const Header = ({ date, setDate }: { date: Date; setDate: React.Dispatch<
 					maxWidth: 100,
 				}}
 				onPress={() => {
-					const previousDate = newDate(date.getFullYear(), date.getMonth(), date.getDate());
-					previousDate.setDate(date.getDate() - 1);
+					// for some reason, getDate returns the date -1. So no need to decrease here
+					const previousDate = newDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+
 					setDate(previousDate);
 				}}
 			>
@@ -67,8 +68,9 @@ export const Header = ({ date, setDate }: { date: Date; setDate: React.Dispatch<
 					maxWidth: 100,
 				}}
 				onPress={() => {
-					const nextDate = newDate(date.getFullYear(), date.getMonth(), date.getDate());
-					nextDate.setDate(date.getDate() + 1);
+					// for some reason, getDate returns the date -1, so we add 2 for tomorrow
+					const nextDate = newDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + 2);
+
 					setDate(nextDate);
 				}}
 			>

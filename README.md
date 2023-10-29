@@ -13,10 +13,3 @@
 -   https://reactnavigation.org/docs/getting-started (require manual steps)
 
 echo $env:ANDROID_HOME
-
-TODO:
-
--   create a "Event settings" page where
-    -   we can see the current list of event we have
-    -   we can add new ones
-    -   we can remove old ones

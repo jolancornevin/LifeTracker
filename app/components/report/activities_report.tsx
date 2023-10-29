@@ -39,16 +39,16 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 	);
 
 	let { start_date: m_start_date, end_date: m_end_date } = computeMonthStartAndEndDate(date);
-	m_end_date.setMonth(m_end_date.getMonth() - 1);
-	m_start_date.setMonth(m_end_date.getMonth() - 1);
+	m_end_date.setMonth(m_end_date.getUTCMonth() - 1);
+	m_start_date.setMonth(m_end_date.getUTCMonth() - 1);
 	const lastMonthActivities = sumEventsForDateRange(m_start_date, m_end_date);
 
 	let { start_date: w_start_date, end_date: w_end_date } = computeWeekStartAndEndDate(date);
 	const weekActivities = sumEventsForDateRange(w_start_date, w_end_date);
 
 	let { start_date: lw_start_date, end_date: lw_end_date } = computeWeekStartAndEndDate(date);
-	lw_start_date.setDate(lw_start_date.getDate() - 7);
-	lw_end_date.setDate(lw_end_date.getDate() - 7);
+	lw_start_date.setDate(lw_start_date.getUTCDate() - 7);
+	lw_end_date.setDate(lw_end_date.getUTCDate() - 7);
 	const lastWeekActivities = sumEventsForDateRange(lw_start_date, lw_end_date);
 
 	let { start_date, end_date } = computeMonthStartAndEndDate(date);
