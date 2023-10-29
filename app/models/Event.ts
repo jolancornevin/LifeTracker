@@ -38,19 +38,18 @@ export const upsertEvent = (
 			event.value = value;
 		});
 
-		return event;
+		const updatedEvent = realm.objects<Event>('Event').filtered(`_id = oid(${event._id})`);
+		return updatedEvent[0];
 	}
 
 	// create the event for the value
-
 	const newID = new Realm.BSON.ObjectId();
-
 	realm.write(() => {
 		realm.create('Event', {
 			_id: newID,
 			date: date.getTime(),
 			label: label,
-			value: '',
+			value: value,
 			type: type,
 		});
 	});

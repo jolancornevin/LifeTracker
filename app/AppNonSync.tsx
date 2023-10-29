@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 
-import { ScrollView, View, Text, Button, TextInput } from 'react-native';
-import { EventUI } from './components/events/events';
-import { SettingsUI } from './components/settings/settings';
+import { View } from 'react-native';
+import { EventUI } from './components/events/events_ui';
+import { SettingsUI } from './components/settings/settings_ui';
 import { HomeUI } from './components/day_rating/home';
-import { ReportUI } from './components/report/report';
+import { ReportUI } from './components/report/report_ui';
 import { Header } from './components/utils/header';
 import { newDate } from './utils';
 

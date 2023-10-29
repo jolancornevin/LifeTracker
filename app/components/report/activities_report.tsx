@@ -6,6 +6,7 @@ import { RealmContext } from '../../models/main';
 import { computeMonthStartAndEndDate, computeWeekStartAndEndDate } from '../../utils';
 import { Event } from '../../models/event';
 import { ACTIVITY_TYPES, getEventsSettings } from '../../models/event_settings';
+import { HoursMinutes } from '../utils/hours_minutes';
 
 const { useRealm, useQuery } = RealmContext;
 
@@ -122,30 +123,18 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 						{Object.entries(recuringEventSettingsDict)
 							.filter(([label, setting]) => setting.type === type)
 							.map(([label, setting]) => {
-								let dailySum = 0,
-									monthlySum = monthlyActivities[label],
+								let monthlySum = monthlyActivities[label],
+									dailySum = Math.floor(monthlySum / nb_of_days_since_month),
 									weekSum = weekActivities[label],
 									pastWeekSum = lastWeekActivities[label],
-									pastMonthSum = lastMonthActivities[label];
-
-								let weeklyHours = Math.floor(weekSum / 60),
-									weeklyMinutes = weekSum % 60;
-
-								let monthlyHours = Math.floor(monthlySum / 60),
-									monthlyMinutes = monthlySum % 60;
-
-								let lastWeekHours = Math.floor(pastWeekSum / 60),
-									lastWeekMinutes = pastWeekSum % 60;
-
-								let lastMonthHours = Math.floor(pastMonthSum / 60),
-									lastMonthMinutes = pastMonthSum % 60;
-
-								dailySum = Math.floor(monthlySum / nb_of_days_since_month);
-								let dailyHours = Math.floor(dailySum / 60),
+									pastMonthSum = lastMonthActivities[label],
+									// current day
+									dailyHours = Math.floor(dailySum / 60),
 									dailyMinutes = dailySum % 60;
 
 								return (
 									<View
+										key={label}
 										style={{
 											flexDirection: 'row',
 											justifyContent: 'center',
@@ -167,28 +156,16 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 											</Text>
 										</View>
 										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
-											<Text>
-												{weeklyHours > 0 && `${weeklyHours}h`}
-												{weeklyMinutes > 0 && `${weeklyMinutes}`}
-											</Text>
+											<HoursMinutes minutes={weekSum} />
 										</View>
 										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
-											<Text>
-												{lastWeekHours > 0 && `${lastWeekHours}h`}
-												{lastWeekMinutes > 0 && `${lastWeekMinutes}`}
-											</Text>
+											<HoursMinutes minutes={pastWeekSum} />
 										</View>
 										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
-											<Text>
-												{monthlyHours > 0 && `${monthlyHours}h`}
-												{monthlyMinutes > 0 && `${monthlyMinutes}`}
-											</Text>
+											<HoursMinutes minutes={monthlySum} />
 										</View>
 										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
-											<Text>
-												{lastMonthHours > 0 && `${lastMonthHours}h`}
-												{lastMonthMinutes > 0 && `${lastMonthMinutes}`}
-											</Text>
+											<HoursMinutes minutes={pastMonthSum} />
 										</View>
 									</View>
 								);

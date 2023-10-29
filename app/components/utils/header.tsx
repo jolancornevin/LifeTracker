@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import { DDMMyyyy } from '../../utils';
+import { DDMMyyyy, newDate } from '../../utils';
 import { CalendarModal } from './calendar_modal';
 
 export const Header = ({ date, setDate }: { date: Date; setDate: React.Dispatch<React.SetStateAction<Date>> }) => {
@@ -33,9 +33,9 @@ export const Header = ({ date, setDate }: { date: Date; setDate: React.Dispatch<
 					maxWidth: 100,
 				}}
 				onPress={() => {
-					const newDate = new Date(date);
-					newDate.setDate(date.getDate() - 1);
-					setDate(newDate);
+					const previousDate = newDate(date.getFullYear(), date.getMonth(), date.getDate());
+					previousDate.setDate(date.getDate() - 1);
+					setDate(previousDate);
 				}}
 			>
 				<Text>{'< Prev'}</Text>
@@ -67,9 +67,9 @@ export const Header = ({ date, setDate }: { date: Date; setDate: React.Dispatch<
 					maxWidth: 100,
 				}}
 				onPress={() => {
-					const newDate = new Date(date);
-					newDate.setDate(date.getDate() + 1);
-					setDate(newDate);
+					const nextDate = newDate(date.getFullYear(), date.getMonth(), date.getDate());
+					nextDate.setDate(date.getDate() + 1);
+					setDate(nextDate);
 				}}
 			>
 				<Text>{'Next >'}</Text>

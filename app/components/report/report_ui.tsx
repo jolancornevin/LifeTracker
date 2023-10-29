@@ -11,7 +11,7 @@ import { computeMonthStartAndEndDate, ddmmyyyy } from '../../utils';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { NextScreenButton } from '../utils/next_screen_button';
 import { DayRatingsReport } from './day_rating';
-import { ActivitiesReport } from './activities';
+import { ActivitiesReport } from './activities_report';
 
 const { useRealm, useQuery } = RealmContext;
 
