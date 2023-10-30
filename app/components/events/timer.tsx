@@ -3,8 +3,7 @@ import React, { useEffect } from 'react';
 import { View, Button } from 'react-native';
 
 import { EventTimer, createEventTimer, deleteEventTimer, getEventTimers } from '../../models/event_timer';
-import { newDate } from '../../utils';
-
+import { newDate, newDateTime } from '../../utils';
 
 export const Timer = ({
 	realm,
@@ -16,13 +15,13 @@ export const Timer = ({
 	label: string;
 	onStop: (value: number) => void;
 }) => {
-	const [existingTimer, onChangeExistingTimer] = React.useState<EventTimer | null>(getEventTimers(realm, label));
-	const [timeDiff, onTimeDiffChange] = React.useState<number>(0);
+	const [existingTimer, setExistingTimer] = React.useState<EventTimer | null>(getEventTimers(realm, label));
+	const [timeDiff, setTimeDiff] = React.useState<number>(0);
 
 	useEffect(() => {
 		if (existingTimer) {
 			const interval = setInterval(() => {
-				onTimeDiffChange(Math.floor((newDate().getTime() - existingTimer.date) / 1000));
+				setTimeDiff(Math.floor((newDateTime().getTime() - existingTimer.date) / 1000));
 			}, 1000);
 
 			return () => clearInterval(interval);
@@ -42,7 +41,7 @@ export const Timer = ({
 					title={'Start 🕒'}
 					color={'green'}
 					onPress={() => {
-						onChangeExistingTimer(createEventTimer(realm, label));
+						setExistingTimer(createEventTimer(realm, label));
 					}}
 				/>
 			</View>
@@ -67,9 +66,9 @@ export const Timer = ({
 					color={'blue'}
 					onPress={() => {
 						onStop(timeDiff);
-						onChangeExistingTimer(null);
+						setExistingTimer(null);
 						deleteEventTimer(realm, existingTimer);
-						onTimeDiffChange(0);
+						setTimeDiff(0);
 					}}
 				/>
 			</View>
@@ -77,9 +76,9 @@ export const Timer = ({
 				title={'x'}
 				color={'red'}
 				onPress={() => {
-					onChangeExistingTimer(null);
+					setExistingTimer(null);
 					deleteEventTimer(realm, existingTimer);
-					onTimeDiffChange(0);
+					setTimeDiff(0);
 				}}
 			/>
 		</View>

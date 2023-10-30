@@ -11,6 +11,18 @@ export const newDate = function (year?: number, month?: number, day?: number): D
 	return d;
 };
 
+export const newDateTime = function (): Date {
+	let date = new Date();
+	return new Date(
+		date.getUTCFullYear(),
+		date.getUTCMonth(),
+		date.getUTCDate(),
+		date.getUTCHours(),
+		date.getUTCMinutes(),
+		date.getUTCSeconds(),
+	);
+};
+
 export const ddmmyyyy = function (date: Date): string {
 	var mm = date.getUTCMonth() + 1; // getMonth() is zero-based
 	var dd = date.getUTCDate();
