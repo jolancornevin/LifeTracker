@@ -34,7 +34,7 @@ export const Header = ({ date, setDate }: { date: Date; setDate: React.Dispatch<
 				}}
 				onPress={() => {
 					// for some reason, getDate returns the date -1. So no need to decrease here
-					const previousDate = newDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+					const previousDate = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate());
 
 					setDate(previousDate);
 				}}
@@ -69,7 +69,7 @@ export const Header = ({ date, setDate }: { date: Date; setDate: React.Dispatch<
 				}}
 				onPress={() => {
 					// for some reason, getDate returns the date -1, so we add 2 for tomorrow
-					const nextDate = newDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + 2);
+					const nextDate = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 2);
 
 					setDate(nextDate);
 				}}

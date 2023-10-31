@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 
-import { View, Button } from 'react-native';
+import { Button, View } from 'react-native';
 
 import { EventTimer, createEventTimer, deleteEventTimer, getEventTimers } from '../../models/event_timer';
-import { newDate, newDateTime } from '../../utils';
+import { newDateTime } from '../../utils';
 
 export const Timer = ({
 	realm,

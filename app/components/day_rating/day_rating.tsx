@@ -1,16 +1,16 @@
 import * as React from 'react';
 
-import { TouchableOpacity, View, Text } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
-import { RealmContext } from '../../models/main';
 import { DayRating } from '../../models/DayRating';
+import { RealmContext } from '../../models/main';
 
 const { useQuery } = RealmContext;
 
 enum Rating {
 	Bad = 'Bad',
 	Meh = 'Meh',
-	Good = 'Good',
+	Good = 'Good', 
 	Awesome = 'Awesome',
 }
 

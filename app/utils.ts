@@ -15,7 +15,7 @@ export const newDateTime = function (): Date {
 	let date = new Date();
 	return new Date(
 		date.getUTCFullYear(),
-		date.getUTCMonth(),
+		date.getMonth(),
 		date.getUTCDate(),
 		date.getUTCHours(),
 		date.getUTCMinutes(),
@@ -24,7 +24,7 @@ export const newDateTime = function (): Date {
 };
 
 export const ddmmyyyy = function (date: Date): string {
-	var mm = date.getUTCMonth() + 1; // getMonth() is zero-based
+	var mm = date.getMonth() + 1; // getMonth() is zero-based
 	var dd = date.getUTCDate();
 
 	return formatToDate(dd, mm, date.getUTCFullYear());
@@ -47,7 +47,7 @@ export const DDMMyyyy = function (date: Date): string {
 		'December',
 	];
 
-	var mm = months[date.getUTCMonth()];
+	var mm = months[date.getMonth()];
 	var dd = days[date.getUTCDay()];
 
 	return `${dd} ${date.getUTCDate()} ${mm} ${date.getUTCFullYear()}`;
@@ -67,16 +67,16 @@ export const stringToDate = function (date: string): Date {
 
 export const computeMonthStartAndEndDate = (date: Date) => {
 	let start_date = useMemo(() => {
-		const d = newDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + 1);
+		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
 		d.setDate(1);
 
 		return d;
 	}, [date]);
 
 	let end_date = useMemo(() => {
-		const d = newDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + 1);
+		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
 		d.setDate(1);
-		d.setMonth(d.getUTCMonth() + 1);
+		d.setMonth(d.getMonth() + 1);
 
 		return d;
 	}, [date]);
@@ -87,7 +87,7 @@ export const computeMonthStartAndEndDate = (date: Date) => {
 export const computeWeekStartAndEndDate = (date: Date) => {
 	// start date is the beginning of the week
 	let start_date = useMemo(() => {
-		let d = newDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + 1);
+		let d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
 		d.setDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
 
 		return d;
@@ -95,7 +95,7 @@ export const computeWeekStartAndEndDate = (date: Date) => {
 
 	// end date is now (+ 1 because the query is <)
 	let end_date = useMemo(() => {
-		const d = newDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + 1);
+		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
 
 		d.setDate(start_date.getUTCDate() + 7);
 		return d;

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { View, Button, TextInput, Text } from 'react-native';
-import { RealmContext } from '../../models/main';
+import { Button, Text, TextInput, View } from 'react-native';
 import { ExportToEmail } from '../../models/exporter';
+import { RealmContext } from '../../models/main';
 import { newDate } from '../../utils';
 
 const { useRealm } = RealmContext;
@@ -85,7 +85,7 @@ export const ImportExport = () => {
 										if (correctedDate.getUTCHours() != 0) {
 											obj.date = newDate(
 												correctedDate.getUTCFullYear(),
-												correctedDate.getUTCMonth(),
+												correctedDate.getMonth(),
 												correctedDate.getUTCDate() + 1,
 											);
 

@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 
+import { DayRating } from '../../models/DayRating';
 import { RealmContext } from '../../models/main';
 import { computeMonthStartAndEndDate } from '../../utils';
-import { DayRating } from '../../models/DayRating';
 import { ColorForRating } from '../day_rating/day_rating';
 
 const { useQuery } = RealmContext;

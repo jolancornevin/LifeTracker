@@ -1,18 +1,15 @@
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { DayRatingUI } from './day_rating';
 
-import { ddmmyyyy, newDate } from '../../utils';
 import { RealmContext } from '../../models/main';
-import { Header } from '../utils/header';
-import { CalendarModal } from '../utils/calendar_modal';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { NextScreenButton } from '../utils/next_screen_button';
-
+ 
 const { useRealm, useQuery } = RealmContext;
 
 type RootStackParamList = {

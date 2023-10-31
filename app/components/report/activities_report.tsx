@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 
-import { RealmContext } from '../../models/main';
-import { computeMonthStartAndEndDate, computeWeekStartAndEndDate } from '../../utils';
 import { Event } from '../../models/event';
 import { ACTIVITY_TYPES, getEventsSettings } from '../../models/event_settings';
+import { RealmContext } from '../../models/main';
+import { computeMonthStartAndEndDate, computeWeekStartAndEndDate } from '../../utils';
 import { HoursMinutes } from '../utils/hours_minutes';
 
 const { useRealm, useQuery } = RealmContext;
@@ -39,8 +39,8 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 	);
 
 	let { start_date: m_start_date, end_date: m_end_date } = computeMonthStartAndEndDate(date);
-	m_end_date.setMonth(m_end_date.getUTCMonth() - 1);
-	m_start_date.setMonth(m_end_date.getUTCMonth() - 1);
+	m_end_date.setMonth(m_end_date.getMonth() - 1);
+	m_start_date.setMonth(m_end_date.getMonth() - 1);
 	const lastMonthActivities = sumEventsForDateRange(m_start_date, m_end_date);
 
 	let { start_date: w_start_date, end_date: w_end_date } = computeWeekStartAndEndDate(date);
