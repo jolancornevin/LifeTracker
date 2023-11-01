@@ -5,6 +5,11 @@ import { Button, View } from 'react-native';
 import { EventTimer, createEventTimer, deleteEventTimer, getEventTimers } from '../../models/event_timer';
 import { newDateTime } from '../../utils';
 
+export const computeTimeDiff = (existingTimer: EventTimer) => {
+	const currentTime = newDateTime().getTime();
+	return Math.floor((currentTime - existingTimer.date) / 1000);
+};
+
 export const Timer = ({
 	realm,
 	label,
@@ -21,7 +26,7 @@ export const Timer = ({
 	useEffect(() => {
 		if (existingTimer) {
 			const interval = setInterval(() => {
-				setTimeDiff(Math.floor((newDateTime().getTime() - existingTimer.date) / 1000));
+				setTimeDiff(computeTimeDiff(existingTimer));
 			}, 1000);
 
 			return () => clearInterval(interval);

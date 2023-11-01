@@ -2,7 +2,8 @@ import { useMemo } from 'react';
 
 // Create a new date, without any time specific info
 export const newDate = function (year?: number, month?: number, day?: number): Date {
-	let d = new Date();
+	let d = new Date(Date.now());
+
 	if (year !== undefined && month !== undefined && year !== undefined) {
 		d = new Date(year, month, day);
 	}
@@ -12,7 +13,8 @@ export const newDate = function (year?: number, month?: number, day?: number): D
 };
 
 export const newDateTime = function (): Date {
-	let date = new Date();
+	let date = new Date(Date.now());
+
 	return new Date(
 		date.getUTCFullYear(),
 		date.getMonth(),
@@ -59,9 +61,11 @@ export const formatToDate = function (day: number, month: number, year: number):
 
 export const stringToDate = function (date: string): Date {
 	const splittedDate = date.split('/');
-	let d = new Date();
+
+	let d = new Date(Date.now());
 	d.setUTCFullYear(parseInt(splittedDate[2]), parseInt(splittedDate[1]) - 1, parseInt(splittedDate[0]));
 	d.setUTCHours(0, 0, 0, 0);
+
 	return d;
 };
 
