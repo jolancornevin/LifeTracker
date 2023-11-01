@@ -16,13 +16,33 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-module.exports = function (api) {
-	api.cache(true);
+module.exports = (api) => {
+	const isTest = api.env('test');
+	// You can use isTest to determine what presets and plugins to use.
+
+	console.log('IS TEST', isTest);
+
+	if (isTest) {
+		return {
+			presets: [['@babel/preset-env', { targets: { node: 'current' } }], '@babel/preset-typescript'],
+			plugins: [
+				'@babel/plugin-transform-flow-strip-types',
+				['@babel/plugin-transform-react-jsx', { pragma: 'h' }],
+			],
+		};
+	}
+
 	return {
-		presets: ['babel-preset-expo'],
-		plugins: [
-			'@realm/babel-plugin',
-			['@babel/plugin-proposal-decorators', { legacy: true }],
-		],
+		presets: [['@babel/preset-env', { targets: { node: 'current' } }], '@babel/preset-typescript'],
+		plugins: ['@realm/babel-plugin', ['@babel/plugin-proposal-decorators', { legacy: true }]],
 	};
 };
+
+// import type { JestConfigWithTsJest } from 'ts-jest';
+
+// const jestConfig: JestConfigWithTsJest = {
+// 	presets: ['module:metro-react-native-babel-preset'],
+// 	plugins: ['@babel/plugin-transform-flow-strip-types'],
+// };
+
+// export default jestConfig;
