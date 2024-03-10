@@ -6,7 +6,6 @@ import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { View } from 'react-native';
 import { EventUI } from './components/events/events_ui';
 import { SettingsUI } from './components/settings/settings_ui';
-import { HomeUI } from './components/day_rating/home';
 import { ReportUI } from './components/report/report_ui';
 import { Header } from './components/utils/header';
 import { newDate } from './utils';
@@ -50,15 +49,6 @@ export const AppNonSync = () => {
 		<>
 			<NavigationContainer>
 				<Stack.Navigator>
-					<Stack.Screen
-						name="HomeUI"
-						component={HomeUI}
-						options={({ navigation, route }) => ({
-							headerTitle: (props) => <HeaderTitle date={date} setDate={setDate} />,
-							headerBackVisible: false,
-						})}
-						initialParams={{ date: date.toJSON() }}
-					/>
 					<Stack.Screen
 						name="EventUI"
 						component={EventUI}

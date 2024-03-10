@@ -3,14 +3,13 @@ import * as React from 'react';
 import { TouchableOpacity, View, Text } from 'react-native';
 
 import { RealmContext } from '../../models/main';
-import { DayRating } from '../../models/DayRating';
+import { DayRating } from '../../models/day_rating';
 
 const { useQuery } = RealmContext;
 
 enum Rating {
 	Bad = 'Bad',
-	Meh = 'Meh',
-	Good = 'Good',
+	Neutral = 'neutral',
 	Awesome = 'Awesome',
 }
 
@@ -22,7 +21,7 @@ const getOrCreateRatingForDate = (realm: Realm, date: Date): DayRating => {
 			realm.create('DayRating', {
 				_id: new Realm.BSON.ObjectId(),
 				date: date.getTime(),
-				value: '',
+				value: 'neutral',
 			});
 		});
 	}
@@ -41,8 +40,7 @@ const updateRating = (realm: Realm, rating: DayRating, value: string) => {
 
 export const ColorForRating = {
 	[Rating.Bad]: 'red',
-	[Rating.Meh]: 'orange',
-	[Rating.Good]: '#6cc857',
+	[Rating.Neutral]: 'light grey',
 	[Rating.Awesome]: 'gold',
 };
 
@@ -86,10 +84,7 @@ export const DayRatingUI = ({ realm, date }: { date: Date; realm: Realm }) => {
 		<>
 			<View style={{ flexDirection: 'row' }}>
 				{ratingButton(Rating.Bad)}
-				{ratingButton(Rating.Meh)}
-			</View>
-			<View style={{ flexDirection: 'row' }}>
-				{ratingButton(Rating.Good)}
+				{ratingButton(Rating.Neutral)}
 				{ratingButton(Rating.Awesome)}
 			</View>
 		</>

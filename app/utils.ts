@@ -67,6 +67,7 @@ export const stringToDate = function (date: string): Date {
 
 export const computeMonthStartAndEndDate = (date: Date) => {
 	let start_date = useMemo(() => {
+		console.log(date.getMonth())
 		const d = newDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + 1);
 		d.setDate(1);
 

@@ -7,6 +7,7 @@ import { computeMonthStartAndEndDate, computeWeekStartAndEndDate } from '../../u
 import { Event } from '../../models/event';
 import { ACTIVITY_TYPES, getEventsSettings } from '../../models/event_settings';
 import { HoursMinutes } from '../utils/hours_minutes';
+import { LineGraph } from 'react-native-graph';
 
 const { useRealm, useQuery } = RealmContext;
 
@@ -41,7 +42,7 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 	let { start_date: m_start_date, end_date: m_end_date } = computeMonthStartAndEndDate(date);
 	m_end_date.setMonth(m_end_date.getUTCMonth() - 1);
 	m_start_date.setMonth(m_end_date.getUTCMonth() - 1);
-	const lastMonthActivities = sumEventsForDateRange(m_start_date, m_end_date);
+	const previousMonthActivities = sumEventsForDateRange(m_start_date, m_end_date);
 
 	let { start_date: w_start_date, end_date: w_end_date } = computeWeekStartAndEndDate(date);
 	const weekActivities = sumEventsForDateRange(w_start_date, w_end_date);
@@ -49,21 +50,27 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 	let { start_date: lw_start_date, end_date: lw_end_date } = computeWeekStartAndEndDate(date);
 	lw_start_date.setDate(lw_start_date.getUTCDate() - 7);
 	lw_end_date.setDate(lw_end_date.getUTCDate() - 7);
-	const lastWeekActivities = sumEventsForDateRange(lw_start_date, lw_end_date);
+	const previousWeekActivities = sumEventsForDateRange(lw_start_date, lw_end_date);
 
-	let { start_date, end_date } = computeMonthStartAndEndDate(date);
-	const monthlyActivities = sumEventsForDateRange(start_date, end_date);
+	let { start_date: month_start_date, end_date: month_end_date } = computeMonthStartAndEndDate(date);
+	console.log( month_start_date, month_end_date)
+	const monthlyActivities = sumEventsForDateRange(month_start_date, month_end_date);
 
 	// reset the date to 1rst of the month
-	start_date.setDate(1);
+	month_start_date.setDate(1);
 	// Compute the time difference of two dates (in MS)
-	let difference_in_time = date.getTime() - start_date.getTime();
+	let difference_in_time = date.getTime() - month_start_date.getTime();
 	// Divide by the number of MS per day to compute the nb of days since the start
 	// add +1 because on the 1rst, the result is 0 and it's an issue for computations.
 	let nb_of_days_since_month = difference_in_time / (1000 * 3600 * 24) + 1;
 
 	return (
 		<>
+			{/*<LineGraph
+				points={priceHistory}
+				animated={true}
+				color="#4484B2"
+			/>*/}
 			{[
 				{ title: "You've done  💪", type: ACTIVITY_TYPES.Positive },
 				{ title: 'But', type: ACTIVITY_TYPES.Negative },
@@ -126,8 +133,8 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 								let monthlySum = monthlyActivities[label],
 									dailySum = Math.floor(monthlySum / nb_of_days_since_month),
 									weekSum = weekActivities[label],
-									pastWeekSum = lastWeekActivities[label],
-									pastMonthSum = lastMonthActivities[label],
+									pastWeekSum = previousWeekActivities[label],
+									pastMonthSum = previousMonthActivities[label],
 									// current day
 									dailyHours = Math.floor(dailySum / 60),
 									dailyMinutes = dailySum % 60;

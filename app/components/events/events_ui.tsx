@@ -10,6 +10,9 @@ import { ACTIVITY_TYPES, getEventsSettings } from '../../models/event_settings';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { NextScreenButton } from '../utils/next_screen_button';
 import { TextEntry } from './text_entry';
+import { DayRating } from '../../models/day_rating';
+import { DayRatingUI } from './day_rating';
+import { HabitsUI } from './habits';
 
 const { useRealm } = RealmContext;
 
@@ -43,6 +46,9 @@ export const EventUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Eve
 			<ScrollView>
 				<View style={styles.wrapper}>
 					<View style={styles.content}>
+						<DayRatingUI realm={realm} date={date} />
+						<HabitsUI realm={realm} date={date} />
+
 						{[
 							{ title: '-- Goals ✓ --', type: ACTIVITY_TYPES.Positive },
 							{ title: '-- Goals ✗ --', type: ACTIVITY_TYPES.Negative },
