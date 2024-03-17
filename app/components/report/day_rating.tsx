@@ -23,9 +23,11 @@ export const DayRatingsReport = ({ date }: { date: Date }) => {
 		if (!rating.value) {
 			return;
 		}
+		console.log({rating,ColorForRating, value: rating.value})
 		// date start at 1
 		ratingsColors[new Date(rating.date).getUTCDate() - 1] = ColorForRating[rating.value];
 	});
+	console.log({ratingsColors})
 
 	return (
 		<View style={{ width: '100%', flexDirection: 'row', paddingTop: 10 }}>

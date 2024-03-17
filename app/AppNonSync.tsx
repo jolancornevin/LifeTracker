@@ -11,7 +11,6 @@ import { Header } from './components/utils/header';
 import { newDate } from './utils';
 
 export type RootStackParamList = {
-	HomeUI: {};
 	EventUI: {};
 	Settings: {};
 	ReportUI: {};

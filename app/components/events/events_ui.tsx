@@ -46,7 +46,25 @@ export const EventUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Eve
 			<ScrollView>
 				<View style={styles.wrapper}>
 					<View style={styles.content}>
+						<Text
+							style={{
+								fontSize: 16,
+								fontWeight: '600',
+							}}
+						>
+							How was your day?
+						</Text>
 						<DayRatingUI realm={realm} date={date} />
+
+						<Text
+							style={{
+								fontSize: 16,
+								fontWeight: '600',
+								marginTop: 16,
+							}}
+						>
+							Habits
+						</Text>
 						<HabitsUI realm={realm} date={date} />
 
 						{[
@@ -57,7 +75,7 @@ export const EventUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Eve
 								<View
 									key={title}
 									style={{
-										marginBottom: 32,
+										marginTop: 32,
 									}}
 								>
 									<Text
@@ -175,6 +193,5 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		width: '100%',
-		paddingTop: 32,
 	},
 });

@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { View, Text } from 'react-native';
+import { View, Text, Dimensions} from 'react-native';
 
 import { RealmContext } from '../../models/main';
-import { computeMonthStartAndEndDate, computeWeekStartAndEndDate } from '../../utils';
+import { computeMonthStartAndEndDate, computeWeekStartAndEndDate, newDate } from '../../utils';
 import { Event } from '../../models/event';
 import { ACTIVITY_TYPES, getEventsSettings } from '../../models/event_settings';
 import { HoursMinutes } from '../utils/hours_minutes';
-import { LineGraph } from 'react-native-graph';
+import { Chart, point } from './chart';
 
 const { useRealm, useQuery } = RealmContext;
 
@@ -66,11 +66,8 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 
 	return (
 		<>
-			{/*<LineGraph
-				points={priceHistory}
-				animated={true}
-				color="#4484B2"
-			/>*/}
+			<Chart date={date} />
+
 			{[
 				{ title: "You've done  💪", type: ACTIVITY_TYPES.Positive },
 				{ title: 'But', type: ACTIVITY_TYPES.Negative },

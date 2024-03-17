@@ -8,7 +8,7 @@ import { Habits, HabitsList } from '../../models/habits';
 const { useQuery } = RealmContext;
 
 const getOrCreateHabitsForDate = (realm: Realm, label: string, date: Date): Habits => {
-	let habits = useQuery(Habits).filtered(`date = ${date.getTime()} and label = ${label}`);
+	let habits = useQuery(Habits).filtered(`date = ${date.getTime()} and label = '${label}'`);
 
 	if (habits.length === 0) {
 		realm.write(() => {
@@ -23,7 +23,7 @@ const getOrCreateHabitsForDate = (realm: Realm, label: string, date: Date): Habi
 
 	// re-run it outside of the if because react doesn't want hooks to be run in conditions...
 	// It's ugly, but it's ok since it's a pretty quick query.
-	habits = useQuery(Habits).filtered(`date = ${date.getTime()} and label = ${label}`);
+	habits = useQuery(Habits).filtered(`date = ${date.getTime()} and label = '${label}'`);
 	return habits[0];
 };
 
@@ -38,20 +38,17 @@ export const HabitsUI = ({ realm, date }: { date: Date; realm: Realm }) => {
 		const habit = getOrCreateHabitsForDate(realm, label, date);
 
 		return (
-			<View style={{ flexDirection: 'row' }}>
-				<Text>{icon}</Text>
-				<Text>{habit.value}</Text>
-				<View style={{ flexDirection: 'column' }}>
+			<View key={label} style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
+				<View style={{ flex: 1,flexDirection: 'row', alignItems: 'center' }}>
+					<Text style={{fontSize: 24}}>{icon}</Text>
+					<Text>{habit.value}</Text>
+				</View>
+				<View style={{ flex: 1, flexDirection: 'row' }}>
 					<TouchableOpacity
 						key={label+'-'}
 						style={{
 							flex: 1,
 							margin: 2,
-							padding: 2,
-
-							borderWidth: 1,
-							borderRadius: 10,
-							borderColor: 'grey',
 
 							alignItems: 'center',
 							justifyContent: 'center',
@@ -60,19 +57,13 @@ export const HabitsUI = ({ realm, date }: { date: Date; realm: Realm }) => {
 							updateHabit(realm, habit, -1);
 						}}
 					>
-						<Text>-</Text>
+						<Text style={{fontSize: 20}}>-</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						key={label+'+'}
 						style={{
 							flex: 1,
 							margin: 2,
-							padding: 2,
-							paddingLeft: 10,
-
-							borderWidth: 1,
-							borderRadius: 10,
-							borderColor: 'grey',
 
 							alignItems: 'center',
 							justifyContent: 'center',
@@ -81,7 +72,7 @@ export const HabitsUI = ({ realm, date }: { date: Date; realm: Realm }) => {
 							updateHabit(realm, habit, 1);
 						}}
 					>
-						<Text>+</Text>
+						<Text style={{fontSize: 20}}>+</Text>
 					</TouchableOpacity>
 				</View>
 			</View>

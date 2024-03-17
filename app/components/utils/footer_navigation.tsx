@@ -31,7 +31,7 @@ export const FooterNavigation = (props) => {
 					borderTopColor: 'grey',
 				}}
 			>
-				<TouchableOpacity onPress={() => navigation.navigate('HomeUI')}>
+				<TouchableOpacity onPress={() => navigation.navigate('EventUI')}>
 					<Text>Home</Text>
 				</TouchableOpacity>
 				<TouchableOpacity onPress={() => navigation.navigate('Settings')}>

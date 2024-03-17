@@ -9,7 +9,7 @@ const { useQuery } = RealmContext;
 
 enum Rating {
 	Bad = 'Bad',
-	Neutral = 'neutral',
+	Neutral = 'OK',
 	Awesome = 'Awesome',
 }
 
@@ -40,7 +40,7 @@ const updateRating = (realm: Realm, rating: DayRating, value: string) => {
 
 export const ColorForRating = {
 	[Rating.Bad]: 'red',
-	[Rating.Neutral]: 'light grey',
+	[Rating.Neutral]: 'green',
 	[Rating.Awesome]: 'gold',
 };
 
