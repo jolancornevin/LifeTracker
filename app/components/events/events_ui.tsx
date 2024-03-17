@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
-import { StyleSheet, View, Text, TextInput, ScrollView } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { RealmContext } from '../../models/main';
-import { getEventsForDate, getOrCreateNoticeableEventForDate, upsertEvent, Event } from '../../models/event';
+import { Event, getEventsForDate, getOrCreateNoticeableEventForDate, upsertEvent } from '../../models/event';
 import { ACTIVITY_TYPES, getEventsSettings } from '../../models/event_settings';
+import { RealmContext } from '../../models/main';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { NextScreenButton } from '../utils/next_screen_button';
 import { TextEntry } from './text_entry';
@@ -15,7 +15,7 @@ import { DayRatingUI } from './day_rating';
 import { HabitsUI } from './habits';
 
 const { useRealm } = RealmContext;
-
+ 
 type RootStackParamList = {
 	EventUI: {
 		date: Date;

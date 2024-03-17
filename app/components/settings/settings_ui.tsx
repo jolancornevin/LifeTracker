@@ -5,8 +5,8 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { ScrollView, View } from 'react-native';
 import { RealmContext } from '../../models/main';
 import { FooterNavigation } from '../utils/footer_navigation';
-import { ImportExport } from './import_export';
 import { ActivitiesSettings } from './activities_settings';
+import { ImportExport } from './import_export';
 
 const { useRealm } = RealmContext;
 

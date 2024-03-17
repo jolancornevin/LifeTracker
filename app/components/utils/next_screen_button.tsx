@@ -1,10 +1,9 @@
 import * as React from 'react';
 
-import { Text, Button, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
-import { ddmmyyyy, stringToDate } from '../../utils';
 
 export const NextScreenButton = ({ nextScreenName, params = {} }: { nextScreenName: string; params? }) => {
 	const navigation = useNavigation();

@@ -2,16 +2,16 @@ import React from 'react';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { RealmContext } from '../../models/main';
 import { Event } from '../../models/event';
 import { ACTIVITY_TYPES } from '../../models/event_settings';
+import { RealmContext } from '../../models/main';
 import { computeMonthStartAndEndDate, ddmmyyyy } from '../../utils';
 import { FooterNavigation } from '../utils/footer_navigation';
 import { NextScreenButton } from '../utils/next_screen_button';
-import { DayRatingsReport } from './day_rating';
 import { ActivitiesReport } from './activities_report';
+import { DayRatingsReport } from './day_rating';
 
 const { useRealm, useQuery } = RealmContext;
 

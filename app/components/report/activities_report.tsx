@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { View, Text, Dimensions} from 'react-native';
+import { Text, View } from 'react-native';
 
-import { RealmContext } from '../../models/main';
-import { computeMonthStartAndEndDate, computeWeekStartAndEndDate, newDate } from '../../utils';
 import { Event } from '../../models/event';
 import { ACTIVITY_TYPES, getEventsSettings } from '../../models/event_settings';
+import { RealmContext } from '../../models/main';
+import { computeMonthStartAndEndDate, computeWeekStartAndEndDate } from '../../utils';
 import { HoursMinutes } from '../utils/hours_minutes';
 import { Chart, point } from './chart';
 

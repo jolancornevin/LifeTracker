@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { View, Modal } from 'react-native';
+import { Modal, View } from 'react-native';
 
 import { Calendar, DateData } from 'react-native-calendars';
 
-import { formatToDate, newDate } from '../../utils';
+import { newDate } from '../../utils';
 
 export const CalendarModal = ({
 	date,
@@ -17,7 +17,7 @@ export const CalendarModal = ({
 	setDate: React.Dispatch<React.SetStateAction<Date>>;
 	setCalendarVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-	let dateForCalendar = [date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()].join('-');
+	let dateForCalendar = [date.getUTCFullYear(), date.getMonth(), date.getUTCDate()].join('-');
 
 	return (
 		<Modal animationType="slide" transparent={true} visible={calendarVisible}>

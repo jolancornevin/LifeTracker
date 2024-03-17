@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 
+import { DayRating } from '../../models/day_rating';
 import { RealmContext } from '../../models/main';
 import { computeMonthStartAndEndDate } from '../../utils';
-import { DayRating } from '../../models/day_rating';
 import { ColorForRating } from '../events/day_rating';
 
 const { useQuery } = RealmContext;
@@ -23,7 +23,7 @@ export const DayRatingsReport = ({ date }: { date: Date }) => {
 		if (!rating.value) {
 			return;
 		}
-		console.log({rating,ColorForRating, value: rating.value})
+		console.log({rating, ColorForRating, value: rating.value})
 		// date start at 1
 		ratingsColors[new Date(rating.date).getUTCDate() - 1] = ColorForRating[rating.value];
 	});

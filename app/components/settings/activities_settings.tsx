@@ -1,18 +1,14 @@
 import React, { useEffect } from 'react';
 
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
-import { StyleSheet, View, Button, TextInput, Text } from 'react-native';
-import { RealmContext } from '../../models/main';
-import { FooterNavigation } from '../utils/footer_navigation';
-import { ExportToEmail } from '../../models/exporter';
-import { ImportExport } from './import_export';
+import { Button, Text, TextInput, View } from 'react-native';
 import {
 	ACTIVITY_TYPES,
 	createEventsSettings,
 	deleteEventsSetting,
 	getEventsSettings,
 } from '../../models/event_settings';
+import { RealmContext } from '../../models/main';
 
 const { useRealm } = RealmContext;
 

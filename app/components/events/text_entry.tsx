@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 
-import { View, Text, TextInput } from 'react-native';
-import { Timer } from './timer';
+import { Text, TextInput, View } from 'react-native';
 import { HoursMinutes } from '../utils/hours_minutes';
+import { Timer } from './timer';
 
 export const TextEntry = ({
 	realm,
@@ -53,6 +53,9 @@ export const TextEntry = ({
 					}}
 					onChangeText={setText}
 					onSubmitEditing={() => {
+						onChange(text);
+					}}
+					onBlur={() => {
 						onChange(text);
 					}}
 					value={text}

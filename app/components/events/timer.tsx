@@ -1,9 +1,31 @@
 import React, { useEffect } from 'react';
 
-import { View, Button } from 'react-native';
+import { Button, View } from 'react-native';
 
 import { EventTimer, createEventTimer, deleteEventTimer, getEventTimers } from '../../models/event_timer';
-import { newDate, newDateTime } from '../../utils';
+import { newDateTime } from '../../utils';
+
+// returns the diff of time between now and the timer, in seconds
+export const computeTimeDiff = (existingTimer: EventTimer) => {
+	const currentTime = newDateTime().getTime();
+
+	return Math.floor((currentTime - existingTimer.date) / 1000);
+};
+
+// time diff is in seconds
+export const displayTimerElapsedTime = (timeDiff: number) => {
+	const seconds = timeDiff % 60,
+		minutes = Math.floor(timeDiff / 60) % 60,
+		hours = Math.floor(timeDiff / (60 * 60)),
+		timeDiffDisplay =
+			(hours < 10 ? '0' + hours : hours) +
+			':' +
+			(minutes < 10 ? '0' + minutes : minutes) +
+			':' +
+			(seconds < 10 ? '0' + seconds : seconds);
+
+	return timeDiffDisplay;
+};
 
 export const Timer = ({
 	realm,
@@ -21,7 +43,7 @@ export const Timer = ({
 	useEffect(() => {
 		if (existingTimer) {
 			const interval = setInterval(() => {
-				setTimeDiff(Math.floor((newDateTime().getTime() - existingTimer.date) / 1000));
+				setTimeDiff(computeTimeDiff(existingTimer));
 			}, 1000);
 
 			return () => clearInterval(interval);
@@ -48,10 +70,6 @@ export const Timer = ({
 		);
 	}
 
-	const minutes = Math.floor(timeDiff / 60),
-		seconds = timeDiff % 60,
-		timeDiffDisplay = (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
-
 	return (
 		<View
 			style={{
@@ -62,7 +80,7 @@ export const Timer = ({
 		>
 			<View style={{ paddingRight: 8 }}>
 				<Button
-					title={timeDiffDisplay}
+					title={displayTimerElapsedTime(timeDiff)}
 					color={'blue'}
 					onPress={() => {
 						onStop(timeDiff);
