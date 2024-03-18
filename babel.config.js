@@ -24,7 +24,11 @@ module.exports = (api) => {
 
 	if (isTest) {
 		return {
-			presets: [['@babel/preset-env', { targets: { node: 'current' } }], '@babel/preset-typescript'],
+			presets: [
+				['@babel/preset-env', { targets: { node: 'current' } }],
+				['@babel/preset-react', {targets: {node: 'current'}}],
+				'@babel/preset-typescript'
+			],
 			plugins: [
 				'@babel/plugin-transform-flow-strip-types',
 				['@babel/plugin-transform-react-jsx', { pragma: 'h' }],
@@ -33,7 +37,11 @@ module.exports = (api) => {
 	}
 
 	return {
-		presets: [['@babel/preset-env', { targets: { node: 'current' } }], '@babel/preset-typescript'],
+		presets: [
+			['@babel/preset-env', { targets: { node: 'current' } }],
+			['@babel/preset-react', {targets: {node: 'current'}}],
+			'@babel/preset-typescript',
+		],
 		plugins: ['@realm/babel-plugin', ['@babel/plugin-proposal-decorators', { legacy: true }]],
 	};
 };
