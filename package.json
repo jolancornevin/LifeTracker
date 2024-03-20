@@ -9,7 +9,7 @@
     "release": "eas build -p android --profile preview"
   },
   "engines": {
-    "node": ">=v18.16.0"
+    "node": ">=18.0.08"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.5.7",
@@ -33,7 +33,6 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/plugin-proposal-decorators": "^7.19.0",
-    "@babel/preset-react": "^7.23.3",
     "@types/react": "~18.0.14",
     "@types/react-native": "~0.70.6",
     "metro": "^0.79.1",

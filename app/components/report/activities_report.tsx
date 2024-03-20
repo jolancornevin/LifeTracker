@@ -66,7 +66,7 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 
 	return (
 		<>
-			<Chart date={date} />
+			{/* <Chart date={date} /> */}
 
 			{[
 				{ title: "You've done  💪", type: ACTIVITY_TYPES.Positive },
