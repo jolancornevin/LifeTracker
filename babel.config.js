@@ -33,8 +33,11 @@ module.exports = (api) => {
 	}
 
 	return {
-		presets: [['@babel/preset-env', { targets: { node: 'current' } }], '@babel/preset-typescript'],
-		plugins: ['@realm/babel-plugin', ['@babel/plugin-proposal-decorators', { legacy: true }]],
+		presets: ['babel-preset-expo'],
+		plugins: [
+			'@realm/babel-plugin',
+			['@babel/plugin-proposal-decorators', { legacy: true }],
+		],
 	};
 };
 
