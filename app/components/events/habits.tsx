@@ -34,18 +34,18 @@ const updateHabit = (realm: Realm, habit: Habits, value: number) => {
 };
 
 export const HabitsUI = ({ realm, date }: { date: Date; realm: Realm }) => {
-	const habitsButton = (icon: string, label: string) => {
+	const habitsButton = React.useCallback((icon: string, label: string) => {
 		const habit = getOrCreateHabitsForDate(realm, label, date);
 
 		return (
 			<View key={label} style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
-				<View style={{ flex: 1,flexDirection: 'row', alignItems: 'center' }}>
-					<Text style={{fontSize: 24}}>{icon}</Text>
+				<View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+					<Text style={{ fontSize: 24 }}>{icon}</Text>
 					<Text>{habit.value}</Text>
 				</View>
 				<View style={{ flex: 1, flexDirection: 'row' }}>
 					<TouchableOpacity
-						key={label+'-'}
+						key={label + '-'}
 						style={{
 							flex: 1,
 							margin: 2,
@@ -57,10 +57,10 @@ export const HabitsUI = ({ realm, date }: { date: Date; realm: Realm }) => {
 							updateHabit(realm, habit, -1);
 						}}
 					>
-						<Text style={{fontSize: 20}}>-</Text>
+						<Text style={{ fontSize: 20 }}>-</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						key={label+'+'}
+						key={label + '+'}
 						style={{
 							flex: 1,
 							margin: 2,
@@ -72,18 +72,18 @@ export const HabitsUI = ({ realm, date }: { date: Date; realm: Realm }) => {
 							updateHabit(realm, habit, 1);
 						}}
 					>
-						<Text style={{fontSize: 20}}>+</Text>
+						<Text style={{ fontSize: 20 }}>+</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
 		);
-	};
+	}, []);
 
 	return (
 		<>
 			<View style={{ flexDirection: 'row' }}>
-				{HabitsList.map(({icon, label}): JSX.Element => {
-					return habitsButton(icon, label)
+				{HabitsList.map(({ icon, label }): JSX.Element => {
+					return habitsButton(icon, label);
 				})}
 			</View>
 		</>

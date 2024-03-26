@@ -9,7 +9,7 @@ const { useQuery } = RealmContext;
 
 enum Rating {
 	Bad = 'Bad',
-	Neutral = 'OK',
+	Neutral = 'Good',
 	Awesome = 'Awesome',
 }
 
@@ -47,7 +47,7 @@ export const ColorForRating = {
 export const DayRatingUI = ({ realm, date }: { date: Date; realm: Realm }) => {
 	const rating = getOrCreateRatingForDate(realm, date);
 
-	const ratingButton = (value: Rating) => {
+	const ratingButton = React.useCallback((value: Rating) => {
 		return (
 			<TouchableOpacity
 				key={value}
@@ -78,7 +78,7 @@ export const DayRatingUI = ({ realm, date }: { date: Date; realm: Realm }) => {
 				</Text>
 			</TouchableOpacity>
 		);
-	};
+	}, []);
 
 	return (
 		<>

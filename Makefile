@@ -1,5 +1,5 @@
 run:
-	npm web
+	npm run start
 
 build:
 	eas build -p android --profile preview
