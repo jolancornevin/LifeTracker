@@ -15,7 +15,7 @@ export const FooterNavigation = (props) => {
 				paddingTop: 20,
 			}}
 		>
-			<View style={{ flex: 1, paddingHorizontal: 20 }}>{props.children}</View>
+			<View style={{ flex: 1 }}>{props.children}</View>
 			<View
 				style={{
 					width: '100%',

@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { Text, View } from 'react-native';
 
 import { Event } from '../../models/event';
-import { ACTIVITY_TYPES, getEventsSettings } from '../../models/event_settings';
+import { ACTIVITY_TYPES, EventSettings, getEventsSettings } from '../../models/event_settings';
 import { RealmContext } from '../../models/main';
 import { computeMonthStartAndEndDate, computeWeekStartAndEndDate, newDate } from '../../utils';
 import { HoursMinutes } from '../utils/hours_minutes';
@@ -32,13 +32,15 @@ const sumEventsForDateRange = (startDate: Date, endDate: Date): Record<string, n
 	return result;
 };
 
-export const ActivitiesReport = ({ date }: { date: Date }) => {
-	const realm = useRealm();
-
-	const recuringEventSettingsDict = Object.fromEntries(
-		getEventsSettings(realm).map((setting) => [setting.label, setting]),
-	);
-
+export const ActivitiesReport = ({
+	date,
+	recuringEventSettingsDict,
+}: {
+	date: Date;
+	recuringEventSettingsDict: {
+		[k: string]: EventSettings;
+	};
+}) => {
 	let { startDate: m_start_date, endDate: m_end_date } = computeMonthStartAndEndDate(date);
 	m_end_date.setMonth(m_end_date.getUTCMonth() - 1);
 	m_start_date.setMonth(m_end_date.getUTCMonth() - 1);
@@ -65,8 +67,6 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 
 	return (
 		<>
-			<Chart date={date} eventsLabels={Object.keys(recuringEventSettingsDict)}/>
-
 			{[
 				{ title: "You've done  💪", type: ACTIVITY_TYPES.Positive },
 				{ title: 'But', type: ACTIVITY_TYPES.Negative },

@@ -109,7 +109,6 @@ const pointsForDateRange = (events: Realm.Results<Event>, startDate: Date, endDa
 };
 
 export const Chart = ({ date, eventsLabels }: { date: Date; eventsLabels: string[] }) => {
-
 	let { startDate, endDate } = computePast30dDate(date);
 
 	let events = useQuery(Event).filtered(
@@ -120,7 +119,7 @@ export const Chart = ({ date, eventsLabels }: { date: Date; eventsLabels: string
 
 	return (
 		<>
-			<LineChart data={data} height={150} gap={30}  color={'#297AB1'} backgroundColor={'#FFFFFF'} />
+			<LineChart data={data} height={150} gap={30}  color={'#297AB1'} backgroundColor={'#efefef'} />
 			<View style={{ flex: 1, flexDirection: 'row' }}>
 				{data.map((d) => (
 					<Text key={d.seriesName} style={{ color: d.color, paddingRight: 8 }}>
