@@ -2,20 +2,12 @@ import React, { useEffect, useRef } from 'react';
 
 import { Text, View } from 'react-native';
 
-import * as echarts from 'echarts/core';
-import { LineChart } from 'echarts/charts';
-import { GridComponent } from 'echarts/components';
-import { SVGRenderer, SkiaChart } from '@wuba/react-native-echarts';
-
-echarts.use([SVGRenderer, LineChart, GridComponent]);
-
-import PureChart from 'react-native-pure-chart';
-
 import { Event } from '../../models/event';
 import { ACTIVITY_TYPES, getEventsSettings } from '../../models/event_settings';
 import { RealmContext } from '../../models/main';
-import { computeMonthStartAndEndDate, computeWeekStartAndEndDate } from '../../utils';
+import { computeMonthStartAndEndDate, computeWeekStartAndEndDate, newDate } from '../../utils';
 import { HoursMinutes } from '../utils/hours_minutes';
+import { Chart } from './chart';
 
 const { useRealm, useQuery } = RealmContext;
 
@@ -72,69 +64,9 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 	// add +1 because on the 1rst, the result is 0 and it's an issue for computations.
 	let nb_of_days_since_month = difference_in_time / (1000 * 3600 * 24) + 1;
 
-	// ---------------------
-
-	const skiaRef = useRef<any>(null);
-	useEffect(() => {
-		const option = {
-			xAxis: {
-				type: 'category',
-				data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-			},
-			yAxis: {
-				type: 'value',
-			},
-			series: [
-				{
-					data: [150, 230, 224, 218, 135, 147, 260],
-					type: 'line',
-				},
-			],
-		};
-		let chart: any;
-		if (skiaRef.current) {
-			chart = echarts.init(skiaRef.current, 'light', {
-				renderer: 'svg',
-				width: 400,
-				height: 400,
-			});
-			chart.setOption(option);
-		}
-		return () => chart?.dispose();
-	}, []);
-
-
-	let sampleData = [
-		{
-		  seriesName: 'series1',
-		  data: [
-			{x: '2018-02-01', y: 30},
-			{x: '2018-02-02', y: 200},
-			{x: '2018-02-03', y: 170},
-			{x: '2018-02-04', y: 250},
-			{x: '2018-02-05', y: 10}
-		  ],
-		  color: '#297AB1'
-		},
-		{
-		  seriesName: 'series2',
-		  data: [
-			{x: '2018-02-01', y: 20},
-			{x: '2018-02-02', y: 100},
-			{x: '2018-02-03', y: 140},
-			{x: '2018-02-04', y: 550},
-			{x: '2018-02-05', y: 40}
-		  ],
-		  color: 'yellow'
-		}
-	  ]
-
 	return (
 		<>
-			{/* <Chart date={date} /> */}
-			<SkiaChart ref={skiaRef} />
-
-			<PureChart data={sampleData} type='line' />
+			<Chart date={date} eventsLabels={Object.keys(recuringEventSettingsDict)}/>
 
 			{[
 				{ title: "You've done  💪", type: ACTIVITY_TYPES.Positive },
