@@ -11,9 +11,9 @@ import { Chart } from './chart';
 
 const { useRealm, useQuery } = RealmContext;
 
-const sumEventsForDateRange = (start_date: Date, end_date: Date): Record<string, number> => {
+const sumEventsForDateRange = (startDate: Date, endDate: Date): Record<string, number> => {
 	let events = useQuery(Event).filtered(
-		`date >= ${start_date.getTime()} and date < ${end_date.getTime()} and type != '${ACTIVITY_TYPES.Noticeable}'`,
+		`date >= ${startDate.getTime()} and date < ${endDate.getTime()} and type != '${ACTIVITY_TYPES.Noticeable}'`,
 	);
 
 	let result = {};
@@ -39,20 +39,20 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 		getEventsSettings(realm).map((setting) => [setting.label, setting]),
 	);
 
-	let { start_date: m_start_date, end_date: m_end_date } = computeMonthStartAndEndDate(date);
+	let { startDate: m_start_date, endDate: m_end_date } = computeMonthStartAndEndDate(date);
 	m_end_date.setMonth(m_end_date.getUTCMonth() - 1);
 	m_start_date.setMonth(m_end_date.getUTCMonth() - 1);
 	const previousMonthActivities = sumEventsForDateRange(m_start_date, m_end_date);
 
-	let { start_date: w_start_date, end_date: w_end_date } = computeWeekStartAndEndDate(date);
+	let { startDate: w_start_date, endDate: w_end_date } = computeWeekStartAndEndDate(date);
 	const weekActivities = sumEventsForDateRange(w_start_date, w_end_date);
 
-	let { start_date: lw_start_date, end_date: lw_end_date } = computeWeekStartAndEndDate(date);
+	let { startDate: lw_start_date, endDate: lw_end_date } = computeWeekStartAndEndDate(date);
 	lw_start_date.setDate(lw_start_date.getUTCDate() - 7);
 	lw_end_date.setDate(lw_end_date.getUTCDate() - 7);
 	const previousWeekActivities = sumEventsForDateRange(lw_start_date, lw_end_date);
 
-	let { start_date: month_start_date, end_date: month_end_date } = computeMonthStartAndEndDate(date);
+	let { startDate: month_start_date, endDate: month_end_date } = computeMonthStartAndEndDate(date);
 	console.log(month_start_date, month_end_date);
 	const monthlyActivities = sumEventsForDateRange(month_start_date, month_end_date);
 

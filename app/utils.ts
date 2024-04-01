@@ -12,6 +12,10 @@ export const newDate = function (year?: number, month?: number, day?: number): D
 	return d;
 };
 
+export const copyDate = function (date: Date): Date {
+	return new Date(date.getUTCFullYear(), date.getMonth(), date.getUTCDate()+1, 0, 0, 0, 0);
+};
+
 export const newDateTime = function (): Date {
 	let date = new Date(Date.now());
 
@@ -70,14 +74,14 @@ export const stringToDate = function (date: string): Date {
 };
 
 export const computeMonthStartAndEndDate = (date: Date) => {
-	let start_date = useMemo(() => {
+	let startDate = useMemo(() => {
 		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
 		d.setDate(1);
 
 		return d;
 	}, [date]);
 
-	let end_date = useMemo(() => {
+	let endDate = useMemo(() => {
 		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
 		d.setDate(1);
 		d.setMonth(d.getMonth() + 1);
@@ -85,12 +89,23 @@ export const computeMonthStartAndEndDate = (date: Date) => {
 		return d;
 	}, [date]);
 
-	return { start_date, end_date };
+	return { startDate, endDate };
+};
+
+export const computePast30dDate = (date: Date) => {
+	let startDate = useMemo(() => {
+		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
+		d.setDate(date.getUTCDate() - 30);
+
+		return d;
+	}, [date]);
+
+	return { startDate, endDate: date };
 };
 
 export const computeWeekStartAndEndDate = (date: Date) => {
 	// start date is the beginning of the week
-	let start_date = useMemo(() => {
+	let startDate = useMemo(() => {
 		let d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
 		d.setDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
 
@@ -98,12 +113,12 @@ export const computeWeekStartAndEndDate = (date: Date) => {
 	}, [date]);
 
 	// end date is now (+ 1 because the query is <)
-	let end_date = useMemo(() => {
+	let endDate = useMemo(() => {
 		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
 
-		d.setDate(start_date.getUTCDate() + 7);
+		d.setDate(startDate.getUTCDate() + 7);
 		return d;
-	}, [start_date, date]);
+	}, [startDate, date]);
 
-	return { start_date, end_date };
+	return { startDate, endDate };
 };

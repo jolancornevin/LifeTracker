@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { View, Text, Dimensions } from 'react-native';
 
 import { RealmContext } from '../../models/main';
-import { computeMonthStartAndEndDate, computeWeekStartAndEndDate, newDate } from '../../utils';
+import {
+	DDMMyyyy,
+	computeMonthStartAndEndDate,
+	computePast30dDate,
+	computeWeekStartAndEndDate,
+	copyDate,
+	newDate,
+} from '../../utils';
 import { Event } from '../../models/event';
 import { ACTIVITY_TYPES } from '../../models/event_settings';
 
@@ -46,12 +53,12 @@ const colors = [
 	'#000000',
 ];
 
-	// ---------------------------
+// ---------------------------
 
-	/**
+/**
 	 *
-	 * @param start_date
-	 * @param end_date
+	 * @param startDate
+	 * @param endDate
 	 * @returns [
 		{
 			seriesName: 'series1',
@@ -63,63 +70,69 @@ const colors = [
 		},..
 	];
 	 */
-	const pointsForDateRange = ( date: Date, eventsLabels: string[] ) => {
-		// todo, get past 30days
-		let { start_date: m_start_date, end_date: m_end_date } = computeMonthStartAndEndDate(date);
+const pointsForDateRange = (events: Realm.Results<Event>, startDate: Date, endDate: Date,eventsLabels: string[]) => {
+	const labelToData: Record<string, eventValues> = {};
+	const labelToDateAndData = {};
 
-		const labelToData: Record<string, eventValues> = {};
-		const labelToDateToData = {};
-		eventsLabels.forEach((label, i) => {
-			labelToData[label] = {
-				seriesName: label,
-				color: colors[i],
-				data: [],
-			};
-			labelToDateToData[label] = {};
-		});
+	eventsLabels.forEach((label, i) => {
+		labelToData[label] = {
+			seriesName: label,
+			color: colors[i],
+			data: [],
+		};
+		labelToDateAndData[label] = {};
+	});
 
-		// iterate over the dates one by one so that we have data for every date
-		for (
-			let currentDate = m_start_date;
-			currentDate <= m_end_date;
-			currentDate.setDate(currentDate.getUTCDate() + 1)
-		) {
-			const events = useQuery(Event).filtered(
-				`date = ${currentDate.getTime()} and type != '${ACTIVITY_TYPES.Noticeable}'`,
-			);
 
-			// get the data we have
-			events.forEach((event: Event) => {
-				if (!event.value) {
-					return;
-				}
-
-				labelToDateToData[event.label][currentDate.toDateString()] = parseInt(event.value);
-			});
-
-			// for all events label (so even if no today data), we go add a point and we set it to 0 if no data.
-			eventsLabels.forEach((label, i) => {
-				labelToData[label].data.push({
-					x: currentDate.getUTCDate().toString(),
-					y: labelToDateToData[label][currentDate.toDateString()] ?? 0,
-				});
-			});
+	// iterate over the events and store the dates and values we have values for
+	events.forEach((event: Event) => {
+		if (!event.value) {
+			return;
 		}
 
-		return Object.values(labelToData);
-	};
+		if (!labelToData[event.label]) {
+			return;
+		}
 
+		labelToDateAndData[event.label][new Date(event.date).toDateString()] = parseInt(event.value) ?? 0;
+	});
+
+	// iterate over the dates one by one in order to have data for every dates.
+	for (
+		let currentDate = startDate;
+		currentDate <= endDate;
+		currentDate.setDate(currentDate.getUTCDate() + 1)
+	) {
+		eventsLabels.forEach((label, i) => {
+			labelToData[label].data.unshift({
+				// take the data we have, or 0
+				y: labelToDateAndData[label][new Date(currentDate).toDateString()] ?? 0,
+				x: DDMMyyyy(currentDate),
+			});
+		});
+	}
+
+	// transform that map of labels to an array and fiter out values without data;
+	return Object.values(labelToData).filter((v) => v.data.length > 0);
+};
 
 export const Chart = ({ date, eventsLabels }: { date: Date; eventsLabels: string[] }) => {
+	let { startDate, endDate } = computePast30dDate(date);
 
-	let data = pointsForDateRange( date, eventsLabels);
+	let events = useQuery(Event).filtered(
+		`date >= ${startDate.getTime()} and date < ${endDate.getTime()} and type != '${ACTIVITY_TYPES.Noticeable}'`,
+	);
+
+	let data = useMemo(() => pointsForDateRange(events, startDate, endDate, eventsLabels), [date, events]);
 
 	return (
 		<>
-			<PureChart data={data} type="line" />
+			<PureChart data={data} type="line" height={150} />
 			<View style={{ flex: 1, flexDirection: 'row' }}>
 				{data.map((d) => (
-					<Text key={d.seriesName} style={{ color: d.color, paddingRight: 8 }}>{d.seriesName}</Text>
+					<Text key={d.seriesName} style={{ color: d.color, paddingRight: 8 }}>
+						{d.seriesName}
+					</Text>
 				))}
 			</View>
 		</>

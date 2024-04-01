@@ -24,10 +24,10 @@ type RootStackParamList = {
 };
 
 const getNoticeableEventsForDate = (date: Date): Event[] => {
-	const { start_date, end_date } = computeMonthStartAndEndDate(date);
+	const { startDate, endDate } = computeMonthStartAndEndDate(date);
 
 	let events = useQuery(Event).filtered(
-		`date >= ${start_date.getTime()} and date < ${end_date.getTime()} and type = '${ACTIVITY_TYPES.Noticeable}'`,
+		`date >= ${startDate.getTime()} and date < ${endDate.getTime()} and type = '${ACTIVITY_TYPES.Noticeable}'`,
 	);
 
 	let result = [];

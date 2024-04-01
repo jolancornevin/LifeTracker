@@ -10,13 +10,13 @@ import { ColorForRating } from '../events/day_rating';
 const { useQuery } = RealmContext;
 
 export const DayRatingsReport = ({ date }: { date: Date }) => {
-	const { start_date, end_date } = computeMonthStartAndEndDate(date);
+	const { startDate, endDate } = computeMonthStartAndEndDate(date);
 
-	const dayRatings = useQuery(DayRating).filtered(`date >= ${start_date.getTime()} && date < ${end_date.getTime()}`);
+	const dayRatings = useQuery(DayRating).filtered(`date >= ${startDate.getTime()} && date < ${endDate.getTime()}`);
 
 	// reset date to the current month, to get the number of days in the month
-	end_date.setDate(end_date.getUTCDate() - 1);
-	const ratingsColors = Array.from({ length: end_date.getUTCDate() }, () => 'transparent');
+	endDate.setDate(endDate.getUTCDate() - 1);
+	const ratingsColors = Array.from({ length: endDate.getUTCDate() }, () => 'transparent');
 
 	// now iterate over the ratings we have in the db and set the color
 	dayRatings.forEach((rating) => {
