@@ -95,7 +95,7 @@ export const computeMonthStartAndEndDate = (date: Date) => {
 export const computePast30dDate = (date: Date) => {
 	let startDate = useMemo(() => {
 		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
-		d.setDate(date.getUTCDate() - 30);
+		d.setUTCHours(- 24 * 30);
 
 		return d;
 	}, [date]);

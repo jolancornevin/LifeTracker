@@ -1,20 +1,18 @@
 import React, { useMemo } from 'react';
 
-import { View, Text, Dimensions } from 'react-native';
+import { Text, View } from 'react-native';
 
+import { Event } from '../../models/event';
+import { ACTIVITY_TYPES } from '../../models/event_settings';
 import { RealmContext } from '../../models/main';
 import {
 	DDMMyyyy,
-	computeMonthStartAndEndDate,
 	computePast30dDate,
-	computeWeekStartAndEndDate,
-	copyDate,
-	newDate,
+	ddmmyyyy
 } from '../../utils';
-import { Event } from '../../models/event';
-import { ACTIVITY_TYPES } from '../../models/event_settings';
 
-import PureChart from 'react-native-pure-chart';
+import LineChart from '../line_chart/line-chart';
+
 
 const { useRealm, useQuery } = RealmContext;
 
@@ -70,7 +68,7 @@ const colors = [
 		},..
 	];
 	 */
-const pointsForDateRange = (events: Realm.Results<Event>, startDate: Date, endDate: Date,eventsLabels: string[]) => {
+const pointsForDateRange = (events: Realm.Results<Event>, startDate: Date, endDate: Date, eventsLabels: string[]) => {
 	const labelToData: Record<string, eventValues> = {};
 	const labelToDateAndData = {};
 
@@ -82,7 +80,6 @@ const pointsForDateRange = (events: Realm.Results<Event>, startDate: Date, endDa
 		};
 		labelToDateAndData[label] = {};
 	});
-
 
 	// iterate over the events and store the dates and values we have values for
 	events.forEach((event: Event) => {
@@ -98,16 +95,12 @@ const pointsForDateRange = (events: Realm.Results<Event>, startDate: Date, endDa
 	});
 
 	// iterate over the dates one by one in order to have data for every dates.
-	for (
-		let currentDate = startDate;
-		currentDate <= endDate;
-		currentDate.setDate(currentDate.getUTCDate() + 1)
-	) {
+	for (let currentDate = startDate; currentDate <= endDate; currentDate.setUTCHours(currentDate.getUTCHours() + 24)) {
 		eventsLabels.forEach((label, i) => {
 			labelToData[label].data.unshift({
 				// take the data we have, or 0
 				y: labelToDateAndData[label][new Date(currentDate).toDateString()] ?? 0,
-				x: DDMMyyyy(currentDate),
+				x: ddmmyyyy(currentDate),
 			});
 		});
 	}
@@ -117,17 +110,18 @@ const pointsForDateRange = (events: Realm.Results<Event>, startDate: Date, endDa
 };
 
 export const Chart = ({ date, eventsLabels }: { date: Date; eventsLabels: string[] }) => {
+	console.log({date})
 	let { startDate, endDate } = computePast30dDate(date);
 
 	let events = useQuery(Event).filtered(
-		`date >= ${startDate.getTime()} and date < ${endDate.getTime()} and type != '${ACTIVITY_TYPES.Noticeable}'`,
+		`date >= ${startDate.getTime()} and date <= ${endDate.getTime()} and type != '${ACTIVITY_TYPES.Noticeable}'`,
 	);
 
 	let data = useMemo(() => pointsForDateRange(events, startDate, endDate, eventsLabels), [date, events]);
 
 	return (
 		<>
-			<PureChart data={data} type="line" height={150} />
+			<LineChart data={data} height={150} gap={30}  color={'#297AB1'} backgroundColor={'#FFFFFF'} />
 			<View style={{ flex: 1, flexDirection: 'row' }}>
 				{data.map((d) => (
 					<Text key={d.seriesName} style={{ color: d.color, paddingRight: 8 }}>

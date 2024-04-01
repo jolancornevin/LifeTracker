@@ -15,7 +15,7 @@ import { DayRatingUI } from './day_rating';
 import { HabitsUI } from './habits';
 
 const { useRealm } = RealmContext;
- 
+
 type RootStackParamList = {
 	EventUI: {
 		date: Date;
@@ -56,7 +56,7 @@ export const EventUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Eve
 						</Text>
 						<DayRatingUI realm={realm} date={date} />
 
-						<Text
+						{/* <Text
 							style={{
 								fontSize: 16,
 								fontWeight: '600',
@@ -65,7 +65,7 @@ export const EventUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Eve
 						>
 							Habits
 						</Text>
-						<HabitsUI realm={realm} date={date} />
+						<HabitsUI realm={realm} date={date} /> */}
 
 						{[
 							{ title: '-- Goals ✓ --', type: ACTIVITY_TYPES.Positive },
