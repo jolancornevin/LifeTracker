@@ -53,7 +53,6 @@ export const ActivitiesReport = ({ date }: { date: Date }) => {
 	const previousWeekActivities = sumEventsForDateRange(lw_start_date, lw_end_date);
 
 	let { startDate: month_start_date, endDate: month_end_date } = computeMonthStartAndEndDate(date);
-	console.log(month_start_date, month_end_date);
 	const monthlyActivities = sumEventsForDateRange(month_start_date, month_end_date);
 
 	// reset the date to 1rst of the month

@@ -6,9 +6,8 @@ import { Event } from '../../models/event';
 import { ACTIVITY_TYPES } from '../../models/event_settings';
 import { RealmContext } from '../../models/main';
 import {
-	DDMMyyyy,
+	DDddmm,
 	computePast30dDate,
-	ddmmyyyy
 } from '../../utils';
 
 import LineChart from '../line_chart/line-chart';
@@ -100,7 +99,7 @@ const pointsForDateRange = (events: Realm.Results<Event>, startDate: Date, endDa
 			labelToData[label].data.unshift({
 				// take the data we have, or 0
 				y: labelToDateAndData[label][new Date(currentDate).toDateString()] ?? 0,
-				x: ddmmyyyy(currentDate),
+				x: DDddmm(currentDate),
 			});
 		});
 	}
@@ -110,7 +109,7 @@ const pointsForDateRange = (events: Realm.Results<Event>, startDate: Date, endDa
 };
 
 export const Chart = ({ date, eventsLabels }: { date: Date; eventsLabels: string[] }) => {
-	console.log({date})
+
 	let { startDate, endDate } = computePast30dDate(date);
 
 	let events = useQuery(Event).filtered(

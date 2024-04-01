@@ -356,7 +356,7 @@ class LineChart extends React.Component<{
 							let dataObject = series.data[this.state.selectedIndex];
 							return dataObject.y ? (
 								<View key={series.seriesName}>
-									{dataObject.x ? <Text style={styles.tooltipTitle}>{series.seriesName} {dataObject.x}</Text> : null}
+									{dataObject.x ? <Text style={styles.tooltipTitle}>{series.seriesName} - {dataObject.x}</Text> : null}
 									<View style={{ flexDirection: 'row', paddingLeft: 5, alignItems: 'center' }}>
 										<View
 											style={{

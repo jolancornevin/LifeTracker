@@ -59,6 +59,14 @@ export const DDMMyyyy = function (date: Date): string {
 	return `${dd} ${date.getUTCDate()} ${mm} ${date.getUTCFullYear()}`;
 };
 
+export const DDddmm = function (date: Date): string {
+	var days = ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thur.', 'Fri.', 'Sat.'];
+
+	var dd = days[date.getUTCDay()];
+
+	return `${dd} ${date.getUTCDate()}/${date.getMonth() < 10? '0' + date.getMonth(): date.getMonth()}`;
+};
+
 export const formatToDate = function (day: number, month: number, year: number): string {
 	return [(day > 9 ? '' : '0') + day, '/', (month > 9 ? '' : '0') + month, '/', year].join('');
 };
