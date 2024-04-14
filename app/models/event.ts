@@ -33,7 +33,7 @@ export const upsertEvent = (
 	type: string,
 ): Event => {
 	// upsert the value if the event exits
-	if (event) {
+	if (event?._id) {
 		realm.write(() => {
 			event.value = value;
 		});
@@ -57,7 +57,7 @@ export const upsertEvent = (
 	const createdEvent = realm.objects<Event>('Event').filtered(`_id = oid(${newID})`);
 
 	// this should always exists since we've just created it.
-	return createdEvent[0];
+	return Object.assign({}, createdEvent[0]);
 };
 
 export const getEventsForDate = (realm: Realm, date: Date): Record<string, Event> => {
@@ -68,7 +68,8 @@ export const getEventsForDate = (realm: Realm, date: Date): Record<string, Event
 		result[event.label] = event;
 	});
 
-	return result;
+	// copy the object for when we are going to delete all realm objects
+	return Object.assign({}, result);
 };
 
 export const getOrCreateNoticeableEventForDate = (realm: Realm, date: Date): Event => {
@@ -78,7 +79,7 @@ export const getOrCreateNoticeableEventForDate = (realm: Realm, date: Date): Eve
 		return events[0];
 	}
 
-	let event;
+	let event: Event;
 	realm.write(() => {
 		event = realm.create<Event>('Event', {
 			_id: new Realm.BSON.ObjectId(),
@@ -89,5 +90,6 @@ export const getOrCreateNoticeableEventForDate = (realm: Realm, date: Date): Eve
 		});
 	});
 
-	return event;
+	// copy the object for when we are going to delete all realm objects
+	return Object.assign({}, event);
 };

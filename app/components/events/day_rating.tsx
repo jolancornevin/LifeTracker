@@ -21,7 +21,7 @@ const getOrCreateRatingForDate = (realm: Realm, date: Date): DayRating => {
 			realm.create('DayRating', {
 				_id: new Realm.BSON.ObjectId(),
 				date: date.getTime(),
-				value: 'neutral',
+				value: '',
 			});
 		});
 	}
@@ -78,7 +78,7 @@ export const DayRatingUI = ({ realm, date }: { date: Date; realm: Realm }) => {
 				</Text>
 			</TouchableOpacity>
 		);
-	}, []);
+	}, [rating]);
 
 	return (
 		<>
