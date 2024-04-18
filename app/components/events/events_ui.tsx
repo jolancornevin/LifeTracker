@@ -29,7 +29,7 @@ export const EventUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Eve
 
 	const date = new Date(route.params.date);
 
-	const [events, setEvents] = React.useState<Record<string, Event>>([]);
+	const [events, setEvents] = React.useState<Record<string, Event>>({});
 	const [noticableEvent, setNoticeableEvent] = React.useState<Event>();
 
 	useEffect(() => {
@@ -113,10 +113,11 @@ export const EventUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Eve
 															eventSetting.type,
 														);
 
-														setEvents((oldEvents) => ({
+														setEvents((oldEvents) => {
+															return ({
 															...oldEvents,
 															[eventSetting.label]: newEvent,
-														}));
+														})});
 													}}
 												/>
 											);
