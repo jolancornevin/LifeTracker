@@ -8,8 +8,7 @@ export const HoursMinutes = ({ minutes }: { minutes: number }) => {
 
 	return (
 		<Text>
-			{hours > 0 && `${hours}h`}
-			{minutesLeft > 0 && `${minutesLeft}`}
+			{hours || minutesLeft? `${hours || 0}h${String(minutesLeft|| 0).padStart(2, '0')}`: '-'}
 		</Text>
 	);
 };

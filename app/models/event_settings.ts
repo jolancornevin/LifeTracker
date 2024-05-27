@@ -23,17 +23,18 @@ export class EventSettings extends Realm.Object<EventSettings> {
 	label!: string;
 	type!: string; // ACTIVITY_TYPES
 
+	order!: number;
+
 	target: number;
 
 	static primaryKey = '_id';
 }
 
-// TODO make sure the order is fixed
 export const getEventsSettings = (realm: Realm): EventSettings[] => {
-	return realm.objects<EventSettings>('EventSettings').map((setting) => setting);
+	return realm.objects<EventSettings>('EventSettings').map((setting) => setting).sort((a, b) => a.order - b.order);
 };
 
-export const createEventsSettings = (realm: Realm, label: string, type: ACTIVITY_TYPES, target?: number) => {
+export const createEventsSettings = (realm: Realm, label: string, type: ACTIVITY_TYPES, order: number, target?: number) => {
 	realm.write(() => {
 		realm.create('EventSettings', {
 			_id: new Realm.BSON.ObjectId(),
@@ -42,6 +43,7 @@ export const createEventsSettings = (realm: Realm, label: string, type: ACTIVITY
 			type: type,
 
 			target: target,
+			order: target,
 		});
 	});
 };

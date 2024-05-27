@@ -20,6 +20,7 @@ export const ActivitiesSettings = () => {
 	const [activityName, setActivityName] = React.useState<string>('');
 	const [activityType, setactivityType] = React.useState<ACTIVITY_TYPES>(ACTIVITY_TYPES.Positive);
 	const [activityTarget, setActivityTarget] = React.useState<string>('');
+	const [order, setOrder] = React.useState<string>('');
 	const [errorText, setErrorText] = React.useState<string>('');
 	const [successText, setSuccessText] = React.useState<string>('');
 
@@ -44,11 +45,16 @@ export const ActivitiesSettings = () => {
 			setErrorText('The target of the activity is required');
 			return;
 		}
+		if (order === '') {
+			setErrorText('The order of the activity is required');
+			return;
+		}
 
-		createEventsSettings(realm, activityName, activityType, Number(activityTarget));
+		createEventsSettings(realm, activityName, activityType, Number(order), Number(activityTarget));
 		setErrorText('');
 		setActivityName('');
 		setActivityTarget('');
+		setOrder('');
 		setSuccessText('done');
 	}
 
@@ -94,6 +100,9 @@ export const ActivitiesSettings = () => {
 					<View style={{ flex: 3 }}>
 						<Text>{activity.target}</Text>
 					</View>
+					<View style={{ flex: 3 }}>
+						<Text>{activity.order}</Text>
+					</View>
 					<View style={{ flex: 2 }}>
 						<Button
 							title={'🗑️'}
@@ -121,6 +130,9 @@ export const ActivitiesSettings = () => {
 				</View>
 				<View style={{ flex: 3 }}>
 					<Text>Target</Text>
+				</View>
+				<View style={{ flex: 3 }}>
+					<Text>Order</Text>
 				</View>
 				<View style={{ flex: 2 }}></View>
 			</View>
@@ -162,6 +174,21 @@ export const ActivitiesSettings = () => {
 						editable
 						onChangeText={setActivityTarget}
 						value={activityTarget}
+						keyboardType={'numeric'}
+					/>
+				</View>
+				<View style={{ flex: 3 }}>
+					{/* order */}
+					<TextInput
+						style={{
+							borderBottomWidth: 1,
+
+							marginLeft: 8,
+							marginRight: 8,
+						}}
+						editable
+						onChangeText={setOrder}
+						value={order}
 						keyboardType={'numeric'}
 					/>
 				</View>

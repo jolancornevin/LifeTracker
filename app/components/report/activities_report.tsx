@@ -42,9 +42,8 @@ export const ActivitiesReport = ({
 	};
 }) => {
 	let { startDate: m_start_date, endDate: m_end_date } = computeMonthStartAndEndDate(date);
-	m_end_date.setMonth(m_end_date.getUTCMonth() - 1);
-	m_start_date.setMonth(m_end_date.getUTCMonth() - 1);
-	const previousMonthActivities = sumEventsForDateRange(m_start_date, m_end_date);
+	m_start_date.setFullYear(2020, 0, 0);
+	const totalActivities = sumEventsForDateRange(m_start_date, m_end_date);
 
 	let { startDate: w_start_date, endDate: w_end_date } = computeWeekStartAndEndDate(date);
 	const weekActivities = sumEventsForDateRange(w_start_date, w_end_date);
@@ -72,7 +71,7 @@ export const ActivitiesReport = ({
 				{ title: 'But', type: ACTIVITY_TYPES.Negative },
 			].map(({ title, type }) => {
 				return (
-					<View key={title} style={{ width: '100%' }}>
+					<View key={title} style={{ width: '100%', padding: 8 }}>
 						<View
 							style={{
 								marginTop: 32,
@@ -97,7 +96,7 @@ export const ActivitiesReport = ({
 						>
 							<View
 								style={{
-									flex: 3,
+									flex: 2,
 									alignItems: 'center',
 									paddingLeft: 4,
 									borderRightWidth: 1,
@@ -110,16 +109,16 @@ export const ActivitiesReport = ({
 								<Text style={{ fontWeight: '600' }}>Daily</Text>
 							</View> */}
 							<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
+								<Text style={{ fontWeight: '600' }}>Avg (M)</Text>
+							</View>
+							<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 								<Text style={{ fontWeight: '600' }}>Total (W)</Text>
 							</View>
 							<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 								<Text style={{ fontWeight: '600' }}>Week -1</Text>
 							</View>
 							<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
-								<Text style={{ fontWeight: '600' }}>Total (M)</Text>
-							</View>
-							<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
-								<Text style={{ fontWeight: '600' }}>Month -1</Text>
+								<Text style={{ fontWeight: '600' }}>Total</Text>
 							</View>
 						</View>
 
@@ -129,11 +128,8 @@ export const ActivitiesReport = ({
 								let monthlySum = monthlyActivities[label],
 									dailySum = Math.floor(monthlySum / nb_of_days_since_month),
 									weekSum = weekActivities[label],
-									pastWeekSum = previousWeekActivities[label],
-									pastMonthSum = previousMonthActivities[label],
-									// current day
-									dailyHours = Math.floor(dailySum / 60),
-									dailyMinutes = dailySum % 60;
+									totalSum = totalActivities[label],
+									pastWeekSum = previousWeekActivities[label];
 
 								return (
 									<View
@@ -146,7 +142,7 @@ export const ActivitiesReport = ({
 									>
 										<View
 											style={{
-												flex: 3,
+												flex: 2,
 												alignItems: 'flex-start',
 												paddingLeft: 4,
 												borderRightWidth: 1,
@@ -154,9 +150,11 @@ export const ActivitiesReport = ({
 											}}
 										>
 											<Text>
-												{label} ~ {dailyHours > 0 && `${dailyHours}h`}
-												{dailyMinutes > 0 && `${dailyMinutes}m`}
+												{label}
 											</Text>
+										</View>
+										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
+											<HoursMinutes minutes={dailySum} />
 										</View>
 										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 											<HoursMinutes minutes={weekSum} />
@@ -165,10 +163,7 @@ export const ActivitiesReport = ({
 											<HoursMinutes minutes={pastWeekSum} />
 										</View>
 										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
-											<HoursMinutes minutes={monthlySum} />
-										</View>
-										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
-											<HoursMinutes minutes={pastMonthSum} />
+											<HoursMinutes minutes={totalSum} />
 										</View>
 									</View>
 								);
