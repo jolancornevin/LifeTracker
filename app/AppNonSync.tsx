@@ -4,11 +4,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 
 import { View } from 'react-native';
-import { EventUI } from './components/events/events_ui';
-import { SettingsUI } from './components/settings/settings_ui';
-import { ReportUI } from './components/report/report_ui';
-import { Header } from './components/utils/header';
-import { newDate } from './utils';
+import { EventUI } from '../components/events/events_ui';
+import { SettingsUI } from '../components/settings/settings_ui';
+import { ReportUI } from '../components/report/report_ui';
+import { Header } from '../components/utils/header';
+import { newDate } from '../utils';
 
 export type RootStackParamList = {
 	EventUI: {};
@@ -41,12 +41,12 @@ const HeaderTitle = ({ date, setDate }: { date: Date; setDate: React.Dispatch<Re
 	);
 };
 
-export const AppNonSync = () => {
+export default function AppNonSync() {
 	const [date, setDate] = React.useState(newDate());
 
 	return (
 		<>
-			<NavigationContainer>
+			{/* <NavigationContainer> */}
 				<Stack.Navigator>
 					<Stack.Screen
 						name="EventUI"
@@ -77,7 +77,7 @@ export const AppNonSync = () => {
 						initialParams={{ date: date.toJSON() }}
 					/>
 				</Stack.Navigator>
-			</NavigationContainer>
+			{/* </NavigationContainer> */}
 		</>
 	);
 };
