@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { GestureResponderEvent, Pressable, StyleProp, ViewStyle } from 'react-native';
 
 // Create a new date, without any time specific info
 export const newDate = function (year?: number, month?: number, day?: number): Date {
@@ -13,7 +14,7 @@ export const newDate = function (year?: number, month?: number, day?: number): D
 };
 
 export const copyDate = function (date: Date): Date {
-	return new Date(date.getUTCFullYear(), date.getMonth(), date.getUTCDate()+1, 0, 0, 0, 0);
+	return new Date(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1, 0, 0, 0, 0);
 };
 
 // returns the diff of time between now and the timer, in seconds
@@ -24,7 +25,7 @@ export const computeTimeDiffToNow = (date: number) => {
 
 export const newLocalDateTime = function (): Date {
 	let date = new Date(Date.now());
-	date.setTime( date.getTime() - date.getTimezoneOffset()*60*1000 );
+	date.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
 
 	return date;
 };
@@ -64,7 +65,7 @@ export const DDddmm = function (date: Date): string {
 
 	var dd = days[date.getUTCDay()];
 
-	return `${dd} ${date.getUTCDate()}/${date.getMonth() < 10? '0' + date.getMonth(): date.getMonth()}`;
+	return `${dd} ${date.getUTCDate()}/${date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()}`;
 };
 
 export const formatToDate = function (day: number, month: number, year: number): string {
@@ -103,7 +104,7 @@ export const computeMonthStartAndEndDate = (date: Date) => {
 export const computePast30dDate = (date: Date) => {
 	let startDate = useMemo(() => {
 		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
-		d.setUTCHours(- 24 * 30);
+		d.setUTCHours(-24 * 30);
 
 		return d;
 	}, [date]);
@@ -130,3 +131,28 @@ export const computeWeekStartAndEndDate = (date: Date) => {
 
 	return { startDate, endDate };
 };
+
+export const CustomButton = ({
+	onPress,
+	children,
+	style,
+}: {
+	onPress: (event: GestureResponderEvent) => void;
+	children: JSX.Element;
+	style?: StyleProp<ViewStyle>
+}) => (
+	<Pressable
+		style={({ pressed }) => [
+			{
+				backgroundColor: pressed ? 'rgb(210, 230, 255)' : 'transparent',
+			},
+			{
+				padding: 10,
+			},
+			style
+		]}
+		onPress={onPress}
+	>
+		{children}
+	</Pressable>
+);

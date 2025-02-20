@@ -8,24 +8,20 @@ import { Event, getEventsForDate, getOrCreateNoticeableEventForDate, upsertEvent
 import { ACTIVITY_TYPES, getEventsSettings } from '../../models/event_settings';
 import { RealmContext } from '../../models/main';
 import { FooterNavigation } from '../utils/footer_navigation';
-import { NextScreenButton } from '../utils/next_screen_button';
+import { NavigationButtons } from '../utils/next_screen_button';
 import { TextEntry } from './text_entry';
 import { Counter } from './counter';
+import { HeaderContext, HeaderTitle } from '../utils/header';
 
 const { useRealm } = RealmContext;
 
-type RootStackParamList = {
-	EventUI: {
-		date: Date;
-	};
-};
-
-export const EventUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'EventUI'>) => {
+export const EventUI = ({}) => {
 	const realm = useRealm();
 
 	const recuringEventSettings = getEventsSettings(realm);
 
-	const date = new Date(route.params.date);
+	const { _date } = React.useContext(HeaderContext);
+	const date = React.useMemo(() => new Date(_date), [_date]);
 
 	const [events, setEvents] = React.useState<Record<string, Event>>({});
 	const [noticableEvent, setNoticeableEvent] = React.useState<Event>();
@@ -41,124 +37,121 @@ export const EventUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Eve
 
 	return (
 		<FooterNavigation>
-			<ScrollView>
-				<View style={styles.wrapper}>
-					<View style={styles.content}>						
-						<Counter />
+			<>
+				<ScrollView>
+					<View style={styles.wrapper}>
+						<View style={styles.content}>
+							<Counter />
 
-						{[
-							{ title: '-- Goals ✓ --', type: ACTIVITY_TYPES.Positive },
-							{ title: '-- Goals ✗ --', type: ACTIVITY_TYPES.Negative },
-						].map(({ title, type }) => {
-							return (
-								<View
-									key={title}
-									style={{
-										marginTop: 32,
-									}}
-								>
-									<Text
+							{[
+								{ title: '-- Goals ✓ --', type: ACTIVITY_TYPES.Positive },
+								{ title: '-- Goals ✗ --', type: ACTIVITY_TYPES.Negative },
+							].map(({ title, type }) => {
+								return (
+									<View
+										key={title}
 										style={{
-											fontSize: 16,
-											fontWeight: '600',
-
-											marginBottom: 16,
-
-											marginLeft: 'auto',
-											marginRight: 'auto',
+											marginTop: 32,
 										}}
 									>
-										{title}
-									</Text>
+										<Text
+											style={{
+												fontSize: 16,
+												fontWeight: '600',
 
-									{recuringEventSettings
-										.filter((eventSetting) => eventSetting.type === type)
-										.map((eventSetting) => {
-											const value = events[eventSetting.label]?.value || '';
+												marginBottom: 16,
 
-											return (
-												<TextEntry
-													realm={realm}
-													key={`${eventSetting.label}-${value}`}
-													label={eventSetting.label}
-													value={value}
-													onChange={(newValue) => {
-														const newEvent = upsertEvent(
-															realm,
-															date,
-															events[eventSetting.label],
-															eventSetting.label,
-															newValue,
-															eventSetting.type,
-														);
+												marginLeft: 'auto',
+												marginRight: 'auto',
+											}}
+										>
+											{title}
+										</Text>
 
-														setEvents((oldEvents) => {
-															return ({
-															...oldEvents,
-															[eventSetting.label]: newEvent,
-														})});
-													}}
-												/>
-											);
-										})}
-								</View>
-							);
-						})}
+										{recuringEventSettings
+											.filter((eventSetting) => eventSetting.type === type)
+											.map((eventSetting) => {
+												const value = events[eventSetting.label]?.value || '';
 
-						<View
-							style={{
-								...styles.content,
-								width: '100%',
-							}}
-						>
-							<Text
+												return (
+													<TextEntry
+														realm={realm}
+														key={`${eventSetting.label}-${value}`}
+														label={eventSetting.label}
+														value={value}
+														onChange={(newValue) => {
+															const newEvent = upsertEvent(
+																realm,
+																date,
+																events[eventSetting.label],
+																eventSetting.label,
+																newValue,
+																eventSetting.type,
+															);
+
+															setEvents((oldEvents) => {
+																return {
+																	...oldEvents,
+																	[eventSetting.label]: newEvent,
+																};
+															});
+														}}
+													/>
+												);
+											})}
+									</View>
+								);
+							})}
+
+							<View
 								style={{
-									fontSize: 16,
-									fontWeight: '600',
+									...styles.content,
+									width: '100%',
 								}}
 							>
-								Events
-							</Text>
+								<Text
+									style={{
+										fontSize: 16,
+										fontWeight: '600',
+									}}
+								>
+									Events
+								</Text>
 
-							<TextInput
-								editable
-								multiline
-								onChangeText={(newText) => {
-									const newEvent = upsertEvent(
-										realm,
-										date,
-										noticableEvent,
-										noticableEvent.label,
-										newText,
-										noticableEvent.type,
-									);
+								<TextInput
+									editable
+									multiline
+									onChangeText={(newText) => {
+										const newEvent = upsertEvent(
+											realm,
+											date,
+											noticableEvent,
+											noticableEvent.label,
+											newText,
+											noticableEvent.type,
+										);
 
-									setNoticeableEvent(newEvent);
-								}}
-								value={noticableEvent?.value || ''}
-								style={{
-									width: '100%',
-									height: 100,
+										setNoticeableEvent(newEvent);
+									}}
+									value={noticableEvent?.value || ''}
+									style={{
+										width: '100%',
+										height: 100,
 
-									borderWidth: 1,
-									borderRadius: 5,
+										borderWidth: 1,
+										borderRadius: 5,
 
-									paddingLeft: 10,
-									marginLeft: 10,
-								}}
-							/>
+										paddingLeft: 10,
+										marginLeft: 10,
+									}}
+								/>
+							</View>
 						</View>
 					</View>
-				</View>
-			</ScrollView>
+				</ScrollView>
 
-			<NextScreenButton
-				nextScreenName={'ReportUI'}
-				params={{
-					date: date.toJSON(),
-					monthly: true,
-				}}
-			/>
+				<NavigationButtons nextScreenName={'ReportUI'} />
+			</>
 		</FooterNavigation>
 	);
 };
@@ -168,7 +161,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		padding: 8,
-		paddingHorizontal: 20
+		paddingHorizontal: 20,
 	},
 	content: {
 		flex: 1,

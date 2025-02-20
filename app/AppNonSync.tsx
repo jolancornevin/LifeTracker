@@ -1,83 +1,45 @@
-import React, { useEffect } from 'react';
+import React, { Dispatch, SetStateAction, useEffect } from 'react';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
 
 import { View } from 'react-native';
 import { EventUI } from '../components/events/events_ui';
 import { SettingsUI } from '../components/settings/settings_ui';
 import { ReportUI } from '../components/report/report_ui';
-import { Header } from '../components/utils/header';
+import { Header, HeaderContext, HeaderTitle } from '../components/utils/header';
 import { newDate } from '../utils';
 
 export type RootStackParamList = {
-	EventUI: {};
-	Settings: {};
-	ReportUI: {};
+	EventUI: undefined;
+	SettingsUI: undefined;
+	ReportUI: undefined;
 };
 
-const Stack = createNativeStackNavigator();
+declare global {
+	namespace ReactNavigation {
+	  interface RootParamList extends RootStackParamList {}
+	}
+  }
 
-const HeaderTitle = ({ date, setDate }: { date: Date; setDate: React.Dispatch<React.SetStateAction<Date>> }) => {
-	const navigation = useNavigation();
-
-	const _setDate = (newDate: Date) => {
-		setDate(newDate);
-		navigation.setParams({
-			date: newDate.toJSON(),
-		});
-	};
-
-	useEffect(() => {
-		navigation.setParams({
-			date: date.toJSON(),
-		});
-	}, [date]);
-
-	return (
-		<View style={{ flex: 1, alignItems: 'center' }}>
-			<Header date={date} setDate={_setDate} />
-		</View>
-	);
-};
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppNonSync() {
 	const [date, setDate] = React.useState(newDate());
 
 	return (
-		<>
-			{/* <NavigationContainer> */}
-				<Stack.Navigator>
-					<Stack.Screen
-						name="EventUI"
-						component={EventUI}
-						options={({ navigation, route }) => ({
-							headerTitle: (props) => <HeaderTitle date={date} setDate={setDate} />,
-							headerBackVisible: false,
-						})}
-						initialParams={{ date: date.toJSON() }}
-					/>
-					<Stack.Screen
-						name="ReportUI"
-						component={ReportUI}
-						options={({ navigation, route }) => ({
-							headerTitle: (props) => <HeaderTitle date={date} setDate={setDate} />,
-							headerBackVisible: false,
-						})}
-						initialParams={{ date: date.toJSON() }}
-					/>
+		<HeaderContext.Provider value={{ _date: date.toJSON(), setDate: setDate }}>
+			<Stack.Navigator
+				initialRouteName="EventUI"
+				screenOptions={{
+					header: () => <HeaderTitle />,
+					headerBackVisible: false,
+				}}
+			>
+				<Stack.Screen name="EventUI" component={EventUI} />
+				<Stack.Screen name="ReportUI" component={ReportUI} />
 
-					<Stack.Screen
-						name="Settings"
-						component={SettingsUI}
-						options={({ navigation, route }) => ({
-							headerTitle: (props) => <HeaderTitle date={date} setDate={setDate} />,
-							headerBackVisible: false,
-						})}
-						initialParams={{ date: date.toJSON() }}
-					/>
-				</Stack.Navigator>
-			{/* </NavigationContainer> */}
-		</>
+				<Stack.Screen name="SettingsUI" component={SettingsUI} />
+			</Stack.Navigator>
+		</HeaderContext.Provider>
 	);
-};
+}

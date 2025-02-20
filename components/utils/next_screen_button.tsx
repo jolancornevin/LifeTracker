@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 
 
-export const NextScreenButton = ({ nextScreenName, params }: { nextScreenName: string; params?: {date: string, monthly?: boolean} }) => {
+export const NavigationButtons = ({ nextScreenName, params }: { nextScreenName?: string; params?: {date: string, monthly?: boolean} }) => {
 	const navigation = useNavigation();
 
 	return (
@@ -32,7 +32,7 @@ export const NextScreenButton = ({ nextScreenName, params }: { nextScreenName: s
 				</TouchableOpacity>
 			)}
 			{nextScreenName && (
-				<TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate(nextScreenName, params)}>
+				<TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate(nextScreenName)}>
 					<Text style={{
 							fontSize: 28,
 							fontWeight: "700",

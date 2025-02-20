@@ -10,13 +10,7 @@ import { ImportExport } from './import_export';
 
 const { useRealm } = RealmContext;
 
-type RootStackParamList = {
-	SettingsUI: {
-		// useRealm: () => Realm;
-	};
-};
-
-export const SettingsUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'SettingsUI'>) => {
+export const SettingsUI = ({ }) => {
 	return (
 		<FooterNavigation>
 			<ScrollView

@@ -9,20 +9,13 @@ import { ACTIVITY_TYPES, getEventsSettings } from '../../models/event_settings';
 import { RealmContext } from '../../models/main';
 import { computeMonthStartAndEndDate, ddmmyyyy } from '../../utils';
 import { FooterNavigation } from '../utils/footer_navigation';
-import { NextScreenButton } from '../utils/next_screen_button';
+import { NavigationButtons } from '../utils/next_screen_button';
 import { ActivitiesReport } from './activities_report';
 import { DayRatingsReport } from './day_rating';
 import { Chart } from './chart';
+import { HeaderContext, HeaderTitle } from '../utils/header';
 
 const { useRealm, useQuery } = RealmContext;
-
-type RootStackParamList = {
-	ReportUI: {
-		// useRealm: () => Realm;
-		monthly: boolean;
-		date: Date;
-	};
-};
 
 const getNoticeableEventsForDate = (date: Date): Event[] => {
 	const { startDate, endDate } = computeMonthStartAndEndDate(date);
@@ -44,11 +37,12 @@ const getNoticeableEventsForDate = (date: Date): Event[] => {
 	return result;
 };
 
-export const ReportUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'ReportUI'>) => {
-	const isMonthly = route.params.monthly;
+export const ReportUI = () => {
 	const realm = useRealm();
 
-	const date = new Date(route.params.date);
+	// const date = new Date(route.params.date);
+	const { _date } = React.useContext(HeaderContext);
+	const date = React.useMemo(() => new Date(_date), [_date]);
 
 	const noticeable = getNoticeableEventsForDate(date) || [];
 
@@ -58,63 +52,60 @@ export const ReportUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'Re
 
 	return (
 		<FooterNavigation>
-			<ScrollView>
-				<View style={styles.content}>
-					<View style={{ paddingHorizontal: 20 }}>
-						<Text style={{ fontSize: 20, fontWeight: '600' }}>🔥 Congrats ! 🔥</Text>
+			<>
+				<ScrollView>
+					<View style={styles.content}>
+						<View style={{ paddingHorizontal: 20 }}>
+							<Text style={{ fontSize: 20, fontWeight: '600' }}>🔥 Congrats ! 🔥</Text>
 
-						<DayRatingsReport date={date} />
-					</View>
+							<DayRatingsReport date={date} />
+						</View>
 
-					<Chart date={date} eventsLabels={Object.keys(recuringEventSettingsDict)} />
+						<Chart date={date} eventsLabels={Object.keys(recuringEventSettingsDict)} />
 
-					<ActivitiesReport date={date} recuringEventSettingsDict={recuringEventSettingsDict} />
+						<ActivitiesReport date={date} recuringEventSettingsDict={recuringEventSettingsDict} />
 
-					<View style={{ paddingHorizontal: 20 }}>
-						<View
-							style={{
-								...styles.content,
-								width: '100%',
-							}}
-						>
-							<Text
-								style={{
-									fontSize: 16,
-									fontWeight: '600',
-									marginBottom: 8,
-								}}
-							>
-								Noticeable 🎉
-							</Text>
+						<View style={{ paddingHorizontal: 20 }}>
 							<View
 								style={{
-									flex: 1,
+									...styles.content,
 									width: '100%',
-									flexDirection: 'column',
-									justifyContent: 'flex-start',
 								}}
 							>
-								<View>
-									{noticeable.map((event) => (
-										<View key={event.value} style={{ flexDirection: 'row' }}>
-											<Text style={{ textDecorationLine: 'underline' }}>
-												{ddmmyyyy(new Date(event.date))}:
-											</Text>
-											<Text> {event.value}</Text>
-										</View>
-									))}
+								<Text
+									style={{
+										fontSize: 16,
+										fontWeight: '600',
+										marginBottom: 8,
+									}}
+								>
+									Noticeable 🎉
+								</Text>
+								<View
+									style={{
+										flex: 1,
+										width: '100%',
+										flexDirection: 'column',
+										justifyContent: 'flex-start',
+									}}
+								>
+									<View>
+										{noticeable.map((event) => (
+											<View key={event.value} style={{ flexDirection: 'row' }}>
+												<Text style={{ textDecorationLine: 'underline' }}>
+													{ddmmyyyy(new Date(event.date))}:
+												</Text>
+												<Text> {event.value}</Text>
+											</View>
+										))}
+									</View>
 								</View>
 							</View>
 						</View>
 					</View>
-				</View>
-			</ScrollView>
-			<NextScreenButton
-				nextScreenName={null}
-				params={{
-					date: date.toJSON(),
-				}}
-			/>
+				</ScrollView>
+				<NavigationButtons />
+			</>
 		</FooterNavigation>
 	);
 };

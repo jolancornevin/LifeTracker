@@ -1,58 +1,69 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { View, Text } from "react-native";
+import { View, Text } from 'react-native';
 
-import { computeTimeDiffToNow, newDate } from "../../utils";
-import { useEffect } from "react";
+import { computeTimeDiffToNow, newDate } from '../../utils';
+import { useEffect } from 'react';
 
 // time diff is in seconds
 export const displayElapsedTime = (timeDiff: number) => {
-  const seconds = timeDiff % 60,
-    minutes = Math.floor(timeDiff / 60) % 60,
-    hours = Math.floor(timeDiff / (60 * 60)) % 24,
-    days = Math.floor(timeDiff / (60 * 60 * 24));
+	const seconds = timeDiff % 60,
+		minutes = Math.floor(timeDiff / 60) % 60,
+		hours = Math.floor(timeDiff / (60 * 60)) % 24,
+		days = Math.floor(timeDiff / (60 * 60 * 24));
 
-  return (
-    (days) +
-    " jours " +
-    (hours < 10 ? "0" + hours : hours) +
-    "h" +
-    (minutes < 10 ? "0" + minutes : minutes) +
-    "m" +
-    (seconds < 10 ? "0" + seconds : seconds)
-  );
+	return (
+		<>
+			<Text>🎉 </Text>
+			<Text style={{fontSize: 22}}>{days}</Text>
+			<Text style={{fontSize: 18}}>d - </Text>
+			<Text style={{fontSize: 22}}>{hours < 10 ? '0' + hours : hours}</Text>
+			<Text style={{fontSize: 18}}>h</Text>
+			<Text style={{fontSize: 22}}>{minutes < 10 ? '0' + minutes : minutes}</Text>
+			<Text style={{fontSize: 18}}>m</Text>
+			<Text style={{fontSize: 22}}>{seconds < 10 ? '0' + seconds : seconds}</Text>
+			<Text> 🎉</Text>
+		</>
+	);
 };
 
 export const Counter = ({}: {}) => {
-  const start = newDate(2025, 1, 18);
+	const start = newDate(2025, 1, 18);
 
-  const [timeDiff, setTimeDiff] = React.useState<number>(0);
+	const [timeDiff, setTimeDiff] = React.useState<number>(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeDiff(computeTimeDiffToNow(start.getTime()));
-    }, 1000);
+	useEffect(() => {
+		setTimeDiff(computeTimeDiffToNow(start.getTime()));
+	}, []);
 
-    return () => clearInterval(interval);
-  }, [setTimeDiff]);
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setTimeDiff(computeTimeDiffToNow(start.getTime()));
+		}, 1000);
 
-  return (
-    <>
-      <Text
-        style={{
-          fontSize: 16,
-          fontWeight: "600",
-        }}
-      >
-        You are doing it !
-      </Text>
-      <View style={{ flexDirection: "row" }}>
-        <Text 
-        style={{
-          fontSize: 22,
-          fontWeight: "600",
-        }}>🎉 {displayElapsedTime(timeDiff)} 🎉</Text>
-      </View>
-    </>
-  );
+		return () => clearInterval(interval);
+	}, [setTimeDiff]);
+
+	return (
+		<>
+			<Text
+				style={{
+					fontSize: 16,
+					fontWeight: '600',
+				}}
+			>
+				You're doing it !
+			</Text>
+			<View style={{ flexDirection: 'row' }}>
+				<Text
+					style={{
+						fontSize: 22,
+						fontWeight: '600',
+					}}
+				>
+					{displayElapsedTime(timeDiff)}
+				</Text>
+			</View>
+		</>
+	);
 };

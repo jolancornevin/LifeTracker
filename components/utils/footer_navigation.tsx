@@ -4,8 +4,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
+import { CustomButton } from '@/utils';
 
-export const FooterNavigation = (props) => {
+export const FooterNavigation = ({ children }: { children: React.JSX.Element }) => {
 	const navigation = useNavigation();
 
 	return (
@@ -13,10 +14,10 @@ export const FooterNavigation = (props) => {
 			style={{
 				flex: 1,
 				backgroundColor: '#efefef',
-				paddingTop: 20,
+				paddingTop: 50,
 			}}
 		>
-			<View style={{ flex: 1 }}>{props.children}</View>
+			<View style={{ flex: 1 }}>{children}</View>
 			<View
 				style={{
 					width: '100%',
@@ -32,12 +33,12 @@ export const FooterNavigation = (props) => {
 					borderTopColor: colors.grey,
 				}}
 			>
-				<TouchableOpacity onPress={() => navigation.navigate('EventUI')}>
+				<CustomButton onPress={() => navigation.navigate('EventUI')}>
 					<Text>Home</Text>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+				</CustomButton>
+				<CustomButton onPress={() => navigation.navigate('SettingsUI')}>
 					<Text>Settings</Text>
-				</TouchableOpacity>
+				</CustomButton>
 			</View>
 		</View>
 	);

@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
@@ -8,38 +8,38 @@ import { DayRatingUI } from './day_rating';
 
 import { RealmContext } from '../../models/main';
 import { FooterNavigation } from '../utils/footer_navigation';
-import { NextScreenButton } from '../utils/next_screen_button';
+import { NavigationButtons } from '../utils/next_screen_button';
 import colors from '../../styles/colors';
+import { HeaderContext, HeaderTitle } from '../utils/header';
 
 const { useRealm, useQuery } = RealmContext;
 
 type RootStackParamList = {
 	HomeUI: {
-		date: Date;
+		// date: Date;
 	};
 };
 
 export const HomeUI = ({ route }: BottomTabScreenProps<RootStackParamList, 'HomeUI'>) => {
 	const realm = useRealm();
 
-	const date = new Date(route.params.date);
+	// const date = new Date(route.params.date);
+	const { _date } = React.useContext(HeaderContext);
+	const date = React.useMemo(() => new Date(_date), [_date]);
 
 	return (
 		<FooterNavigation>
-			<View style={styles.wrapper}>
-				<View style={styles.content}>
-					<Text style={{ fontSize: 26, paddingBottom: 50 }}>How was your day? 😃</Text>
+			<>
+				<View style={styles.wrapper}>
+					<View style={styles.content}>
+						<Text style={{ fontSize: 26, paddingBottom: 50 }}>How was your day? 😃</Text>
 
-					<DayRatingUI realm={realm} date={date} />
+						<DayRatingUI realm={realm} date={date} />
+					</View>
 				</View>
-			</View>
 
-			<NextScreenButton
-				nextScreenName={'EventUI'}
-				params={{
-					date: date.toJSON(),
-				}}
-			/>
+				<NavigationButtons nextScreenName={'EventUI'} />
+			</>
 		</FooterNavigation>
 	);
 };
