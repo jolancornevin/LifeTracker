@@ -16,11 +16,11 @@ export const displayElapsedTime = (timeDiff: number) => {
 		<>
 			<Text>🎉 </Text>
 			<Text style={{fontSize: 22}}>{days}</Text>
-			<Text style={{fontSize: 18}}>d - </Text>
+			<Text style={{fontSize: 16}}> days - </Text>
 			<Text style={{fontSize: 22}}>{hours < 10 ? '0' + hours : hours}</Text>
-			<Text style={{fontSize: 18}}>h</Text>
+			<Text style={{fontSize: 16}}>h</Text>
 			<Text style={{fontSize: 22}}>{minutes < 10 ? '0' + minutes : minutes}</Text>
-			<Text style={{fontSize: 18}}>m</Text>
+			<Text style={{fontSize: 16}}>m</Text>
 			<Text style={{fontSize: 22}}>{seconds < 10 ? '0' + seconds : seconds}</Text>
 			<Text> 🎉</Text>
 		</>
