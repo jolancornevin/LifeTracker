@@ -1,12 +1,4 @@
-// This TS version of the Task model shows how to create Realm objects using
-// TypeScript syntax, using `@realm/babel-plugin`
-// (https://github.com/realm/realm-js/blob/main/packages/babel-plugin/).
-//
-// If you are not using TypeScript and `@realm/babel-plugin`, you instead need
-// to defining a schema on the class - see `Task.js` in the Realm example app
-// for an example of this.
-
-import { Realm } from '@realm/react';
+import Realm from "realm";
 import { ACTIVITY_TYPES } from './event_settings';
 
 // To use a class as a Realm object type in Typescript with the `@realm/babel-plugin` plugin,
@@ -63,7 +55,7 @@ export const upsertEvent = (
 export const getEventsForDate = (realm: Realm, date: Date): Record<string, Event> => {
 	let events = realm.objects<Event>('Event').filtered(`date = ${date.getTime()}`);
 
-	let result = {};
+	let result: Record<string, Event> = {};
 	events.forEach((event: Event) => {
 		result[event.label] = event;
 	});
@@ -78,9 +70,8 @@ export const getOrCreateNoticeableEventForDate = (realm: Realm, date: Date): Eve
 		return events[0];
 	}
 
-	let event: Event;
-	realm.write(() => {
-		event = realm.create<Event>('Event', {
+	let event: Event = realm.write(() => {
+		return realm.create<Event>('Event', {
 			_id: new Realm.BSON.ObjectId(),
 			date: date.getTime(),
 			label: NOTICEABLE_LABEL,

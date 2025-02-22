@@ -1,5 +1,6 @@
-import { Realm } from '@realm/react';
-import { newDate, newLocalDateTime } from '../utils';
+import Realm from "realm";
+
+import { newLocalDateTime } from '../utils';
 
 // To use a class as a Realm object type in Typescript with the `@realm/babel-plugin` plugin,
 // simply define the properties on the class with the correct type and the plugin will convert
@@ -19,9 +20,8 @@ export const getEventTimers = (realm: Realm, label: string): EventTimer | null =
 };
 
 export const createEventTimer = (realm: Realm, label: string): EventTimer => {
-	let timer;
-	realm.write(() => {
-		timer = realm.create<EventTimer>('EventTimer', {
+	return realm.write(() => {
+		return realm.create<EventTimer>('EventTimer', {
 			_id: new Realm.BSON.ObjectId(),
 
 			label: label,
@@ -29,8 +29,6 @@ export const createEventTimer = (realm: Realm, label: string): EventTimer => {
 			date: newLocalDateTime().getTime(),
 		});
 	});
-
-	return timer;
 };
 
 export const deleteEventTimer = (realm: Realm, timer: EventTimer) => {

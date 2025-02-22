@@ -41,6 +41,9 @@ export const ActivitiesReport = ({
 		[k: string]: EventSettings;
 	};
 }) => {
+	// TODO think of a better way to present the data. Possibly only show 
+	// the average of the past weeks and the average of the current week.
+
 	let { startDate: m_start_date, endDate: m_end_date } = computeMonthStartAndEndDate(date);
 	m_start_date.setFullYear(2020, 0, 0); // get ALL the data
 	const totalActivities = sumEventsForDateRange(m_start_date, m_end_date);
@@ -49,8 +52,8 @@ export const ActivitiesReport = ({
 	const weekActivities = sumEventsForDateRange(w_start_date, w_end_date);
 
 	let { startDate: lw_start_date, endDate: lw_end_date } = computeWeekStartAndEndDate(date);
-	lw_start_date.setDate(lw_start_date.getUTCDate() - 7);
-	lw_end_date.setDate(lw_end_date.getUTCDate() - 7);
+	lw_start_date.setUTCDate(lw_start_date.getUTCDate() - 7);
+	lw_end_date.setUTCDate(lw_end_date.getUTCDate() - 7);
 	const previousWeekActivities = sumEventsForDateRange(lw_start_date, lw_end_date);
 
 	let { startDate: month_start_date, endDate: month_end_date } = computeMonthStartAndEndDate(date);
@@ -68,7 +71,7 @@ export const ActivitiesReport = ({
 		<>
 			{[
 				{ title: "You've done  💪", type: ACTIVITY_TYPES.Positive },
-				{ title: 'But', type: ACTIVITY_TYPES.Negative },
+				// { title: 'But', type: ACTIVITY_TYPES.Negative },
 			].map(({ title, type }) => {
 				return (
 					<View key={title} style={{ width: '100%', padding: 8 }}>
@@ -109,10 +112,10 @@ export const ActivitiesReport = ({
 								<Text style={{ fontWeight: '600' }}>Daily</Text>
 							</View> */}
 							<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
-								<Text style={{ fontWeight: '600' }}>Avg (M)</Text>
+								<Text style={{ fontWeight: '600' }}>Total (W)</Text>
 							</View>
 							<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
-								<Text style={{ fontWeight: '600' }}>Total (W)</Text>
+								<Text style={{ fontWeight: '600' }}>Avg (M)</Text>
 							</View>
 							<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 								<Text style={{ fontWeight: '600' }}>Week -1</Text>
@@ -154,10 +157,10 @@ export const ActivitiesReport = ({
 											</Text>
 										</View>
 										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
-											<HoursMinutes minutes={dailySum} />
+											<HoursMinutes minutes={weekSum} />
 										</View>
 										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
-											<HoursMinutes minutes={weekSum} />
+											<HoursMinutes minutes={dailySum} />
 										</View>
 										<View style={{ flex: 2, alignItems: 'center', borderRightWidth: 1 }}>
 											<HoursMinutes minutes={pastWeekSum} />

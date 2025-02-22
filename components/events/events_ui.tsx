@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Event, getEventsForDate, getOrCreateNoticeableEventForDate, upsertEvent } from '../../models/event';
@@ -11,9 +9,59 @@ import { FooterNavigation } from '../utils/footer_navigation';
 import { NavigationButtons } from '../utils/next_screen_button';
 import { TextEntry } from './text_entry';
 import { Counter } from './counter';
-import { HeaderContext, HeaderTitle } from '../utils/header';
+import { HeaderContext } from '../utils/header';
 
 const { useRealm } = RealmContext;
+
+
+const EventsSection = ({date}: { date: Date}) => {
+	const realm = useRealm();
+	
+	const [noticableEvent, setNoticeableEvent] = React.useState<Event>();
+	
+	useEffect(() => {
+		const noticeableEvent = getOrCreateNoticeableEventForDate(realm, date);
+
+		setNoticeableEvent(noticeableEvent);
+	}, [date.getTime()]);
+
+	return (
+		<View style={{ ...styles.content, alignItems: 'center', width: '100%', paddingTop: 16 }}>
+			<Text style={{fontSize: 16, fontWeight: '600'}}>
+				Events
+			</Text>
+
+			<TextInput
+				editable
+				multiline
+				onChangeText={(newText) => {
+					const newEvent = upsertEvent(
+						realm,
+						date,
+						noticableEvent,
+						noticableEvent?.label || "",
+						newText,
+						noticableEvent?.type || "",
+					);
+
+					setNoticeableEvent(newEvent);
+				}}
+				value={noticableEvent?.value || ''}
+				style={{
+					width: '100%',
+					height: 100,
+
+					borderWidth: 1,
+					borderRadius: 5,
+
+					paddingLeft: 10,
+					marginLeft: 10,
+				}}
+			/>
+		</View>
+
+	)
+}
 
 export const EventUI = ({}) => {
 	const realm = useRealm();
@@ -24,15 +72,10 @@ export const EventUI = ({}) => {
 	const date = React.useMemo(() => new Date(_date), [_date]);
 
 	const [events, setEvents] = React.useState<Record<string, Event>>({});
-	const [noticableEvent, setNoticeableEvent] = React.useState<Event>();
 
 	useEffect(() => {
 		const events = getEventsForDate(realm, date);
 		setEvents(events);
-
-		const noticeableEvent = getOrCreateNoticeableEventForDate(realm, date);
-
-		setNoticeableEvent(noticeableEvent);
 	}, [date.getTime()]);
 
 	return (
@@ -45,13 +88,13 @@ export const EventUI = ({}) => {
 
 							{[
 								{ title: '-- Goals ✓ --', type: ACTIVITY_TYPES.Positive },
-								{ title: '-- Goals ✗ --', type: ACTIVITY_TYPES.Negative },
+								// { title: '-- Goals ✗ --', type: ACTIVITY_TYPES.Negative },
 							].map(({ title, type }) => {
 								return (
 									<View
 										key={title}
 										style={{
-											marginTop: 32,
+											marginTop: 8,
 										}}
 									>
 										<Text
@@ -103,49 +146,7 @@ export const EventUI = ({}) => {
 								);
 							})}
 
-							<View
-								style={{
-									...styles.content,
-									width: '100%',
-								}}
-							>
-								<Text
-									style={{
-										fontSize: 16,
-										fontWeight: '600',
-									}}
-								>
-									Events
-								</Text>
-
-								<TextInput
-									editable
-									multiline
-									onChangeText={(newText) => {
-										const newEvent = upsertEvent(
-											realm,
-											date,
-											noticableEvent,
-											noticableEvent.label,
-											newText,
-											noticableEvent.type,
-										);
-
-										setNoticeableEvent(newEvent);
-									}}
-									value={noticableEvent?.value || ''}
-									style={{
-										width: '100%',
-										height: 100,
-
-										borderWidth: 1,
-										borderRadius: 5,
-
-										paddingLeft: 10,
-										marginLeft: 10,
-									}}
-								/>
-							</View>
+							<EventsSection date={date} />
 						</View>
 					</View>
 				</ScrollView>
@@ -159,13 +160,12 @@ export const EventUI = ({}) => {
 const styles = StyleSheet.create({
 	wrapper: {
 		flex: 1,
-		alignItems: 'center',
-		padding: 8,
+		// alignItems: 'center',
+		// padding: 8,
 		paddingHorizontal: 20,
 	},
 	content: {
 		flex: 1,
-		alignItems: 'center',
 		width: '100%',
 	},
 });

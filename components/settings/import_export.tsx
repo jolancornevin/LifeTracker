@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Realm from "realm";
+
 import { Button, Text, TextInput, View } from 'react-native';
 import { ExportToEmail } from '../../models/exporter';
 import { RealmContext } from '../../models/main';
@@ -9,7 +11,7 @@ import { customData } from '../../assets/data';
 import colors from '../../styles/colors';
 import { EventSettings } from '@/models/event_settings';
 import { Event } from '@/models/event';
-import { DayRating } from '@/models/DayRating';
+import { DayRating } from '@/models/day_rating';
 
 const { useRealm } = RealmContext;
 

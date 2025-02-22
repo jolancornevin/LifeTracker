@@ -4,11 +4,12 @@ const colors = {
 	purpleDark: '#4238a6',
 
 	grey: 'grey',
-	gray: '#B5B5B5',
 
-	green: 'green',
-	blue: 'blue',
-	red: 'red',
+	bg: '#EAE7DC',
+
+	green: '#3AAFA9',
+	blue: '#374785',
+	red: '#FF2C5C',
 
 	white: '#FFFFFF',
 	black: '#000000',

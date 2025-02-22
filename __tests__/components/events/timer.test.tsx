@@ -1,12 +1,12 @@
 // import { render, screen, fireEvent } from '@testing-library/react-native';
 // import { Timer } from '../../../app/components/events/timer';
-import { Realm } from '@realm/react';
+import Realm from "realm";
 
 import { afterEach, beforeEach, describe, expect, jest, test } from '@jest/globals';
 
-import { computeTimeDiff, displayTimerElapsedTime } from '../../../app/components/events/timer';
-import { EventTimer } from '../../../app/models/event_timer';
-import { newDateTime } from '../../../app/utils';
+import { computeTimeDiff, displayTimerElapsedTime } from '../../../components/events/timer';
+import { EventTimer } from '../../../models/event_timer';
+import { newDateTime } from '../../../utils';
 
 test('form submits two answers', () => {
 	// const allQuestions = ['q1', 'q2'];

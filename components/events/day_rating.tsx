@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import Realm from "realm";
+
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import { DayRating } from '../../models/day_rating';

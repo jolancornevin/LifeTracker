@@ -13,7 +13,7 @@ export const FooterNavigation = ({ children }: { children: React.JSX.Element }) 
 		<View
 			style={{
 				flex: 1,
-				backgroundColor: '#efefef',
+				backgroundColor: colors.bg,
 				paddingTop: 50,
 			}}
 		>

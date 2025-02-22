@@ -84,14 +84,14 @@ export const stringToDate = function (date: string): Date {
 
 export const computeMonthStartAndEndDate = (date: Date) => {
 	let startDate = useMemo(() => {
-		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
+		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate());
 		d.setDate(1);
 
 		return d;
 	}, [date]);
 
 	let endDate = useMemo(() => {
-		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
+		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate());
 		d.setDate(1);
 		d.setMonth(d.getMonth() + 1);
 
@@ -103,7 +103,7 @@ export const computeMonthStartAndEndDate = (date: Date) => {
 
 export const computePast30dDate = (date: Date) => {
 	let startDate = useMemo(() => {
-		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
+		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate());
 		d.setUTCHours(-24 * 30);
 
 		return d;
@@ -115,17 +115,17 @@ export const computePast30dDate = (date: Date) => {
 export const computeWeekStartAndEndDate = (date: Date) => {
 	// start date is the beginning of the week
 	let startDate = useMemo(() => {
-		let d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
-		d.setDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
+		let d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate());
+		d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
 
 		return d;
 	}, [date]);
 
 	// end date is now (+ 1 because the query is <)
 	let endDate = useMemo(() => {
-		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate() + 1);
+		const d = newDate(date.getUTCFullYear(), date.getMonth(), date.getUTCDate());
 
-		d.setDate(startDate.getUTCDate() + 7);
+		d.setUTCDate(startDate.getUTCDate() + 7);
 		return d;
 	}, [startDate, date]);
 

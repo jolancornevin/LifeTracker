@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react';
 
+import Realm from "realm";
+
 import { Text, View } from 'react-native';
 
 import { Event } from '../../models/event';
@@ -11,6 +13,7 @@ import {
 } from '../../utils';
 
 import LineChart from '../line_chart/line-chart';
+import colors from '@/styles/colors';
 
 
 const { useRealm, useQuery } = RealmContext;
@@ -26,7 +29,7 @@ interface eventValues {
 	data: point[];
 }
 
-const colors = [
+const pointColors = [
 	'#e6194b',
 	'#3cb44b',
 	'#4363d8',
@@ -69,12 +72,12 @@ const colors = [
 	 */
 const pointsForDateRange = (events: Realm.Results<Event>, startDate: Date, endDate: Date, eventsLabels: string[]) => {
 	const labelToData: Record<string, eventValues> = {};
-	const labelToDateAndData = {};
+	const labelToDateAndData: Record<string, Record<string, number>> = {};
 
 	eventsLabels.forEach((label, i) => {
 		labelToData[label] = {
 			seriesName: label,
-			color: colors[i],
+			color: pointColors[i],
 			data: [],
 		};
 		labelToDateAndData[label] = {};
@@ -119,7 +122,7 @@ export const Chart = ({ date, eventsLabels }: { date: Date; eventsLabels: string
 
 	return (
 		<>
-			<LineChart data={data} height={150} gap={30}  color={'#297AB1'} backgroundColor={'#efefef'} />
+			<LineChart data={data} height={150} gap={30}  color={'#297AB1'} backgroundColor={colors.bg} />
 			<View style={{ flex: 1, flexDirection: 'row' }}>
 				{data.map((d) => (
 					<Text key={d.seriesName} style={{ color: d.color, paddingRight: 8 }}>

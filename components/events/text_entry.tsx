@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 
+import Realm from "realm";
+
 import { Text, TextInput, View } from 'react-native';
 import { HoursMinutes } from '../utils/hours_minutes';
 import { Timer } from './timer';

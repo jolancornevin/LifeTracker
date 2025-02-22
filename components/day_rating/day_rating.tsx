@@ -1,9 +1,11 @@
 import * as React from 'react';
 
+import Realm from 'realm';
+
 import { TouchableOpacity, View, Text } from 'react-native';
 
 import { RealmContext } from '../../models/main';
-import { DayRating } from '../../models/DayRating';
+import { DayRating } from '../../models/day_rating';
 import colors from '../../styles/colors';
 
 const { useQuery } = RealmContext;
